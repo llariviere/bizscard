@@ -4,11 +4,11 @@
     <description>
        Bizswiper without scan.
     </description>
-    <author email="bizswiper@gmeil.com" href="https://bizswiper.com">
+    <author email="bizswiper@gmail.com" href="https://bizswiper.com">
         Bizswiper Team
     </author>
     <content src="index.html" />
-    <access origin="*" />
+    <access origin="https://bizswiper.com:3333/" />
     <allow-navigation href="https://*.bizswiper.com/*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
