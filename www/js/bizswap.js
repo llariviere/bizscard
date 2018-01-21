@@ -668,7 +668,7 @@ function card_login(email,password,create,auto_login) {
 }
 
 //var socket = io('https://bizswiper.com:3333/');
-var socket = io();
+//var socket = io();
 var $connected = false;
 var $online = false;
 
