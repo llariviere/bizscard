@@ -1,81 +1,943 @@
 <!DOCTYPE html>
 <html>
-<head>
-
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">
-
+  <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="format-detection" content="telephone=no">
-    <meta name="msapplication-tap-highlight" content="no">
-
-    <title>Bizcard</title>
-
-    <link rel="stylesheet" href="lib/framework7/css/framework7.ios.min.css">
-    <link rel="stylesheet" href="lib/framework7/css/framework7.ios.colors.min.css">
-
-    <link rel="stylesheet" href="css/styles.css">
-</head>
-
-<body>
-    <!-- Status bar overlay for full screen mode (PhoneGap) -->
+    <title>Bizswiper</title>
+    
+    <link rel="stylesheet" href="css/framework7.ios.min.css">
+    <link rel="stylesheet" href="css/framework7.ios.colors.min.css">
+	 <link rel="stylesheet" href="css/font-awesome.min.css">
+	
+    <link rel="stylesheet" href="css/welcomescreen.css">
+    <link rel="stylesheet" href="css/bizswap.css?v=20171013.2255">
+    <link rel="shortcut icon" type="image/png" href="img/favicon.png"/>
+    <link rel="manifest" href="js/manifest.json">
+  </head>
+  
+  <body  class="theme-gray framework7-root">
+  
     <div class="statusbar-overlay"></div>
-
-    <!-- Panels overlay-->
+    
     <div class="panel-overlay"></div>
-    <!-- Left panel with reveal effect-->
+    
     <div class="panel panel-left panel-reveal">
-        <div class="content-block">
-            <p>Left panel content goes here</p>
-        </div>
-    </div>
+              
+		<div class="list-block layout-dark color-white">
+		  <ul>
+		    <li>
+			  <a href="#index" class="item-link">
+		      <div class="item-content close-panel">
+		         <div class="item-inner">
+		            <div class="item-title">Home</div>
+		          </div>
+		      </div>
+		      </a>
+		    </li>
+		    <li>
+			  <a href="#" class="item-link current-list-open">
+		      <div class="item-content close-panel">
+		         <div class="item-inner">
+		            <div class="item-title">Current card list</div>
+		            <div class="item-after">
+		            	<span class="badge bg-green current-list-nbr">0</span>
+		            </div>
+		          </div>
+		      </div>
+		      </a>
+		    </li>
+		    <li>
+		    	<a href="#" class="item-link waiting-list-open">
+		      <div class="item-content close-panel">
+		         <div class="item-inner">
+		            <div class="item-title">Waiting card list</div>
+		            <div class="item-after">
+		            	<span class="badge bg-red waiting-list-nbr">0</span>
+		            </div>
+		          </div>
+		      </div>
+		      </a>
+		    </li>
+		    <li>
+		    	<a href="#" onclick="card_form_open(mycard);" class="item-link my-card-open">
+		      <div class="item-content close-panel">
+		         <div class="item-inner">
+		            <div class="item-title">My profile</div>
+		            <div class="item-after"> </div>
+		          </div>
+		      </div>
+		      </a>
+		    </li>
+		    <li>
+		    	<a href="#" onclick="_init();" class="item-link my-preferences-open">
+		      <div class="item-content close-panel">
+		         <div class="item-inner">
+		            <div class="item-title">Reload my data</div>
+		            <div class="item-after"> </div>
+		          </div>
+		      </div>
+		      </a>
+		    </li>
+		    <li>
+		    	<a href="#" class="item-link log-off">
+		      <div class="item-content close-panel">
+		         <div class="item-inner">
+		            <div class="item-title">Log off</div>
+		            <div class="item-after"> </div>
+		          </div>
+		      </div>
+				</a>
+		    </li>
+		  </ul>
+		</div>     
 
-    <!-- Views -->
+    </div>
+    
+    <div class="panel panel-right panel-cover">
+      <div class="content-block">
+        <p>Right panel content goes here</p>
+      </div>
+    </div>
+    
+    
+    
+    
     <div class="views">
-        <!-- Your main view, should have "view-main" class -->
-        <div class="view view-main">
-            <!-- Top Navbar-->
-            <div class="navbar">
-                <div class="navbar-inner">
-                    <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
-                    <div class="center sliding">Awesome App</div>
-                    <div class="right">
-                        <!--
-                          Right link contains only icon - additional "icon-only" class
-                          Additional "open-panel" class tells app to open panel when we click on this link
-                        -->
-                        <a href="#" class="link icon-only open-panel"><i class="icon icon-bars"></i></a>
-                    </div>
-                </div>
+    
+      <div class="view view-main">
+      
+        <div class="navbar">
+        
+          <div class="navbar-inner" data-page="index">
+            <div class="center sliding">Bizswiper</div>
+            <div class="right">
+              <a href="#" class="link icon-only open-panel"> <i class="fa fa-bars fa-lg"></i></a>
             </div>
-            <!-- Pages container, because we use fixed-through navbar and toolbar, it has additional appropriate classes-->
-            <div class="pages navbar-through toolbar-through">
-                <!-- Page, "data-page" contains page name -->
-                <div data-page="index" class="page">
-                    <!-- Scrollable page content -->
-                    <div class="page-content">
-                        <div class="content-block">
-                            <p>Page content goes here</p>
-                        </div>
-                    </div>
-                </div>
+          </div>
+          
+	      <div class="navbar-inner cached" data-page="create-card">
+            <div class="left">
+              <a href="#" class="link icon-only back"> <i class="icon icon-back"></i></a>
             </div>
-            <!-- Bottom Toolbar-->
-            <div class="toolbar">
-                <div class="toolbar-inner">
-                    <!-- Toolbar links -->
-                    <a href="#" class="link">Link 1</a>
-                    <a href="#" class="link">Link 2</a>
-                </div>
+	        <div class="center sliding">Add a card</div>
+            <div class="right">
+              <a href="#" class="link icon-only open-panel"> <i class="fa fa-bars fa-lg"></i></a>
             </div>
+	        
+	        <div class="subnavbar">
+	          <div class="buttons-row">
+	            <a href="#tab1" class="button active tab-link"><i id="create-card-btn" class="fa fa-camera fa-lg"></i></a>
+	            <a href="#tab2" class="button tab-link"><i class="fa fa-edit fa-lg"></i></a>
+	          </div>
+	        </div>
+	      </div>
+          
+          <div class="navbar-inner cached" data-page="current-list">
+            <div class="left">
+              <a href="#" class="link icon-only back"> <i class="icon icon-back"></i></a>
+            </div>
+            <div class="center sliding">Current card list</div>
+            <div class="right">
+              <a href="#" class="link icon-only open-panel"> <i class="fa fa-bars fa-lg"></i></a>
+            </div>
+          </div>
+          
+          <div class="navbar-inner cached" data-page="waiting-list">
+            <div class="left">
+              <a href="#" class="link icon-only back"> <i class="icon icon-back"></i></a>
+            </div>
+            <div class="center sliding">Waiting card list</div>
+            <div class="right">
+              <a href="#" class="link icon-only open-panel"> <i class="fa fa-bars fa-lg"></i></a>
+            </div>
+          </div>
+          
+          <div class="navbar-inner cached" data-page="card-form">
+            <div class="left">
+              <a href="#" class="link icon-only back"> <i class="icon icon-back"></i></a>
+            </div>
+            <div class="center sliding">Card form</div>
+            <div class="right">
+              <a href="#" class="link icon-only open-panel"> <i class="fa fa-bars fa-lg"></i></a>
+            </div>
+          </div>
+          
         </div>
+        
+        <div class="pages navbar-through toolbar-through">
+        
+          <div data-page="index" class="page">
+          
+            <div class="page-content">
+            
+              <div class="content-block-title no-thumb">Your ranking</div>
+              
+              <div class="content-block no-thumb">
+                <div class="content-block-inner inset">
+                
+                
+						 <div class="pieID pie"></div>
+						 <div class="pieID pie_text">Bronze<br>60%</div>
+						 <ul class="pieID legend">
+						   <li>
+						     <em>Actual</em>
+						     <span class="point actual"></span>
+						   </li>
+						   <li class="missing">
+						     <em>Missing</em>
+						     <span class="point missing"></span>
+						   </li>
+						   <li class="target">
+						     <em>Target</em>
+						     <span class="target"></span>
+						   </li>
+						   <li class="next_target">
+						     <em></em>
+						     <span class="next_target"></span>
+						   </li>
+						 </ul>
+                	                	
+                </div>
+              </div>
+              
+           
+           <div class="draggable2"></div>
+              
+              <div class="content-block-title no-thumb">Your card</div>
+              
+	           <div id="mycard" class="draggable">
+	             <div class="content"></div>
+	             <div class="points"><img src="img/badge_none.png" alt="points"></div>
+	             <div class="thumb"><img src="img/thumb.png" alt="thumb"></div>
+	           </div>
+          	 
+            </div>
+                	
+          </div>
+          
+          <div class="page cached with-subnavbar no-tabbar" data-page="create-card">
+		    
+		    <div class="tabs-swipeable-wrap">
+		      <div class="tabs">
+		      
+		        <div id="tab1" class="page-content tab active">
+						<img src="img/bcard.png" id="img_upload" class="" width="100%">
+		        		<input type="file" id="file_upload" name="file_upload" accept="image/*" capture="camera" style="position:absolute;top:-100px;">
+		        </div>
+		        
+		        <div id="tab2" class="page-content tab">
+		        	
+		        	<img src="img/bcard.jpg" style="width:100%;max-width:400px;"/>
+		        	
+					<div class="">
+						<div class="list-block">
+										
+				        <ul id="add_card_list">
+				          <li class="list-item">
+				            <div class="item-content">
+				              <div class="item-inner"> 
+				                <div class="item-title label">Firstname</div>
+				                <div class="item-input">
+				                  <input type="text" name="value_1" placeholder="First name" value="John"/>
+				                </div>
+				              </div>
+				            </div>
+				          </li>
+				          <li class="list-item">
+				            <div class="item-content">
+				              <div class="item-inner"> 
+				                <div class="item-title label">Lastname</div>
+				                <div class="item-input">
+				                  <input type="text" name="value_2" placeholder="Last name" value="Smith"/>
+				                </div>
+				              </div>
+				            </div>
+				          </li>
+				          <li class="list-item">
+				            <div class="item-content">
+				              <div class="item-inner"> 
+				                <div class="item-title label">Email</div>
+				                <div class="item-input">
+				                  <input type="email" name="value_3" placeholder="Email address" value="johnsmith@cs.com"/>
+				                </div>
+				              </div>
+				            </div>
+				          </li>
+				          <li class="list-item">
+				            <div class="item-content">
+				              <div class="item-inner"> 
+				                <div class="item-title label">Cellphone</div>
+				                <div class="item-input">
+				                  <input type="tel" name="value_3" placeholder="Cell number" value=""/>
+				                </div>
+				              </div>
+				            </div>
+				          </li>
+				          <li class="list-item">
+				            <div class="item-content">
+				              <div class="item-inner"> 
+				                <div class="item-title label">Company</div>
+				                <div class="item-input">
+				                  <input type="text" name="value_3" placeholder="Company name" value=""/>
+				                </div>
+				              </div>
+				            </div>
+				          </li>
+				        </ul>
+				        
+						</div>
+					</div>
+					
+			      <div class="content-block">
+			        <div class="row">
+			          <div class="col-50"><a href="#" onclick="mainView.router.back()" class="button button-big button-fill color-red">Cancel</a></div>
+			          <div class="col-50">
+			            <input type="button" onclick="card_add()" value="Record" class="button button-big button-fill color-green"/>
+			          </div>
+			        </div>
+			      </div>
+		        </div>
+		      </div>
+		    </div>
+          </div>
+          
+        </div>
+        
+        <div class="toolbar tabbar"> 
+		    <div class="toolbar-inner">
+		        <a href="#" class="tab-link share">
+		            <i class="fa fa-share-alt fa-lg"></i>
+		        </a>
+		        <a href="#" class="tab-link current-list-open">
+		            <i class="fa fa-id-card-o fa-lg"></i>
+		        </a>
+		        <a href="#" class="tab-link waiting-list-open">
+		            <i class="fa fa-id-card fa-lg" style="position: relative;">
+		            	<span class="badge waiting-list-nbr bg-red" style="position: absolute;right:-15px;top:-15px;">0</span>
+		            </i>		            
+		        </a>
+		        <a href="#" class="tab-link create-card-open">
+		            <i class="fa fa-user-plus fa-lg"></i>
+		        </a>
+		    </div>
+		</div>
+		
+      </div>
+      
     </div>
+    
+    
+  
+  <div class="picker-modal picker-qrcode">
+    <div class="toolbar">
+      <div class="toolbar-inner">
+        <div class="left"></div>
+        <div class="right"><a href="#" class="close-picker">Close</a></div>
+      </div>
+    </div>
+    <div class="picker-modal-inner">
+      <div class="content-block" style="text-align: center;width:100%;">
+        <img id="qr_img" src="" align="middle" style="width:150px;" />
+      </div>
+    </div>
+  </div>
+  
+  <div class="popup popup-category">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="left"></div>
+        <div class="center"></div>
+        <div class="right"><a href="#" class="close-popup">Okiok</a></div>
+      </div>
+    </div>
+   <div class="content-block">
+  		<div class="list-block accordion-list">
+			<div class="accordion-item category-level1 accordion-item-expanded">
+				<div class="accordion-item-toggle">
+					<a href="#" class="item-content item-link">
+						<div class="item-inner">
+				         <div class="item-title">Level 1</div>
+			        	</div>
+		        </a>
+				</div>
+				<div class="accordion-item-content">
+					<ul></ul>
+				</div>
+			</div>
+			<div class="accordion-item category-level2">
+				<div class="accordion-item-toggle">
+					<a href="#" class="item-content item-link">
+						<div class="item-inner">
+				         <div class="item-title">Level 2</div>
+			        	</div>
+		        </a>
+				</div>
+				<div class="accordion-item-content">
+					<ul>
+						<li><label class="label-radio item-content"><div class="item-inner"><div class="item-title">Please select in previous level</div></div></label></li>
+					</ul>
+				</div>
+			</div>
+			<div class="accordion-item category-level3">
+				<div class="accordion-item-toggle">
+					<a href="#" class="item-content item-link">
+						<div class="item-inner">
+				         <div class="item-title">Level 3</div>
+			        	</div>
+		        </a>
+				</div>
+				<div class="accordion-item-content">
+					<ul>
+						<li><label class="label-radio item-content"><div class="item-inner"><div class="item-title">Please select in previous level</div></div></label></li>
+					</ul>
+				</div>
+			</div>
+			<div class="accordion-item category-level4">
+				<div class="accordion-item-toggle">
+					<a href="#" class="item-content item-link">
+						<div class="item-inner">
+				         <div class="item-title">Level 4</div>
+			        	</div>
+		        </a>
+				</div>
+				<div class="accordion-item-content">
+					<ul>
+						<li><label class="label-radio item-content"><div class="item-inner"><div class="item-title">Please select in previous level</div></div></label></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+   </div>
+  </div>
+  
+  <div class="popup popup-templates">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="left"></div>
+        <div class="center"></div>
+        <div class="right"><a href="#" class="close-popup">Ok</a></div>
+      </div>
+    </div>
+   <div class="content-block" style="padding:2px 2px;"></div>
+  </div>
+  
+  
+    
+<script id="current-list" type="text/template7">
 
+	<div class="navbar">
+		<div class="navbar-inner" data-page="current-list">
+			<div class="left">
+		        <a href="#" class="link icon-only back">
+		            <i class="icon icon-back"></i>
+		        </a>
+		    </div>
+			<div class="center "><h3>Card list</h3></div>
+			<div class="right">
+				<a href="#" data-panel="left" class="link open-panel icon-only">
+					<i class="fa fa-bars fa-lg"></i>
+				</a>
+			</div>
+		</div>
+	</div>
+
+	<div class="page no-tabbar" data-page="current-list">
+	
+    <form class="searchbar">
+        <div class="searchbar-input">
+            <input type="search" placeholder="Search">
+            <a href="#" class="searchbar-clear"></a>
+        </div>
+        <a href="#" class="searchbar-cancel">Cancel</a>
+    </form>
+    
+    <div class="searchbar-overlay"></div>
+    
+	<div class="page-content">
+	
+	<div class="content-block searchbar-not-found">
+   	Nothing found
+	</div>
+        
+	<div class="list-block list-block-search searchbar-found">
+	  <ul>
+	    {{#each current}}
+	    <li class="swipeout card-item" 
+	    	data-id="{{id}}" 
+	    	data-firstname="{{firstname}}"
+	    	data-lastname="{{lastname}}"
+	    	data-company="{{company}}"
+	    	data-birthdate="{{birthdate}}"
+	    	data-email="{{email}}"
+	    	data-website="{{website}}"
+	    	data-cellphone="{{cellphone}}"
+	    	data-gender="{{gender}}"
+	    	data-comment="{{comment}}" 
+	    	data-title="{{title}}" 
+	    	data-fax="{{fax}}" 
+	    	data-language="{{language}}" 
+	    	data-logo="{{logo}}" 
+	    	data-template="{{template}}" 
+	    	data-points="{{points}}" 
+	    	data-reputation="{{reputation}}" 
+	    	data-points_img="{{points_img}}" 
+	    	data-payed_date="{{payed_date}}" 
+	    	data-current=true >
+	      <div class="swipeout-content item-content">
+	         <div class="item-inner">
+	            <div class="item-title">{{firstname}} {{lastname}}</div>
+	            <div class="item-after">{{company}}</div>
+	          </div>
+	      </div>
+	      <div class="swipeout-actions-left">
+	        <a href="#" onclick="card_auth('{{id}}','delete')" class="bg-red">Delete</a>
+	      </div>
+	      <div class="swipeout-actions-right">
+	        <a href="#" onclick="" class="bg-green"><i class="fa fa-phone fa-lg"></i></a>
+	        <a href="#" onclick="" class="bg-blue"><i class="fa fa-comment fa-lg"></i></a>
+	      </div>
+	    </li>
+	    {{else}}
+	    <li>
+	      <div class="item-content">
+	         <div class="item-inner">
+	            <div class="item-title">No card yet</div>
+	            <div class="item-after"></div>
+	          </div>
+	      </div>
+	    </li>
+	    {{/each}}
+	  </ul>
+	</div>       
+	</div>
+	  
+	<a href="#create-card" class="floating-button color-red"><i class="icon icon-plus">+</i></a>
+	  
+	</div>
+</script>  
+    
+<script id="waiting-list" type="text/template7">
+
+	<div class="navbar">
+		<div class="navbar-inner" data-page="waiting-list">
+			<div class="left">
+		        <a href="#" class="link icon-only back">
+		            <i class="icon icon-back"></i>
+		        </a>
+		    </div>
+			<div class="center "><h3>Waiting list</h3></div>
+			<div class="right">
+				<a href="#" data-panel="left" class="link open-panel icon-only">
+					<i class="fa fa-bars fa-lg"></i>
+				</a>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="page no-tabbar" data-page="waiting-list">
+	<div class="page-content">
+	              
+	<div class="list-block">
+	  <ul>
+	    {{#each waiting}}
+	    <li class="swipeout card-item" 
+	    	data-id="{{id}}" 
+	    	data-firstname="{{firstname}}"
+	    	data-lastname="{{lastname}}"
+	    	data-title="{{title}}"
+	    	data-address="{{address}}"
+	    	data-city="{{city}}"
+	    	data-state_prov="{{state_prov}}"
+	    	data-zip_postal="{{zip_postal}}"
+	    	data-country="{{country}}"
+	    	data-company="{{company}}"
+	    	data-category="{{category}}"
+	    	data-category_text="{{category_text}}"
+	    	data-birthdate="{{birthdate}}"
+	    	data-email="{{email}}"
+	    	data-website="{{website}}"
+	    	data-password="{{password}}"
+	    	data-cellphone="{{cellphone}}"
+	    	data-gender="{{gender}}"
+	    	data-comment="{{comment}}" 
+	    	data-language="{{language}}"
+	    	data-logo="{{logo}}" 
+	    	data-template="{{template}}" 
+	    	data-points="{{points}}" 
+	    	data-reputation="{{reputation}}" 
+	    	data-points_img="{{points_img}}" 
+	    	data-payed_date="{{payed_date}}" 
+	    	data-current="" >
+	      <div class="swipeout-content item-content">
+	         <div class="item-inner">
+	            <div class="item-title">{{firstname}} {{lastname}}</div>
+	            <div class="item-after">{{company}}</div>
+	          </div>
+	      </div>
+	      <div class="swipeout-actions-left">
+	        <a href="#" onclick="card_auth('{{id}}','refuse')" class="bg-red">Refuse</a>
+	      </div>
+	      <div class="swipeout-actions-right">
+	        <a href="#" onclick="card_auth('{{id}}','accept')" class="bg-green">Accept</a>
+	      </div>
+	    </li>
+	    {{else}}
+	    <li>
+	      <div class="item-content">
+	         <div class="item-inner">
+	            <div class="item-title">No card yet</div>
+	            <div class="item-after"></div>
+	          </div>
+	      </div>
+	    </li>
+	    {{/each}}
+	  </ul>
+	</div>       
+	</div>
+	  
+	</div>
+</script>  
+    
+<script id="card-form" type="text/template7">
+
+  <div class="navbar">
+	<div class="navbar-inner" data-page="card-{{id}}">
+		<div class="left">
+            <a href="#" class="link icon-only back">
+                <i class="icon icon-back"></i>
+            </a>
+        </div>
+		<div class="center "><h3>{{titre}}</h3></div>
+		<div class="right">
+			<a href="#" data-panel="left" class="link open-panel icon-only">
+				<i class="fa fa-bars fa-lg"></i>
+			</a>
+		</div>
+	</div>
+  </div>
+
+  <div class="pages">
+    
+	  <div class="page no-tabbar" data-page="card-{{id}}">
+	  
+	  <div class="page-content">
+	  
+	     <div id="thecard">
+	       <div class="content"></div>
+	       <div class="points"><img src="img/badge_none.png" alt="points"></div>
+	     </div>
+	  
+	  
+	  	<form id="thecard_form">
+      <div class="list-block">
+        <ul>
+          <li>
+            <div class="item-content">
+              <div class="item-inner"> 
+                <div class="item-title label">First name</div>
+                <div class="item-input">
+                  <input type="hidden" name="id" value="{{id}}"/>
+                  <input type="text" name="firstname" placeholder="Your first name" value="{{firstname}}"/>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="item-content">
+              <div class="item-inner"> 
+                <div class="item-title label">Last name</div>
+                <div class="item-input">
+                  <input type="text" name="lastname" placeholder="Your last name" value="{{lastname}}"/>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="item-content">
+              <div class="item-inner"> 
+                <div class="item-title label">Title</div>
+                <div class="item-input">
+                  <input type="text" name="title" placeholder="Your job title" value="{{title}}"/>
+                </div>
+              </div>
+            </div>
+          </li>  
+          
+          <li>
+            <div class="item-content">
+              <div class="item-inner"> 
+                <div class="item-title label">E-mail</div>
+                <div class="item-input">
+                  <input type="email" name="email" placeholder="E-mail" value="{{email}}"/>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="item-content">
+              <div class="item-inner"> 
+                <div class="item-title label">Cell phone</div>
+                <div class="item-input">
+                  <input type="tel" name="cellphone" placeholder="Phone" value="{{cellphone}}"/>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="item-content">
+              <div class="item-inner"> 
+                <div class="item-title label">Fax numer</div>
+                <div class="item-input">
+                  <input type="tel" name="fax" placeholder="fax" value="{{fax}}"/>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="item-content">
+              <div class="item-inner"> 
+                <div class="item-title label">Birth date</div>
+                <div class="item-input">
+                  <input type="date" name="birthdate" placeholder="Birth day" value="{{birthdate}}"/>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="item-content">
+              <div class="item-inner"> 
+                <div class="item-title label">Company</div>
+                <div class="item-input">
+                  <input type="text" name="company" placeholder="Company" value="{{company}}"/>
+                </div>
+              </div>
+            </div>
+          </li>
+
+		    <li>
+            <div class="item-content" onClick="category_open()">
+              <div class="item-inner"> 
+                <div class="item-title label">Category</div>
+                <div class="item-input">
+                  <span id="category_text">{{category_text}}</span>
+                </div>
+                <div class="item-after"><input type="hidden" name="category" id="category" value="{{category}}"/></div>
+              </div>
+            </div>
+		    </li>          
+          
+          <li>
+            <div class="item-content">
+              <div class="item-inner"> 
+                <div class="item-title label">Address</div>
+                <div class="item-input">
+                  <input type="text" name="address" value="{{address}}"/>
+                </div>
+              </div>
+            </div>
+          </li>         
+          
+          <li>
+            <div class="item-content">
+              <div class="item-inner"> 
+                <div class="item-title label">City</div>
+                <div class="item-input">
+                  <input type="text" name="city" value="{{city}}"/>
+                </div>
+              </div>
+            </div>
+          </li>         
+          
+          <li>
+            <div class="item-content">
+              <div class="item-inner"> 
+                <div class="item-title label">State/Province</div>
+                <div class="item-input">
+                  <input type="text" name="state_prov" value="{{state_prov}}"/>
+                </div>
+              </div>
+            </div>
+          </li>        
+          
+          <li>
+            <div class="item-content">
+              <div class="item-inner"> 
+                <div class="item-title label">Zip/Postal</div>
+                <div class="item-input">
+                  <input type="text" name="zip_postal" value="{{zip_postal}}"/>
+                </div>
+              </div>
+            </div>
+          </li>              
+          
+          <li>
+            <div class="item-content">
+              <div class="item-inner"> 
+                <div class="item-title label">Country</div>
+                <div class="item-input">
+                  <input type="text" name="country" value="{{country}}"/>
+                </div>
+              </div>
+            </div>
+          </li>    
+          <li>
+            <div class="item-content">
+              <div class="item-inner"> 
+                <div class="item-title label">Website</div>
+                <div class="item-input">
+                  <input type="url" name="website" placeholder="URL" value="{{website}}"/>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="item-content">
+              <div class="item-inner"> 
+                <div class="item-title label">Gender</div>
+                <div class="item-input">
+                	<p class="buttons-row">
+                	  <input type="hidden"  name="gender" value="{{this.gender}}"/>
+						  <a href="#" data-id="m" class="button radio_btn {{#js_compare "this.gender == 'm'"}}active{{/js_compare}}">Male</a>
+						  <a href="#" data-id="f" class="button radio_btn {{#js_compare "this.gender == 'f'"}}active{{/js_compare}}">Female</a>
+						</p>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="item-content">
+              <div class="item-inner"> 
+                <div class="item-title label">Language</div>
+                <div class="item-input">
+                	<p class="buttons-row">
+                	  <input type="hidden"  name="language" value="{{this.language}}"/>
+						  <a href="#" data-id="en" class="button radio_btn {{#js_compare "this.language == 'en'"}}active{{/js_compare}}">English</a>
+						  <a href="#" data-id="fr" class="button radio_btn {{#js_compare "this.language == 'fr'"}}active{{/js_compare}}">Fran&ccedil;ais</a>
+						</p>
+                </div>
+              </div>
+            </div>
+          </li>
+
+		    <li>
+            <div class="item-content" onClick="template_open($$('#template').val())">
+              <div class="item-inner"> 
+                <div class="item-title label">Templates</div>
+                <div class="item-input">
+                  <span id="template_text">{{template_text}}</span>
+                </div>
+                <div class="item-after"><input type="hidden" name="template" id="template" value="{{template}}"/></div>
+              </div>
+            </div>
+		    </li>
+		    
+          <li class="align-top">
+            <div class="item-content">
+              <div class="item-inner"> 
+                <div class="item-title label">Private<br>comment</div>
+                <div class="item-input">
+                  <textarea name="comment">{{comment}}</textarea>
+                </div>
+              </div>
+            </div>
+          </li>
+          {{#if own}}
+          <li class="align-top">
+            <div class="item-content">
+              <div class="item-inner"> 
+                <div class="item-title label">Points</div>
+                <div class="item-input">
+                  <!--input type="text" disabled value="{{points}}"/-->
+                  <input type="text" name="points" value="{{points}}"/>
+                </div>
+              </div>
+            </div>
+          </li>
+          {{/if}}
+        </ul>
+      </div>
+      
+      {{#if own}}
+      
+      <div class="content-block">
+        <div class="row">
+          <div class="col-50"><a href="#" onclick="mainView.router.back()" class="button button-big button-fill bg-gray">Cancel</a></div>
+          <div class="col-50"><a href="#" onclick="card_form_record()" class="button button-big button-fill bg-green">Record</a></div>
+        </div>
+      </div>
+      
+      {{else}}
+      
+	      {{#if current}} 
+	      
+	      	{{#unless payed_date}}
+	      	
+      <div class="content-block">
+        <div class="row">
+          <div class="col-50"><a href="#" onclick="mainView.router.back()" class="button button-big button-fill bg-gray">Cancel</a></div>
+          <div class="col-50"><a href="#" onclick="card_form_record()" class="button button-big button-fill bg-green">Record</a></div>
+        </div>
+      </div>
+	      	
+	      	{{/unless}}
+	      	
+	      {{else}}
+	      
+      <div class="content-block">
+        <div class="row">
+          <div class="col-50"><a href="#" onclick="card_auth('{{id}}','refuse')" class="button button-big button-fill bg-red">Refuse</a></div>
+          <div class="col-50"><a href="#" onclick="card_auth('{{id}}','accept')" class="button button-big button-fill bg-green">Accept</a></div>
+        </div>
+      </div>
+      
+	      {{/if}}
+      
+      {{/if}}
+      
+      {{#unless payed_date}}
+      
+      <div class="content-block">
+        <div class="row">
+          <div class="col-100">
+          	<a href="#" class="button button-big button-fill bg-blue"> {{#if own}}Get the complete version{{else}}Pay for {{#js_compare "this.gender == 'm'"}}him{{else}}her{{/js_compare}}{{/if}} </a>
+          </div>
+        </div>
+      </div>
+      
+      {{/unless}}
+      
+      </form>
+    </div>
+    
+    
+  {{#if current}}
+  <div class="speed-dial">
+    <a href="#" class="floating-button color-red">
+      <i class="fa fa-share-alt fa-2x"></i>
+      <i class="fa fa-close fa-2x"></i>
+    </a>
+    <div class="speed-dial-buttons">
+      <a href="#"><i class="fa fa-envelope fa-lg"></i></a>
+      <a href="#"><i class="fa fa-comment fa-lg"></i></a>
+      <a href="#" onclick="qrcode_open()"><i class="fa fa-qrcode fa-lg"></i></a>
+      <a href="#" onclick="card_offer()"><i class="fa fa-upload fa-lg"></i></a>
+    </div>
+  </div>
+  {{/if}}	
+  </div>
+  </div>
+    </script>
+    
+    
+    <script type="text/javascript" src="js/framework7.min.js"></script>
+    <script type="text/javascript" src="js/welcomescreen.js"></script>
+    <script type="text/javascript" src="js/drag.min.js"></script>
+    <script type="text/javascript" src="js/category.js"></script>
     <script type="text/javascript" src="cordova.js"></script>
-    <script type="text/javascript" src="lib/framework7/js/framework7.min.js"></script>
-    <script type="text/javascript" src="js/index.js"></script>
-</body>
-
+    <script type="text/javascript" src="js/socket.io.js"></script>
+    <script type="text/javascript" src="js/bizswap.js?v=201712070943"></script>
+  </body>
 </html>
