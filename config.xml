@@ -28,4 +28,5 @@
     </platform>
     <preference name="DisallowOverscroll" value="true" />
     <preference name="Orientation" value="portrait" />
+    <plugin name="cordova-plugin-whitelist" spec="1" />
 </widget>
