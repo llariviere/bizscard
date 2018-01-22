@@ -530,7 +530,7 @@ function geoloc() {
 	function error(err) {
 		console.log(err);
 		myApp.hidePreloader();
-		myApp.alert("Impossible to determine your location: "+err.code);
+		myApp.alert("Impossible to determine your location: "+err.message);
 	}
 	
 	var options = {
