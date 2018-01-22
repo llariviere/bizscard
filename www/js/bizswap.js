@@ -522,7 +522,7 @@ function geoloc() {
 	}
 
 	function success(o) {
-		//socket.emit('card offer', {"cardid":mycard.id, "lat":o.lat, "lng":o.lng, "alt":o.alt});
+		//socket.emit('card offer', {"cardid":mycard.id, "lat":o.lat, "lng":o.lng, "alt":o.alt}); // manual override for testing...
 		var p = o.coords;
 		socket.emit('card offer', {"cardid":mycard.id, "lat":p.latitude, "lng":p.longitude, "alt":p.altitude});
 	};
@@ -530,7 +530,7 @@ function geoloc() {
 	function error(err) {
 		console.log(err);
 		myApp.hidePreloader();
-		myApp.alert("Impossible to determine your location:"+err);
+		myApp.alert("Impossible to determine your location: "+err);
 	}
 	
 	var options = {
@@ -540,7 +540,7 @@ function geoloc() {
 	};
 	
 	navigator.geolocation.getCurrentPosition(success, error, options);
-	//success({lat:45.6105491,lng:-73.5094794,alt:0})
+	//success({lat:45.6105491,lng:-73.5094794,alt:0}); // manual override for testing...
 }
 
 
