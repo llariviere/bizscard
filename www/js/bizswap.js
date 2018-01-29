@@ -331,7 +331,7 @@ function card_offer_complete() {
 
 
 $$('#create-card-btn').on("click", function(){
-	openCamera(selection)
+	openCamera(false)
 	//$$('#file_upload').click();
 });
 
