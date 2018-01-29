@@ -1,4 +1,4 @@
-/* Bizswiper specific */
+/* Bizswiper specific /var/www/node/socket/bizswiper/app/js/bizswap.js */
 
  var myApp = new Framework7({
 	precompileTemplates: true,
@@ -331,7 +331,8 @@ function card_offer_complete() {
 
 
 $$('#create-card-btn').on("click", function(){
-	$$('#file_upload').click();
+	openCamera(selection)
+	//$$('#file_upload').click();
 });
 
 $$('#file_upload').on("change", function(event) {
@@ -530,7 +531,7 @@ function geoloc() {
 	function error(err) {
 		console.log(err);
 		myApp.hidePreloader();
-		myApp.alert("Impossible to determine your location: "+err.message);
+		myApp.alert("Impossible to determine your location: "+err);
 	}
 	
 	var options = {
@@ -667,8 +668,8 @@ function card_login(email,password,create,auto_login) {
 
 }
 
+//var socket = io('https://bizswiper.com:3333/');
 var socket = io('https://bizswiper.com:3333/');
-//var socket = io();
 var $connected = false;
 var $online = false;
 
@@ -913,3 +914,58 @@ function _init() {
 }
 
 _init();
+
+
+// camera....
+
+	function setOptions(srcType) {
+	    var options = {
+	        // Some common settings are 20, 50, and 100
+	        quality: 50,
+	        destinationType: Camera.DestinationType.FILE_URI,
+	        // In this app, dynamically set the picture source, Camera or photo gallery
+	        sourceType: srcType,
+	        encodingType: Camera.EncodingType.JPEG,
+	        mediaType: Camera.MediaType.PICTURE,
+	        allowEdit: true,
+	        correctOrientation: false  //Corrects Android orientation quirks
+	    }
+	    return options;
+	}
+	
+	function openCamera(selection) {
+ 
+	    var srcType = Camera.PictureSourceType.CAMERA;
+	    var options = setOptions(srcType);
+	    var func = createNewFileEntry;
+	 
+	    navigator.camera.getPicture(function cameraSuccess(imageUri) {
+	 
+	        displayImage(imageUri);
+	        // You may choose to copy the picture, save it somewhere, or upload.
+	        func(imageUri);
+	 
+	    }, function cameraError(error) {
+	        console.debug("Unable to obtain picture: " + error, "app");
+	    }, options);
+	}
+	
+	function displayImage(imgUri) {
+	 	 $$("#img_upload").attr('src',imgUri);
+	}
+	
+	function createNewFileEntry(imgUri) {
+	    window.resolveLocalFileSystemURL(cordova.file.cacheDirectory, function success(dirEntry) {
+	 
+	        // JPEG file
+	        dirEntry.getFile("tempFile.jpeg", { create: true, exclusive: false }, function (fileEntry) {
+	 
+	            // Do something with it, like write to it, upload it, etc.
+	            // writeFile(fileEntry, imgUri);
+	            console.log("got file: " + fileEntry.fullPath);
+	            // displayFileData(fileEntry.fullPath, "File copied to");
+	 
+	        }, onErrorCreateFile);
+	 
+	    }, onErrorResolveUrl);
+	}
