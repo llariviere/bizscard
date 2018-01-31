@@ -915,6 +915,124 @@ function _init() {
 
 _init();
 
+var doch = $$("body").height();
+var docw = $$("body").width();
+var coords = [];
+	
+$$("#tab1 > div").css({
+	"width": docw +'px',
+	"height": (doch-88) +'px',
+	"position": "absolute",
+	"top": "88px",
+	"left": 0
+});
+$$("#tab1 canvas").css({
+	"width": docw +'px',
+	"height": (doch-88) +'px'
+});
+$$("#tab1 > div > img").css({
+	"max-width": docw +'px',
+	"max-height": (doch-88) +'px'
+});
+
+function _init_image_crop(document) {
+    'use strict';
+    
+    var drawPoly = function() {
+        var canvas = document.getElementById("cropCanvas");
+        
+        var c2 = canvas.getContext("2d");
+
+        c2.clearRect(0, 0, 2000, 2000);
+        c2.beginPath();
+        c2.moveTo(0,0);
+        c2.lineTo(320, 0);
+        c2.lineTo(320, 240);
+        c2.lineTo(0, 240);
+        c2.closePath();
+        c2.fillStyle = "rgba(0, 0, 0, .5)";
+        c2.fill();
+        
+        c2.globalCompositeOperation='destination-out';
+        
+        c2.beginPath();
+        
+        var $vs = document.querySelectorAll("#cornercontainer .corner")
+        for (var i=0; i<$vs.length; i++) {
+        		var p = $($vs[i]).position();
+        		var x = 2+p.left;
+        		var y = 2+p.top;
+        		if (i) {
+        			c2.lineTo(x, y);
+        		} else {
+        			c2.moveTo(x, y);
+        		}
+        		coords[i] = '('+x+', '+y+')';
+        }
+
+        c2.closePath();
+        c2.fill();
+        
+  		  c2.globalCompositeOperation='source-over';
+        c2.strokeStyle = "rgba(0, 255, 0, .5)";
+		  c2.stroke();
+
+    };
+
+    drawPoly();
+    
+    var draggable = document.getElementsByClassName('corner'),
+        draggableCount = draggable.length, i;
+        
+    function startDrag(evt) {
+        evt.preventDefault();
+        
+	     for (i=0; i<draggableCount; i++) {
+	        draggable[i].classList.remove("currenthandle");
+	     }
+    
+        this.className += ' currenthandle';
+        
+        drawPoly();
+        
+        var diffX = evt.clientX - this.offsetLeft,
+            diffY = evt.clientY - this.offsetTop,
+            that = this;
+            
+        function moveAlong(evt) {
+            evt.preventDefault();
+            var left = parseInt(evt.clientX - diffX);
+            var top = parseInt(evt.clientY - diffY);
+            
+            if (top < 0) { top = 0; }
+            if (left < 0) { left = 0; }
+            if (top > window.innerHeight-1) 
+                { top = window.innerHeight-1; }
+            if (left > window.innerWidth-1) 
+                { left = window.innerWidth-1; }
+                
+            that.style.left = left + 'px';
+            that.style.top = top + 'px';
+            
+            drawPoly();
+        }
+        
+        function stopDrag() {
+            document.removeEventListener('mousemove', moveAlong);
+            document.removeEventListener('mouseup', stopDrag);
+            drawPoly();
+        }
+
+        document.addEventListener('mouseup', stopDrag);
+        document.addEventListener('mousemove', moveAlong);
+        return false;
+    }
+    
+    if (draggableCount > 0) for (i = 0; i < draggableCount; i += 1) {
+        draggable[i].addEventListener('mousedown', startDrag);
+    }
+
+}
 
 // camera....
 
