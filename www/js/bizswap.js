@@ -952,7 +952,6 @@ _init();
 	
 	function displayImage(imgUri) {
 	 	 $$("#img_upload").attr('src',imgUri);
-	 	 //_init_image_crop();
 	}
 	
 	function createNewFileEntry(imgUri) {
