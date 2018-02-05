@@ -321,3 +321,38 @@
     opacity: 0.0;
  }
 }
+
+
+	
+.corner {width:50px; height:50px; position:absolute; display:none; }
+
+#cornercontainer .corner {display:block;}
+
+.corner div.handle {
+	width:10px; 
+	height:10px; 
+	border-radius:5px;
+	position:relative; 
+	z-index:1; 
+	background-color: rgba(0,255,0, 0.8);
+}
+
+#corner1 div.handle {left:-5px; top:-5px;}
+#corner2 div.handle {right:5px; top:-5px;}
+#corner3 div.handle {right:5px; top:-5px;}
+#corner4 div.handle {left:-5px; top:-5px;}
+
+.currenthandle {width:10px; height:10px; position:absolute;border-radius:5px; background-color:rgba(0,255,0,0);}
+
+.container {
+	position: absolute;
+	top: 88px;
+	left: 0;
+	width: 360px;
+}
+.container img {
+	position: absolute;
+	left: 0;
+	width: 100%;
+	max-width: 400px;
+}
