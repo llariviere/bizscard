@@ -928,7 +928,7 @@ _init();
 	        encodingType: Camera.EncodingType.JPEG,
 	        mediaType: Camera.MediaType.PICTURE,
 	        allowEdit: false,
-	        correctOrientation: false  //Corrects Android orientation quirks
+	        correctOrientation: true  //Corrects Android orientation quirks
 	    }
 	    return options;
 	}
