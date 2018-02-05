@@ -1053,55 +1053,19 @@ var coords = [];
 
     drawPoly();
     
-    var draggable = document.getElementsByClassName('corner'),
-        draggableCount = draggable.length, i;
-        
-    function startDrag(evt) {
-        evt.preventDefault();
-        
-	     for (i=0; i<draggableCount; i++) {
-	        draggable[i].classList.remove("currenthandle");
-	     }
-    
-        this.className += ' currenthandle';
-        
-        drawPoly();
-        
-        var diffX = evt.clientX - this.offsetLeft,
-            diffY = evt.clientY - this.offsetTop,
-            that = this;
-            
-        function moveAlong(evt) {
-            evt.preventDefault();
-            var left = parseInt(evt.clientX - diffX);
-            var top = parseInt(evt.clientY - diffY);
-            
-            if (top < 0) { top = 0; }
-            if (left < 0) { left = 0; }
-            if (top > window.innerHeight-1) 
-                { top = window.innerHeight-1; }
-            if (left > window.innerWidth-1) 
-                { left = window.innerWidth-1; }
-                
-            that.style.left = left + 'px';
-            that.style.top = top + 'px';
-            
-            drawPoly();
-        }
-        
-        function stopDrag() {
-            document.removeEventListener('mousemove', moveAlong);
-            document.removeEventListener('mouseup', stopDrag);
-            drawPoly();
-        }
-
-        document.addEventListener('mouseup', stopDrag);
-        document.addEventListener('mousemove', moveAlong);
-        return false;
-    }
-    
-    if (draggableCount > 0) for (i = 0; i < draggableCount; i += 1) {
-        draggable[i].addEventListener('mousedown', startDrag);
-    }
+	var draggableElems = document.querySelectorAll('.corner');
+	var draggies = []
+	for ( var i=0, len = draggableElems.length; i < len; i++ ) {
+		var draggableElem = draggableElems[i];
+		var draggie = new Draggabilly( draggableElem );
+		draggie.on( 'dragMove', function() {
+			$$(this).css({
+				"left": this.position.x + 'px', 
+				"top": this.position.y + 'px'
+			})
+			drawPoly();
+		});
+		draggie.on( 'dragEnd', drawPoly);
+	}
 
 }(document));
