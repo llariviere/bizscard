@@ -271,6 +271,7 @@ $$(".waiting-list-open").on("click", function(){
 $$(".create-card-open").on("click", function(){
 	
 	mainView.router.load({pageName: 'create-card'});
+	openCamera(false);
 	
 });
 
@@ -749,7 +750,7 @@ socket.on('card load', function (data) {
 	$$("#mycard").data("top", t);
 	$$("#mycard").css({"height": h, "bottom":t+h});
 	
-		var draggie = new Draggabilly( '#mycard', { axis:"y" });
+	var draggie = new Draggabilly( '#mycard', { axis:"y" });
 	draggie.on( 'dragEnd', function( event, pointer ) {
 		if (this.position.y < 30) {
 			card_offered();
@@ -915,40 +916,111 @@ function _init() {
 
 _init();
 
-var doch = $$("body").height();
-var docw = $$("body").width();
-var coords = [];
-	
-$$("#tab1 > div").css({
-	"width": docw +'px',
-	"height": (doch-88) +'px',
-	"position": "absolute",
-	"top": "88px",
-	"left": 0
-});
-$$("#tab1 canvas").css({
-	"width": docw +'px',
-	"height": (doch-88) +'px'
-});
-$$("#tab1 > div > img").css({
-	"max-width": docw +'px',
-	"max-height": (doch-88) +'px'
-});
+// camera....
 
-function _init_image_crop(document) {
+	function setOptions(srcType) {
+	    var options = {
+	        // Some common settings are 20, 50, and 100
+	        quality: 50,
+	        destinationType: Camera.DestinationType.FILE_URI,
+	        // In this app, dynamically set the picture source, Camera or photo gallery
+	        sourceType: srcType,
+	        encodingType: Camera.EncodingType.JPEG,
+	        mediaType: Camera.MediaType.PICTURE,
+	        allowEdit: false,
+	        correctOrientation: false  //Corrects Android orientation quirks
+	    }
+	    return options;
+	}
+	
+	function openCamera(selection) {
+ 
+	    var srcType = Camera.PictureSourceType.CAMERA;
+	    var options = setOptions(srcType);
+	    var func = createNewFileEntry;
+	 
+	    navigator.camera.getPicture(function cameraSuccess(imageUri) {
+	 
+	        displayImage(imageUri);
+	        // You may choose to copy the picture, save it somewhere, or upload.
+	        func(imageUri);
+	 
+	    }, function cameraError(error) {
+	        console.debug("Unable to obtain picture: " + error, "app");
+	    }, options);
+	}
+	
+	function displayImage(imgUri) {
+	 	 $$("#img_upload").attr('src',imgUri);
+	 	 //_init_image_crop();
+	}
+	
+	function createNewFileEntry(imgUri) {
+	    window.resolveLocalFileSystemURL(cordova.file.cacheDirectory, function success(dirEntry) {
+	 
+	        // JPEG file
+	        dirEntry.getFile("tempFile.jpeg", { create: true, exclusive: false }, function (fileEntry) {
+	 
+	            // Do something with it, like write to it, upload it, etc.
+	            // writeFile(fileEntry, imgUri);
+	            console.log("got file: " + fileEntry.fullPath);
+	            // displayFileData(fileEntry.fullPath, "File copied to");
+	 
+	        }, onErrorCreateFile);
+	 
+	    }, onErrorResolveUrl);
+	}
+	
+
+
+// image_crop
+
+var coords = [];
+
+(function (document) {
     'use strict';
     
+    
+	var doch = $$("body").height()-88;
+	var docw = $$("body").width();
+	
+	$$(".container, canvas").css({
+		"width": docw+'px',
+		"height": doch+'px',
+		"top": '88px',
+		"left": '0'	
+	});
+	
+	$$("#corner1").css({left:'20px', top:'20px'});
+	$$("#corner2").css({left:(docw-20)+'px', top:'20px'});
+	$$("#corner3").css({left:(docw-20)+'px', top:(doch-20)+'px'});
+	$$("#corner4").css({left:'20px', top:(doch-20)+'px'});
+	
+	$$("#visualElements").append('<canvas id="demoCanvas" width="'+docw+'" height="'+doch+'"></canvas>');
+	
+	function findPos(obj) {
+		var curleft = 0, curtop = 0;
+		if (obj.offsetParent) {
+			do {
+				curleft += obj.offsetLeft;
+				curtop += obj.offsetTop;
+			} while (obj = obj.offsetParent);
+			return [curleft,curtop];
+		} else { return false; }
+	}
+    
     var drawPoly = function() {
-        var canvas = document.getElementById("cropCanvas");
+        var canvas = document.getElementById("demoCanvas");
+        
         
         var c2 = canvas.getContext("2d");
 
-        c2.clearRect(0, 0, 2000, 2000);
+        c2.clearRect(0, 0, docw, doch);
         c2.beginPath();
         c2.moveTo(0,0);
-        c2.lineTo(320, 0);
-        c2.lineTo(320, 240);
-        c2.lineTo(0, 240);
+        c2.lineTo(docw, 0);
+        c2.lineTo(docw, doch);
+        c2.lineTo(0, doch);
         c2.closePath();
         c2.fillStyle = "rgba(0, 0, 0, .5)";
         c2.fill();
@@ -959,15 +1031,15 @@ function _init_image_crop(document) {
         
         var $vs = document.querySelectorAll("#cornercontainer .corner")
         for (var i=0; i<$vs.length; i++) {
-        		var p = $($vs[i]).position();
-        		var x = 2+p.left;
-        		var y = 2+p.top;
-        		if (i) {
-        			c2.lineTo(x, y);
-        		} else {
-        			c2.moveTo(x, y);
-        		}
+        		var x = $$($vs[i]).css("left").replace('px','');
+        		var y = $$($vs[i]).css("top").replace('px','');
+        		
+        		if (i==0) c2.moveTo(x, y);
+        		if (i==1) c2.lineTo(x, y);
+        		if (i==2) c2.lineTo(x, y);
+        		if (i==3) c2.lineTo(x, y);
         		coords[i] = '('+x+', '+y+')';
+        		console.log(coords[i])
         }
 
         c2.closePath();
@@ -1032,58 +1104,4 @@ function _init_image_crop(document) {
         draggable[i].addEventListener('mousedown', startDrag);
     }
 
-}
-
-// camera....
-
-	function setOptions(srcType) {
-	    var options = {
-	        // Some common settings are 20, 50, and 100
-	        quality: 50,
-	        destinationType: Camera.DestinationType.FILE_URI,
-	        // In this app, dynamically set the picture source, Camera or photo gallery
-	        sourceType: srcType,
-	        encodingType: Camera.EncodingType.JPEG,
-	        mediaType: Camera.MediaType.PICTURE,
-	        allowEdit: true,
-	        correctOrientation: false  //Corrects Android orientation quirks
-	    }
-	    return options;
-	}
-	
-	function openCamera(selection) {
- 
-	    var srcType = Camera.PictureSourceType.CAMERA;
-	    var options = setOptions(srcType);
-	    var func = createNewFileEntry;
-	 
-	    navigator.camera.getPicture(function cameraSuccess(imageUri) {
-	 
-	        displayImage(imageUri);
-	        // You may choose to copy the picture, save it somewhere, or upload.
-	        func(imageUri);
-	 
-	    }, function cameraError(error) {
-	        console.debug("Unable to obtain picture: " + error, "app");
-	    }, options);
-	}
-	
-	function displayImage(imgUri) {
-	 	 $$("#img_upload").attr('src',imgUri);
-	}
-	
-	function createNewFileEntry(imgUri) {
-	    window.resolveLocalFileSystemURL(cordova.file.cacheDirectory, function success(dirEntry) {
-	 
-	        // JPEG file
-	        dirEntry.getFile("tempFile.jpeg", { create: true, exclusive: false }, function (fileEntry) {
-	 
-	            // Do something with it, like write to it, upload it, etc.
-	            // writeFile(fileEntry, imgUri);
-	            console.log("got file: " + fileEntry.fullPath);
-	            // displayFileData(fileEntry.fullPath, "File copied to");
-	 
-	        }, onErrorCreateFile);
-	 
-	    }, onErrorResolveUrl);
-	}
+}(document));
