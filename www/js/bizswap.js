@@ -199,6 +199,10 @@ $$(document).on('form:success', 'form.ajax-submit', function (e) {
 	
 });
 
+$$(document).on('page:init', '.page[data-page="create-card"]', function (e, page) {
+  openCamera(false);
+})
+
 $$(".share").on("click", function(){
 	var buttons1 = [
         {
@@ -271,9 +275,11 @@ $$(".waiting-list-open").on("click", function(){
 $$(".create-card-open").on("click", function(){
 	
 	mainView.router.load({pageName: 'create-card'});
-	openCamera(false);
+	//openCamera(false);
 	
 });
+
+
 
 $$(".my-card-open").on("click", function(){
 	
@@ -970,7 +976,20 @@ _init();
 	    }, onErrorResolveUrl);
 	}
 	
-
+	function getBase64Image(img) {
+	  var canvas = document.createElement("canvas");
+	  canvas.width = img.width;
+	  canvas.height = img.height;
+	  var ctx = canvas.getContext("2d");
+	  ctx.drawImage(img, 0, 0);
+	  var dataURL = canvas.toDataURL("image/png");
+	  return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+	}
+	
+	$$("#img_record_btn").on("click", function(){
+		var base64 = getBase64Image(document.getElementById("img_upload"));
+		myApp.alert('base64 = '+base64.length)
+	});
 
 // image_crop
 
@@ -979,11 +998,10 @@ var coords = [];
 (function (document) {
     'use strict';
     
-    
 	var doch = $$("body").height()-88;
 	var docw = $$("body").width();
 	
-	$$(".container, canvas").css({
+	$$(".container").css({
 		"width": docw+'px',
 		"height": doch+'px',
 		"top": '88px',
@@ -996,24 +1014,12 @@ var coords = [];
 	$$("#corner4").css({left:'20px', top:(doch-20)+'px'});
 	
 	$$("#visualElements").append('<canvas id="demoCanvas" width="'+docw+'" height="'+doch+'"></canvas>');
-	
-	function findPos(obj) {
-		var curleft = 0, curtop = 0;
-		if (obj.offsetParent) {
-			do {
-				curleft += obj.offsetLeft;
-				curtop += obj.offsetTop;
-			} while (obj = obj.offsetParent);
-			return [curleft,curtop];
-		} else { return false; }
-	}
+		
+	var canvas = document.getElementById("demoCanvas");
+	var c2 = canvas.getContext("2d");
     
     var drawPoly = function() {
-        var canvas = document.getElementById("demoCanvas");
-        
-        
-        var c2 = canvas.getContext("2d");
-
+    	
         c2.clearRect(0, 0, docw, doch);
         c2.beginPath();
         c2.moveTo(0,0);
@@ -1038,12 +1044,10 @@ var coords = [];
         		if (i==2) c2.lineTo(x, y);
         		if (i==3) c2.lineTo(x, y);
         		coords[i] = '('+x+', '+y+')';
-        		console.log(coords[i])
         }
 
         c2.closePath();
         c2.fill();
-        
   		  c2.globalCompositeOperation='source-over';
         c2.strokeStyle = "rgba(0, 255, 0, .5)";
 		  c2.stroke();
@@ -1066,5 +1070,5 @@ var coords = [];
 		});
 		draggie.on( 'dragEnd', drawPoly);
 	}
-
+	
 }(document));
