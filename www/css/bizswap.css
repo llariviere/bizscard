@@ -356,3 +356,24 @@
 	height: 100%;
 	max-width: 100%;
 }
+
+#img_record_btn {
+	position: absolute;
+	width: 50px;
+	height: 50px;
+	left: 50%;
+	margin-left: -25px;
+	bottom: 70px;
+	border-radius: 25px;
+	border: solid 3px rgba(0,255,0, 1);
+	background-color: rgba(0,255,0, 0.2);
+	color: rgba(0,255,0, 1);
+	text-align: center;
+	font-size: 50px;
+	line-height: 50px;
+}
+
+#img_record_btn:active {
+	background-color: rgba(0,255,0, 0.5);
+}
+
