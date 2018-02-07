@@ -955,7 +955,7 @@ _init();
 	function displayImage(imgUri) {
 	 	 $$("#img_upload").attr('src',imgUri);
 	 	 readImage(imgUri,  function(base64) {  
-	 	 	base64_img = base64; 
+	 	 	base64_img = base64.replace(/^data:image\/(png|jpg);base64,/, ""); 
 		 });
 	}
 	
