@@ -952,16 +952,9 @@ _init();
 	    }, options);
 	}
 	
-	function displayImage(imgUri) {
-		
-	    var newImg = new Image();
-	
-	    newImg.src = imgUri;
-	    
-	    base64_img = getBase64Image(newImg);
-    
+	function displayImage(imgUri) {	    
+	    base64_img = getBase64Image(readImage(imgUri));
 	 	 $$("#img_upload").attr('src',imgUri);
-	 	 
 	}
 	
 	function getBase64Image(img) {
@@ -972,6 +965,20 @@ _init();
 	  ctx.drawImage(img, 0, 0);
 	  var dataURL = canvas.toDataURL("image/png");
 	  return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+	}
+	
+	function readImage(url, callback) {
+	  var xhr = new XMLHttpRequest();
+	  xhr.onload = function() {
+	    var reader = new FileReader();
+	    reader.onloadend = function() {
+	      callback(reader.result);
+	    }
+	    reader.readAsDataURL(xhr.response);
+	  };
+	  xhr.open('GET', url);
+	  xhr.responseType = 'blob';
+	  xhr.send();
 	}
 	
 	$$("#img_record_btn").on("click", function(){
