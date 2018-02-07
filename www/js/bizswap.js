@@ -952,9 +952,11 @@ _init();
 	    }, options);
 	}
 	
-	function displayImage(imgUri) {	    
-	    base64_img = getBase64Image(readImage(imgUri));
+	function displayImage(imgUri) {
 	 	 $$("#img_upload").attr('src',imgUri);
+	 	 readImage(imgUri,  function(base64) {  
+	 	 	base64_img = base64; 
+		 });
 	}
 	
 	function getBase64Image(img) {
@@ -983,9 +985,13 @@ _init();
 	
 	$$("#img_record_btn").on("click", function(){
 		
+		if (!base64_img) return;
+		
 		var photo_data = {"cardid":mycard.id, "photo":base64_img, "coords":coords, "ratio":doch};
 		
 		socket.emit('card photo', photo_data);
+		
+		myApp.alert("Processing image...");
 		
 	});
 
