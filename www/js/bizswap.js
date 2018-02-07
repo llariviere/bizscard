@@ -943,37 +943,25 @@ _init();
  
 	    var srcType = Camera.PictureSourceType.CAMERA;
 	    var options = setOptions(srcType);
-	    var func = createNewFileEntry;
+	    var func = displayImage;
 	 
 	    navigator.camera.getPicture(function cameraSuccess(imageUri) {
-	 
-	        displayImage(imageUri);
-	        // You may choose to copy the picture, save it somewhere, or upload.
 	        func(imageUri);
-	 
 	    }, function cameraError(error) {
 	        console.debug("Unable to obtain picture: " + error, "app");
 	    }, options);
 	}
 	
 	function displayImage(imgUri) {
-	 	 $$("#img_upload").attr('src',imgUri);
-	}
+		
+	    var newImg = new Image();
 	
-	function createNewFileEntry(imgUri) {
-	    window.resolveLocalFileSystemURL(cordova.file.cacheDirectory, function success(dirEntry) {
-	 
-	        // JPEG file
-	        dirEntry.getFile("tempFile.jpeg", { create: true, exclusive: false }, function (fileEntry) {
-	 
-	            // Do something with it, like write to it, upload it, etc.
-	            // writeFile(fileEntry, imgUri);
-	            console.log("got file: " + fileEntry.fullPath);
-	            // displayFileData(fileEntry.fullPath, "File copied to");
-	 
-	        }, onErrorCreateFile);
-	 
-	    }, onErrorResolveUrl);
+	    newImg.src = imgUri;
+	    
+	    base64_img = getBase64Image(newImg);
+    
+	 	 $$("#img_upload").attr('src',imgUri);
+	 	 
 	}
 	
 	function getBase64Image(img) {
@@ -988,9 +976,7 @@ _init();
 	
 	$$("#img_record_btn").on("click", function(){
 		
-		var base64 = getBase64Image(document.getElementById("img_upload"));
-		
-		var photo_data = {"cardid":mycard.id, "photo":base64, "coords":coords, "ratio":doch};
+		var photo_data = {"cardid":mycard.id, "photo":base64_img, "coords":coords, "ratio":doch};
 		
 		socket.emit('card photo', photo_data);
 		
@@ -1001,6 +987,7 @@ _init();
 var coords = [];
 var doch = $$("body").height()-88;
 var docw = $$("body").width();
+var base64_img = ''; 
 
 (function (document) {
     'use strict';
