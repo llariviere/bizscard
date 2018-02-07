@@ -987,19 +987,23 @@ _init();
 	}
 	
 	$$("#img_record_btn").on("click", function(){
+		
 		var base64 = getBase64Image(document.getElementById("img_upload"));
-		myApp.alert('base64 = '+base64.length)
+		
+		var photo_data = {"cardid":mycard.id, "photo":base64, "coords":coords, "ratio":doch};
+		
+		socket.emit('card photo', photo_data);
+		
 	});
 
 // image_crop
 
 var coords = [];
+var doch = $$("body").height()-88;
+var docw = $$("body").width();
 
 (function (document) {
     'use strict';
-    
-	var doch = $$("body").height()-88;
-	var docw = $$("body").width();
 	
 	$$(".container").css({
 		"width": docw+'px',
