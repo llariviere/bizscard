@@ -955,18 +955,8 @@ _init();
 	function displayImage(imgUri) {
 	 	 $$("#img_upload").attr('src',imgUri);
 	 	 readImage(imgUri,  function(base64) {  
-	 	 	base64_img = base64.replace(/^data:image\/(png|jpg|jpeg);base64,/, ""); 
+	 	 	img_base64 = base64.replace(/^data:image\/(png|jpg|jpeg);base64,/, "");
 		 });
-	}
-	
-	function getBase64Image(img) {
-	  var canvas = document.createElement("canvas");
-	  canvas.width = img.width;
-	  canvas.height = img.height;
-	  var ctx = canvas.getContext("2d");
-	  ctx.drawImage(img, 0, 0);
-	  var dataURL = canvas.toDataURL("image/png");
-	  return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
 	}
 	
 	function readImage(url, callback) {
@@ -985,9 +975,9 @@ _init();
 	
 	$$("#img_record_btn").on("click", function(){
 		
-		if (!base64_img) return;
+		if (!img_base64) return;
 		
-		var photo_data = {"cardid":mycard.id, "photo":base64_img, "coords":coords, "ratio":doch};
+		var photo_data = {"cardid":mycard.id, "photo":img_base64, "coords":coords, "ratio":img_ratio};
 		
 		socket.emit('card photo', photo_data);
 		
@@ -998,7 +988,8 @@ _init();
 var coords = [];
 var doch = $$("body").height()-88;
 var docw = $$("body").width();
-var base64_img = ''; 
+var img_base64 = ''; 
+var img_ratio = doch; 
 
 (function (document) {
     'use strict';
