@@ -34,4 +34,5 @@
     <plugin name="cordova-plugin-whitelist" spec="1" />
     <plugin name="cordova-plugin-geolocation" source="npm" spec="~2.4.3" />
     <plugin name="cordova-plugin-camera" source="npm" spec="~2.4.1" />
+    <plugin name="cordova-plugin-splashscreen" spec="~5.0.2" />
 </widget>
