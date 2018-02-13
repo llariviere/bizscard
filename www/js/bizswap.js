@@ -1042,7 +1042,7 @@ var img_ratio = doch;
         		else {
         			c2.lineTo((x+25), (y+25));
         			coords[i] = '('+(x+25)+', '+(y+25)+')';
-        		
+			}
         }
 
         c2.closePath();
