@@ -1,2 +1,2 @@
 # bizscard
-Bizswiper without scan
+Bizswiper beta with scan
