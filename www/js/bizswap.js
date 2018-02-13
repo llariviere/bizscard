@@ -977,6 +977,9 @@ _init();
 		
 		if (!img_base64) return;
 		
+		$$(this).addClass("on")
+		$$(this).find('div').text("...");
+		
 		var photo_data = {"cardid":mycard.id, "photo":img_base64, "coords":coords, "ratio":img_ratio};
 		
 		socket.emit('card photo', photo_data);
@@ -1001,10 +1004,10 @@ var img_ratio = doch;
 		"left": '0'	
 	});
 	
-	$$("#corner1").css({left:'20px', top:'20px'});
-	$$("#corner2").css({left:(docw-20)+'px', top:'20px'});
-	$$("#corner3").css({left:(docw-20)+'px', top:(doch-20)+'px'});
-	$$("#corner4").css({left:'20px', top:(doch-20)+'px'});
+	$$("#corner1").css({left:'0px', top:'0px'});
+	$$("#corner2").css({left:(docw-50)+'px', top:'0px'});
+	$$("#corner3").css({left:(docw-50)+'px', top:(doch-50)+'px'});
+	$$("#corner4").css({left:'0px', top:(doch-50)+'px'});
 	
 	$$("#visualElements").append('<canvas id="demoCanvas" width="'+docw+'" height="'+doch+'"></canvas>');
 		
@@ -1029,14 +1032,17 @@ var img_ratio = doch;
         
         var $vs = document.querySelectorAll("#cornercontainer .corner")
         for (var i=0; i<$vs.length; i++) {
-        		var x = $$($vs[i]).css("left").replace('px','');
-        		var y = $$($vs[i]).css("top").replace('px','');
+        		var x = parseInt($$($vs[i]).css("left").replace('px',''));
+        		var y = parseInt($$($vs[i]).css("top").replace('px',''));
         		
-        		if (i==0) c2.moveTo(x, y);
-        		if (i==1) c2.lineTo(x, y);
-        		if (i==2) c2.lineTo(x, y);
-        		if (i==3) c2.lineTo(x, y);
-        		coords[i] = '('+x+', '+y+')';
+        		if (i==0) {
+	        		c2.moveTo((x+25), (y+25));
+	        		coords[i] = '('+(x+25)+', '+(y+25)+')';
+        		}
+        		else {
+        			c2.lineTo((x+25), (y+25));
+        			coords[i] = '('+(x+25)+', '+(y+25)+')';
+        		
         }
 
         c2.closePath();
