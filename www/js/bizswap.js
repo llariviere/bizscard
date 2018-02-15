@@ -1039,10 +1039,14 @@ var img_ratio = doch;
 	        		c2.moveTo((x+25), (y+25));
 	        		coords[i] = '('+(x+25)+', '+(y+25)+')';
         		}
-        		else {
+        		else if (i==1) {
         			c2.lineTo((x+25), (y+25));
         			coords[i] = '('+(x+25)+', '+(y+25)+')';
-			}
+        		}
+        		else {
+        			c2.lineTo((x+25), (y+25));
+        			coords[i] = '('+(x+25)+', '+(y+75)+')';
+        		}
         }
 
         c2.closePath();
