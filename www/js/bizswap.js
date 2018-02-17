@@ -1037,19 +1037,19 @@ var img_ratio = doch;
         		
         		if (i==0) {
 	        		c2.moveTo((x+25), (y+25));
-	        		coords[i] = '('+(x+25)+', '+(y)+')';
+	        		coords[i] = '('+(x+30)+', '+(y+20)+')';
         		}
         		else if (i==1) {
         			c2.lineTo((x+25), (y+25));
-        			coords[i] = '('+(x+50)+', '+(y)+')';
+        			coords[i] = '('+(x+55)+', '+(y+20)+')';
         		}
         		else if (i==2) {
         			c2.lineTo((x+25), (y+25));
-        			coords[i] = '('+(x+50)+', '+(y+75)+')';
+        			coords[i] = '('+(x+55)+', '+(y+80)+')';
         		}
         		else {
         			c2.lineTo((x+25), (y+25));
-        			coords[i] = '('+(x+25)+', '+(y+75)+')';
+        			coords[i] = '('+(x+30)+', '+(y+80)+')';
         		}
         }
 
