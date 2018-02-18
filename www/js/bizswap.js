@@ -900,6 +900,11 @@ socket.on('card qr', function(data){
 socket.on('card connected', function(data){
   console.log("card connected response: "+data)
 });
+socket.on('card ocr', function(data){
+	$$("#tab2").find("img").attr("src",data.img);
+	
+	$$("#tab2").find("textarea").text(data.ocr);
+});
 
 function online(event) {
   $online = (event.type=='online');
@@ -1037,11 +1042,11 @@ var img_ratio = doch;
         		
         		if (i==0) {
 	        		c2.moveTo((x+25), (y+25));
-	        		coords[i] = '('+(x+30)+', '+(y+20)+')';
+	        		coords[i] = '('+(x+30)+', '+(y+35)+')';
         		}
         		else if (i==1) {
         			c2.lineTo((x+25), (y+25));
-        			coords[i] = '('+(x+55)+', '+(y+20)+')';
+        			coords[i] = '('+(x+55)+', '+(y+35)+')';
         		}
         		else if (i==2) {
         			c2.lineTo((x+25), (y+25));
