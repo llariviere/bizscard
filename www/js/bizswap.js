@@ -275,7 +275,6 @@ $$(".waiting-list-open").on("click", function(){
 $$(".create-card-open").on("click", function(){
 	
 	mainView.router.load({pageName: 'create-card'});
-	//openCamera(false);
 	
 });
 
@@ -335,12 +334,6 @@ function card_offer_complete() {
 		{ complete: function(){ $$(".no-thumb").show() } }
 	);
 } 
-
-
-$$('#create-card-btn').on("click", function(){
-	openCamera(false)
-	//$$('#file_upload').click();
-});
 
 $$('#file_upload').on("change", function(event) {
    var tmppath = URL.createObjectURL(event.target.files[0]);
@@ -904,6 +897,12 @@ socket.on('card ocr', function(data){
 	$$("#tab2").find("img").attr("src",data.img);
 	
 	$$("#tab2").find("textarea").text(data.ocr);
+	
+	myApp.tab.show("#tab2", true);
+	
+	$$("#img_upload").attr('src','').hide();
+	cropper_init();
+	
 });
 
 function online(event) {
@@ -958,7 +957,7 @@ _init();
 	}
 	
 	function displayImage(imgUri) {
-	 	 $$("#img_upload").attr('src',imgUri);
+	 	 $$("#img_upload").attr('src',imgUri).show();
 	 	 readImage(imgUri,  function(base64) {  
 	 	 	img_base64 = base64.replace(/^data:image\/(png|jpg|jpeg);base64,/, "");
 		 });
@@ -983,15 +982,19 @@ _init();
 		if (!img_base64) return;
 		
 		$$(this).addClass("on")
-		$$(this).find('div').text("...");
+		$$(this).find('div').text("Reading");
+		$$("#img_record_btn").off("click");
+		pulsation($$("#img_record_btn"));
+		
 		
 		var photo_data = {"cardid":mycard.id, "photo":img_base64, "coords":coords, "ratio":img_ratio};
 		
 		socket.emit('card photo', photo_data);
 		
-		myApp.alert("Processing image...");
-		
 	});
+	
+var opacity = .5;
+function pulsation(e) { if (e.hasClass("on")) e.animate({opacity:opacity},{complete: pulsation(e)}); opacity = (opacity==.5 ? 1 : .5) }
 
 var coords = [];
 var doch = $$("body").height()-88;
@@ -999,7 +1002,8 @@ var docw = $$("body").width();
 var img_base64 = ''; 
 var img_ratio = doch; 
 
-(function (document) {
+	
+function cropper_init() {
     'use strict';
 	
 	$$(".container").css({
@@ -1082,5 +1086,8 @@ var img_ratio = doch;
 		});
 		draggie.on( 'dragEnd', drawPoly);
 	}
-	
+}
+
+(function (document) {
+	cropper_init();
 }(document));
