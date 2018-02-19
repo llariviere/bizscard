@@ -984,8 +984,6 @@ _init();
 		$$(this).addClass("on")
 		$$(this).find('div').text("Reading");
 		$$("#img_record_btn").off("click");
-		pulsation($$("#img_record_btn"));
-		
 		
 		var photo_data = {"cardid":mycard.id, "photo":img_base64, "coords":coords, "ratio":img_ratio};
 		
@@ -994,7 +992,7 @@ _init();
 	});
 	
 var opacity = .5;
-function pulsation(e) { if (e.hasClass("on")) e.animate({opacity:opacity},{complete: pulsation(e)}); opacity = (opacity==.5 ? 1 : .5) }
+//function pulsation(e) { if (e.hasClass("on")) e.animate({opacity:opacity},{complete: pulsation(e)}); opacity = (opacity==.5 ? 1 : .5) }
 
 var coords = [];
 var doch = $$("body").height()-88;
