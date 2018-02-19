@@ -898,7 +898,7 @@ socket.on('card ocr', function(data){
 	
 	$$("#tab2").find("textarea").text(data.ocr);
 	
-	myApp.tab.show("#tab2", true);
+	myApp.showTab("#tab2", true);
 	
 	$$("#img_upload").attr('src','').hide();
 	cropper_init();
