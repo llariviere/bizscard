@@ -999,7 +999,7 @@ var img_ratio = doch;
 function cropper_init() {
     'use strict';
     
-		
+	myApp.showTab("#tab1", true);
 	$$("#img_record_btn").removeClass("on")
 	$$("#img_record_btn").find('div').text("Read");
 	$$("#img_record_btn").on("click", function(){
