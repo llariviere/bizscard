@@ -505,7 +505,14 @@ function category_open() {
 	});
 }
 
-function card_add() {	
+function card_add() {
+	
+	//////////////////////////////////////////
+	mainView.router.load({pageName: 'index'});
+	cropper_init();
+	return false;
+	//////////////////////////////////////////
+	
 	var pars = {};
 	$$.each($$("#add_card_list > li"), function(i,li) {
 		var name = $$(li).find(".label").text().toLowerCase();
