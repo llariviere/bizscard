@@ -985,19 +985,6 @@ _init();
 	  xhr.send();
 	}
 	
-	$$("#img_record_btn").on("click", function(){
-		
-		if (!img_base64) return;
-		
-		$$(this).addClass("on")
-		$$(this).find('div').text("Reading");
-		$$("#img_record_btn").off("click");		
-		
-		var photo_data = {"cardid":mycard.id, "photo":img_base64, "coords":coords, "ratio":img_ratio};
-		
-		socket.emit('card photo', photo_data);
-		
-	});
 	
 var opacity = .5;
 function pulsation(e) { if (e.hasClass("on")) e.animate({opacity:opacity},{complete: pulsation(e)}); opacity = (opacity==.5 ? 1 : .5) }
@@ -1011,6 +998,23 @@ var img_ratio = doch;
 	
 function cropper_init() {
     'use strict';
+    
+		
+	$$("#img_record_btn").removeClass("on")
+	$$("#img_record_btn").find('div').text("Read");
+	$$("#img_record_btn").on("click", function(){
+		
+		if (!img_base64) return;
+		
+		$$(this).addClass("on")
+		$$(this).find('div').text("Reading");
+		$$("#img_record_btn").off("click");		
+		
+		var photo_data = {"cardid":mycard.id, "photo":img_base64, "coords":coords, "ratio":img_ratio};
+		
+		socket.emit('card photo', photo_data);
+		
+	});
 	
 	$$(".container").css({
 		"width": docw+'px',
