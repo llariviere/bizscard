@@ -199,10 +199,6 @@ $$(document).on('form:success', 'form.ajax-submit', function (e) {
 	
 });
 
-$$(document).on('page:init', '.page[data-page="create-card"]', function (e, page) {
-  openCamera(false);
-})
-
 $$(".share").on("click", function(){
 	var buttons1 = [
         {
@@ -275,6 +271,7 @@ $$(".waiting-list-open").on("click", function(){
 $$(".create-card-open").on("click", function(){
 	
 	mainView.router.load({pageName: 'create-card'});
+	openCamera(false);
 	
 });
 
@@ -298,8 +295,6 @@ $$(document).on("click", "li.reputation i.fa", function () {
 });
 
 function card_offer() {
-	
-	//$$(".no-thumb").hide();
 	
 	$$("#mycard .thumb").show();
 	$$('#mycard').css({ 'top': $$('#mycard').data('top') })
@@ -381,6 +376,12 @@ function card_form_open(context) {
 }
 
 function card_form_record(){
+	
+	//////////////////////////////////////////
+	mainView.router.load({pageName: 'index'});
+	cropper_init();
+	return false;
+	//////////////////////////////////////////
 	
 	var pars = {};
 	
@@ -983,7 +984,7 @@ _init();
 		
 		$$(this).addClass("on")
 		$$(this).find('div').text("Reading");
-		$$("#img_record_btn").off("click");
+		$$("#img_record_btn").off("click");		
 		
 		var photo_data = {"cardid":mycard.id, "photo":img_base64, "coords":coords, "ratio":img_ratio};
 		
@@ -992,7 +993,7 @@ _init();
 	});
 	
 var opacity = .5;
-//function pulsation(e) { if (e.hasClass("on")) e.animate({opacity:opacity},{complete: pulsation(e)}); opacity = (opacity==.5 ? 1 : .5) }
+function pulsation(e) { if (e.hasClass("on")) e.animate({opacity:opacity},{complete: pulsation(e)}); opacity = (opacity==.5 ? 1 : .5) }
 
 var coords = [];
 var doch = $$("body").height()-88;
