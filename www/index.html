@@ -12,7 +12,7 @@
 	 <link rel="stylesheet" href="css/font-awesome.min.css">
 	
     <link rel="stylesheet" href="css/welcomescreen.css">
-    <link rel="stylesheet" href="css/bizswap.css?v=20171013.2255">
+    <link rel="stylesheet" href="css/bizswap.css?v=20180212.2235">
     <link rel="shortcut icon" type="image/png" href="img/favicon.png"/>
     <link rel="manifest" href="js/manifest.json">
   </head>
@@ -224,20 +224,21 @@
 		      
 		        <div id="tab1" class="page-content tab active">
 		        
-			<div class="container"><img id="img_upload" src="img/bcard_big.jpg" alt=""></div>
+					<div class="container"><img id="img_upload" src="" alt=""></div>
+					
+					<div class="container">
+					
+					  <div id="visualElements"></div>
+					
+					  <div id="cornercontainer">
+					    <div id="corner1" class="corner"><div class="handle"></div></div>
+					    <div id="corner2" class="corner"><div class="handle"></div></div>
+					    <div id="corner3" class="corner"><div class="handle"></div></div>
+					    <div id="corner4" class="corner"><div class="handle"></div></div>
+					    <div id="img_record_btn"><div>Read</div></div>
+					  </div>
+					</div>
 
-			<div class="container">
-
-			  <div id="visualElements"></div>
-
-			  <div id="cornercontainer">
-			    <div id="corner1" class="corner"><div class="handle"></div></div>
-			    <div id="corner2" class="corner"><div class="handle"></div></div>
-			    <div id="corner3" class="corner"><div class="handle"></div></div>
-			    <div id="corner4" class="corner"><div class="handle"></div></div>
-			    <div id="img_record_btn"><div>Record</div></div>
-			  </div>
-			</div>
 		        </div>
 		        
 		        <div id="tab2" class="page-content tab">
@@ -245,7 +246,7 @@
 		        	<img src="img/bcard.jpg" style="width:100%;max-width:400px;"/>
 		        	
 					<div class="">
-						<div class="list-block">
+						<div class="list-block"> 
 										
 				        <ul id="add_card_list">
 				          <li class="list-item">
@@ -467,7 +468,7 @@
 		</div>
 	</div>
 
-	<div class="page no-tabbar" data-page="current-list">
+	<div class="page" data-page="current-list">
 	
     <form class="searchbar">
         <div class="searchbar-input">
@@ -537,8 +538,6 @@
 	</div>       
 	</div>
 	  
-	<a href="#create-card" class="floating-button color-red"><i class="icon icon-plus">+</i></a>
-	  
 	</div>
 </script>  
     
@@ -561,7 +560,7 @@
 	</div>
 
 
-	<div class="page no-tabbar" data-page="waiting-list">
+	<div class="page" data-page="waiting-list">
 	<div class="page-content">
 	              
 	<div class="list-block">
@@ -645,7 +644,7 @@
 
   <div class="pages">
     
-	  <div class="page no-tabbar" data-page="card-{{id}}">
+	  <div class="page" data-page="card-{{id}}">
 	  
 	  <div class="page-content">
 	  
@@ -961,11 +960,7 @@
     <script type="text/javascript" src="js/drag.min.js"></script>
     <script type="text/javascript" src="js/category.js"></script>
     <script type="text/javascript" src="cordova.js"></script>
-    <script type="text/javascript" src="socket.io/socket.io.js"></script>
-    <script type="text/javascript" src="https://bizswiper.com/socket.io/socket.io.js"></script>
-    <script type="text/javascript">
-      //var socket = io.connect(); 
-    </script> 
-    <script type="text/javascript" src="js/bizswap.js?v=201712070943"></script>
+    <script type="text/javascript" src="js/socket.io.js"></script>
+    <script type="text/javascript" src="js/bizswap.js?v=201802121035"></script>
   </body>
 </html>
