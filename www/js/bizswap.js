@@ -941,7 +941,7 @@ _init();
 	function setOptions(srcType) {
 	    var options = {
 	        // Some common settings are 20, 50, and 100
-	        quality: 75,
+	        quality: 50,
 	        destinationType: Camera.DestinationType.FILE_URI,
 	        // In this app, dynamically set the picture source, Camera or photo gallery
 	        sourceType: srcType,
@@ -1048,15 +1048,15 @@ function cropper_init() {
         		}
         		else if (i==1) {
         			c2.lineTo((x+25), (y+25));
-        			coords[i] = '('+(x+55)+', '+(y+35)+')';
+        			coords[i] = '('+(x+30)+', '+(y+35)+')';
         		}
         		else if (i==2) {
         			c2.lineTo((x+25), (y+25));
-        			coords[i] = '('+(x+55)+', '+(y+80)+')';
+        			coords[i] = '('+(x+30)+', '+(y+60)+')';
         		}
         		else {
         			c2.lineTo((x+25), (y+25));
-        			coords[i] = '('+(x+30)+', '+(y+80)+')';
+        			coords[i] = '('+(x+30)+', '+(y+60)+')';
         		}
         }
 
