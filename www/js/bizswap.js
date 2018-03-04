@@ -699,6 +699,9 @@ socket.on('reconnect', function () {
     console.log('$connected = '+$connected);
     //myApp.alert("You are re-connected with the server!")
 });
+socket.on('card msg', function(data){
+	myApp.alert(data)
+});
 socket.on('card login', function (data) {
 	
 	switch(data.msg) {
@@ -902,9 +905,9 @@ socket.on('card connected', function(data){
   console.log("card connected response: "+data)
 });
 socket.on('card ocr', function(data){
-	$$(".card-entry").find("img").attr("src",data.img);
+	$$("#card-entry").find("img").attr("src",data.img);
 	
-	$$(".card-entry").find("textarea").text(data.ocr);
+	$$("#card-entry").find("textarea").text(data.ocr);
 	
 	mainView.router.load({pageName: 'card-entry'});
 	
