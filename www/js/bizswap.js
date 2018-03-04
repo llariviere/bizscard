@@ -268,9 +268,9 @@ $$(".waiting-list-open").on("click", function(){
 	
 });
 
-$$(".create-card-open").on("click", function(){
+$$(".card-cropper-open").on("click", function(){
 	
-	mainView.router.load({pageName: 'create-card'});
+	mainView.router.load({pageName: 'card-cropper'});
 	openCamera(false);
 	
 });
@@ -509,7 +509,6 @@ function card_add() {
 	
 	//////////////////////////////////////////
 	mainView.router.load({pageName: 'index'});
-	myApp.showTab("#tab1", true);
 	cropper_init();
 	return false;
 	//////////////////////////////////////////
@@ -903,15 +902,14 @@ socket.on('card connected', function(data){
   console.log("card connected response: "+data)
 });
 socket.on('card ocr', function(data){
-	$$("#tab2").find("img").attr("src",data.img);
+	$$(".card-entry").find("img").attr("src",data.img);
 	
-	$$("#tab2").find("textarea").text(data.ocr);
+	$$(".card-entry").find("textarea").text(data.ocr);
 	
-	myApp.showTab("#tab2", true);
+	mainView.router.load({pageName: 'card-entry'});
 	
 	$$("#img_upload").attr('src','').hide();
 	cropper_init();
-	
 });
 
 function online(event) {
@@ -940,7 +938,7 @@ _init();
 	function setOptions(srcType) {
 	    var options = {
 	        // Some common settings are 20, 50, and 100
-	        quality: 50,
+	        quality: 75,
 	        destinationType: Camera.DestinationType.FILE_URI,
 	        // In this app, dynamically set the picture source, Camera or photo gallery
 	        sourceType: srcType,
@@ -991,35 +989,22 @@ var opacity = .5;
 function pulsation(e) { if (e.hasClass("on")) e.animate({opacity:opacity},{complete: pulsation(e)}); opacity = (opacity==.5 ? 1 : .5) }
 
 var coords = [];
-var doch = $$("body").height()-88;
+var doch = $$("body").height()-44;
 var docw = $$("body").width();
 var img_base64 = ''; 
 var img_ratio = doch; 
 
 	
 function cropper_init() {
-    'use strict';
-    
+   'use strict';
+    	
 	$$("#img_record_btn").removeClass("on")
-	$$("#img_record_btn").find('div').text("Read");
-	$$("#img_record_btn").on("click", function(){
-		
-		if (!img_base64) return;
-		
-		$$(this).addClass("on")
-		$$(this).find('div').text("Reading");
-		$$("#img_record_btn").off("click");		
-		
-		var photo_data = {"cardid":mycard.id, "photo":img_base64, "coords":coords, "ratio":img_ratio};
-		
-		socket.emit('card photo', photo_data);
-		
-	});
+	$$("#img_record_btn").find('div').text("Save");
 	
 	$$(".container").css({
 		"width": docw+'px',
 		"height": doch+'px',
-		"top": '88px',
+		"top": '44px',
 		"left": '0'	
 	});
 	
@@ -1097,6 +1082,20 @@ function cropper_init() {
 		draggie.on( 'dragEnd', drawPoly);
 	}
 }
+
+$$("#img_record_btn").on("click", function(){
+	
+	if (!img_base64) return;
+	
+	$$(this).addClass("on")
+	$$(this).find('div').text("Saving");
+	$$("#img_record_btn").off("click");		
+	
+	var photo_data = {"cardid":mycard.id, "photo":img_base64, "coords":coords, "ratio":img_ratio};
+	
+	socket.emit('card photo', photo_data);
+	
+});
 
 (function (document) {
 	cropper_init();
