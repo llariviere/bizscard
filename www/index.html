@@ -94,15 +94,8 @@
 		</div>     
 
     </div>
-    
-    <div class="panel panel-right panel-cover">
-      <div class="content-block">
-        <p>Right panel content goes here</p>
-      </div>
-    </div>
-    
-    
-    
+
+      
     
     <div class="views">
     
@@ -117,21 +110,24 @@
             </div>
           </div>
           
-	      <div class="navbar-inner cached" data-page="create-card">
+	      <div class="navbar-inner cached" data-page="card-cropper">
             <div class="left">
               <a href="#" class="link icon-only back"> <i class="icon icon-back"></i></a>
             </div>
-	        <div class="center sliding">Add a card</div>
+	        <div class="center sliding">Crop card contour</div>
             <div class="right">
               <a href="#" class="link icon-only open-panel"> <i class="fa fa-bars fa-lg"></i></a>
             </div>
-	        
-	        <div class="subnavbar">
-	          <div class="buttons-row">
-	            <a href="#tab1" class="button active tab-link"><i class="fa fa-camera fa-lg"></i></a>
-	            <a href="#tab2" class="button tab-link"><i class="fa fa-edit fa-lg"></i></a>
-	          </div>
-	        </div>
+	      </div>
+          
+	      <div class="navbar-inner cached" data-page="card-entry">
+            <div class="left">
+              <a href="#" class="link icon-only back"> <i class="icon icon-back"></i></a>
+            </div>
+	        <div class="center sliding">Enter card fields</div>
+            <div class="right">
+              <a href="#" class="link icon-only open-panel"> <i class="fa fa-bars fa-lg"></i></a>
+            </div>
 	      </div>
           
           <div class="navbar-inner cached" data-page="current-list">
@@ -165,6 +161,27 @@
           </div>
           
         </div>
+        
+        
+        <div class="toolbar tabbar">
+		    <div class="toolbar-inner">
+		        <a href="#" class="tab-link share">
+		            <i class="fa fa-share-alt fa-lg"></i>
+		        </a>
+		        <a href="#" class="tab-link current-list-open">
+		            <i class="fa fa-id-card-o fa-lg"></i>
+		        </a>
+		        <a href="#" class="tab-link waiting-list-open">
+		            <i class="fa fa-id-card fa-lg" style="position: relative;">
+		            	<span class="badge waiting-list-nbr bg-red" style="position: absolute;right:-15px;top:-10px;">0</span>
+		            </i>		            
+		        </a>
+		        <a href="#" class="tab-link card-cropper-open">
+		            <i class="fa fa-user-plus fa-lg"></i>
+		        </a>
+		    </div>
+		  </div>
+		  
         
         <div class="pages navbar-through toolbar-through">
         
@@ -217,12 +234,10 @@
                 	
           </div>
           
-          <div class="page cached with-subnavbar no-tabbar" data-page="create-card">
-		    
-		    <div class="tabs-animated-wrap">
-		      <div class="tabs">
+          
+        <div class="page cached no-tabbar" data-page="card-cropper">
 		      
-		        <div id="tab1" class="page-content tab active">
+		        <div class="page-content">
 		        
 					<div class="container"><img id="img_upload" src="" alt=""></div>
 					
@@ -235,125 +250,122 @@
 					    <div id="corner2" class="corner"><div class="handle"></div></div>
 					    <div id="corner3" class="corner"><div class="handle"></div></div>
 					    <div id="corner4" class="corner"><div class="handle"></div></div>
-					    <div id="img_record_btn"><div>Read</div></div>
+					    <div id="img_record_btn"><div>Save</div></div>
 					  </div>
 					</div>
 
 		        </div>
 		        
-		        <div id="tab2" class="page-content tab">
-		        	
-		        	<img src="img/bcard.jpg" style="width:100%;max-width:400px;"/>
-		        	
-					<div class="">
-						<div class="list-block"> 
-										
-				        <ul id="add_card_list">
-				          <li class="list-item">
-				            <div class="item-content">
-				              <div class="item-inner"> 
-				                <div class="item-title label">OCR</div>
-				                <div class="item-input">
-				                  <textarea style="height:300px"></textarea>
-				                </div>
-				              </div>
-				            </div>
-				          </li>
-				          
-				          <!--li class="list-item">
-				            <div class="item-content">
-				              <div class="item-inner"> 
-				                <div class="item-title label">Firstname</div>
-				                <div class="item-input">
-				                  <input type="text" name="value_1" placeholder="First name" value="John"/>
-				                </div>
-				              </div>
-				            </div>
-				          </li>
-				          <li class="list-item">
-				            <div class="item-content">
-				              <div class="item-inner"> 
-				                <div class="item-title label">Lastname</div>
-				                <div class="item-input">
-				                  <input type="text" name="value_2" placeholder="Last name" value="Smith"/>
-				                </div>
-				              </div>
-				            </div>
-				          </li>
-				          <li class="list-item">
-				            <div class="item-content">
-				              <div class="item-inner"> 
-				                <div class="item-title label">Email</div>
-				                <div class="item-input">
-				                  <input type="email" name="value_3" placeholder="Email address" value="johnsmith@cs.com"/>
-				                </div>
-				              </div>
-				            </div>
-				          </li>
-				          <li class="list-item">
-				            <div class="item-content">
-				              <div class="item-inner"> 
-				                <div class="item-title label">Cellphone</div>
-				                <div class="item-input">
-				                  <input type="tel" name="value_3" placeholder="Cell number" value=""/>
-				                </div>
-				              </div>
-				            </div>
-				          </li>
-				          <li class="list-item">
-				            <div class="item-content">
-				              <div class="item-inner"> 
-				                <div class="item-title label">Company</div>
-				                <div class="item-input">
-				                  <input type="text" name="value_3" placeholder="Company name" value=""/>
-				                </div>
-				              </div>
-				            </div>
-				          </li-->
-				        </ul>
-				        
-						</div>
-					</div>
-					
-			      <div class="content-block">
-			        <div class="row">
-			          <div class="col-50"><a href="#" onclick="mainView.router.back()" class="button button-big button-fill color-red">Cancel</a></div>
-			          <div class="col-50">
-			            <input type="button" onclick="card_add()" value="Record" class="button button-big button-fill color-green"/>
-			          </div>
-			        </div>
-			      </div>
-		        </div>
-		      </div>
-		    </div>
-          </div>
-          
         </div>
         
-        <div class="toolbar tabbar"> 
-		    <div class="toolbar-inner">
-		        <a href="#" class="tab-link share">
-		            <i class="fa fa-share-alt fa-lg"></i>
-		        </a>
-		        <a href="#" class="tab-link current-list-open">
-		            <i class="fa fa-id-card-o fa-lg"></i>
-		        </a>
-		        <a href="#" class="tab-link waiting-list-open">
-		            <i class="fa fa-id-card fa-lg" style="position: relative;">
-		            	<span class="badge waiting-list-nbr bg-red" style="position: absolute;right:-15px;top:-15px;">0</span>
-		            </i>		            
-		        </a>
-		        <a href="#" class="tab-link create-card-open">
-		            <i class="fa fa-user-plus fa-lg"></i>
-		        </a>
-		    </div>
-		</div>
+        
+          
+        <div class="page cached no-tabbar" data-page="card-entry">
+		      		        
+	        <div class="page-content">
+	        	
+	        	<img src="img/bcard.jpg" style="width:100%;max-width:400px;"/>
+	        	
+				<div class="">
+					<div class="list-block"> 
+									
+			        <ul id="add_card_list">
+			          <li class="list-item">
+			            <div class="item-content">
+			              <div class="item-inner"> 
+			                <div class="item-title label">OCR</div>
+			                <div class="item-input">
+			                  <textarea style="height:300px"></textarea>
+			                </div>
+			              </div>
+			            </div>
+			          </li>
+			          
+			          <!--li class="list-item">
+			            <div class="item-content">
+			              <div class="item-inner"> 
+			                <div class="item-title label">Firstname</div>
+			                <div class="item-input">
+			                  <input type="text" name="value_1" placeholder="First name" value="John"/>
+			                </div>
+			              </div>
+			            </div>
+			          </li>
+			          <li class="list-item">
+			            <div class="item-content">
+			              <div class="item-inner"> 
+			                <div class="item-title label">Lastname</div>
+			                <div class="item-input">
+			                  <input type="text" name="value_2" placeholder="Last name" value="Smith"/>
+			                </div>
+			              </div>
+			            </div>
+			          </li>
+			          <li class="list-item">
+			            <div class="item-content">
+			              <div class="item-inner"> 
+			                <div class="item-title label">Email</div>
+			                <div class="item-input">
+			                  <input type="email" name="value_3" placeholder="Email address" value="johnsmith@cs.com"/>
+			                </div>
+			              </div>
+			            </div>
+			          </li>
+			          <li class="list-item">
+			            <div class="item-content">
+			              <div class="item-inner"> 
+			                <div class="item-title label">Cellphone</div>
+			                <div class="item-input">
+			                  <input type="tel" name="value_3" placeholder="Cell number" value=""/>
+			                </div>
+			              </div>
+			            </div>
+			          </li>
+			          <li class="list-item">
+			            <div class="item-content">
+			              <div class="item-inner"> 
+			                <div class="item-title label">Company</div>
+			                <div class="item-input">
+			                  <input type="text" name="value_3" placeholder="Company name" value=""/>
+			                </div>
+			              </div>
+			            </div>
+			          </li-->
+			        </ul>
+			        
+					</div>
+				</div>
+				
+		      <div class="content-block">
+		        <div class="row">
+		          <div class="col-50"><a href="#" onclick="mainView.router.back()" class="button button-big button-fill color-red">Cancel</a></div>
+		          <div class="col-50">
+		            <input type="button" onclick="card_add()" value="Record" class="button button-big button-fill color-green"/>
+		          </div>
+		        </div>
+		      </div>
+	        </div>
+		        
+        </div>
+        
+        
+        
+        
+        
 		
       </div>
       
     </div>
+   
+  </div>
     
-    
+
+
+
+
+
+
+
   
   <div class="picker-modal picker-qrcode">
     <div class="toolbar">
