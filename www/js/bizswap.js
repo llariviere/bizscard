@@ -648,26 +648,13 @@ function card_login(email,password,create,auto_login) {
 		return false;
 	}
 	
-	/*
-	if (password.length<8) {
-		myApp.alert("Your password has to be 8 characters or more. Please correct it and try again.")
-		welcomescreen.open();
-		$$("#password").val('');
-		$$("#password").focus();
-		return false;
-	}
-	*/
-	
-
 	myApp.formStoreData('login_form', {
-		"email":email, 
-		"password":password
-   });
+		"email":email
+   	});
 		   
 	var login_data = {
 		"email":email, 
-		"password":password,
-		"create":create
+		"uuid":device.uuid
 	}
 	
 	socket.emit('card login', login_data);
