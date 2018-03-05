@@ -21,15 +21,7 @@ var welcomescreen_slides = [
                     <div class="item-inner">\
                       <div class="item-title label" style="text-align:right;">Email:&nbsp;</div>\
                       <div class="item-input">\
-                        <input type="email" id="email" placeholder="Email" autocomplete="off">\
-                      </div>\
-                    </div>\
-                  </li>\
-                  <li class="item-content">\
-                    <div class="item-inner">\
-                      <div class="item-title label" style="text-align:right;">Password:&nbsp;</div>\
-                      <div class="item-input">\
-                        <input type="password" id="password" placeholder="Password" autocomplete="off">\
+                        <input type="email" id="email" style="color:white" placeholder="Email" autocomplete="off">\
                       </div>\
                     </div>\
                   </li>\
@@ -38,10 +30,7 @@ var welcomescreen_slides = [
               <div class="list-block" style="font-size:20px;">\
                 <ul style="background: transparent;">\
                   <li>\
-                    <a href="#" onclick="card_login($$(\'#email\').val(),$$(\'#password\').val(),0,0)" class="item-link list-button color-white">Log in</a>\
-                  </li>\
-                  <li>\
-                    <a href="#" onclick="card_login($$(\'#email\').val(),$$(\'#password\').val(),1,0)" class="item-link list-button color-white">Create an account</a>\
+                    <a href="#" onclick="card_login($$(\'#email\').val(),0,0)" class="item-link list-button color-white">Enter</a>\
                   </li>\
                 </ul>\
               </div>\
@@ -694,20 +683,27 @@ socket.on('card login', function (data) {
 	switch(data.msg) {
 		case "card not found":
 			myApp.formDeleteData('login_form');
-			myApp.alert("<b>Your email was not found!</b><br>Please correct and try again<br>or clic on '<b>Create an account</b>'.");
+			myApp.alert("It's the first time you use this email from this device.<b>We sent a message to confirm ownership so please open it to have access.");
 			welcomescreen.open();
 			$$("#email").focus();
 			break;
-		case "card not logged in":
+		case "card not confirmed":
 			myApp.formDeleteData('login_form');
-			myApp.alert("<b>Password error!</b><br>Please correct and try again.");
+			myApp.alert("This email is not confirmed on this device.<br>We sent a new message to confirm ownership so please open it to have access.");
 			welcomescreen.open();
+			$$("#email").focus();
+			break;
+		case "card login try count":
+			myApp.formDeleteData('login_form');
+			myApp.alert("This email is not confirmed on this device and you exceeded the number of try without confirming.");
+			welcomescreen.open();
+			$$("#email").html('');
 			$$("#email").focus();
 			break;
 		case "card logged in":
 			console.log('card load')
 			socket.emit('card load', data.id);
-		   welcomescreen.close();
+		   	welcomescreen.close();
 	}
 	
 });
