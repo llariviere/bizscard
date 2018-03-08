@@ -182,7 +182,7 @@ Framework7.prototype.plugins.welcomescreen = function (app, globalPluginParams) 
      * @memberof module:Framework7/prototype/plugins/welcomescreen
      */
     self.close = function () {
-      if (swiper) { swiper.destroy(true); }
+      if (swiper && typeof swiper.destroy === 'function') { swiper.destroy(true); }
       if (container) { container.remove(); }
       container = swiperContainer = swiper = undefined;
       if (typeof options.onClosed === 'function') { options.onClosed(); }
