@@ -636,23 +636,31 @@ function card_login(email,password,create,auto_login) {
 		$$("#email").focus();
 		return false;
 	}
-	
+
 	myApp.formStoreData('login_form', {
 		"email":email
-   	});
+   });
+   
+   var uuid = '';
+   if (typeof device === 'undefined') {
+   	uuid = 'portable_louis';
+   } else {
+   	uuid = device.uuid;
+   }
 		   
 	var login_data = {
-		"email":email, 
-		"uuid":device.uuid
+		"email":email,
+		"uuid":uuid
 	}
+	
+	console.log(login_data)
 	
 	socket.emit('card login', login_data);
 	
-	myApp.alert('Synchronizing your data...<br>Please wait.');
+	
 
 }
 
-//var socket = io('https://bizswiper.com:3333/');
 var socket = io('https://bizswiper.com:3333/');
 var $connected = false;
 var $online = false;
@@ -701,9 +709,9 @@ socket.on('card login', function (data) {
 			$$("#email").focus();
 			break;
 		case "card logged in":
-			console.log('card load')
 			socket.emit('card load', data.id);
-		   	welcomescreen.close();
+		   welcomescreen.close();
+		   myApp.alert('Synchronizing your data...<br>Please wait.');
 	}
 	
 });
@@ -924,7 +932,7 @@ _init();
 	function setOptions(srcType) {
 	    var options = {
 	        // Some common settings are 20, 50, and 100
-	        quality: 50,
+	        quality: 75,
 	        destinationType: Camera.DestinationType.FILE_URI,
 	        // In this app, dynamically set the picture source, Camera or photo gallery
 	        sourceType: srcType,
@@ -1031,15 +1039,15 @@ function cropper_init() {
         		}
         		else if (i==1) {
         			c2.lineTo((x+25), (y+25));
-        			coords[i] = '('+(x+30)+', '+(y+35)+')';
+        			coords[i] = '('+(x+55)+', '+(y+35)+')';
         		}
         		else if (i==2) {
         			c2.lineTo((x+25), (y+25));
-        			coords[i] = '('+(x+30)+', '+(y+60)+')';
+        			coords[i] = '('+(x+55)+', '+(y+80)+')';
         		}
         		else {
         			c2.lineTo((x+25), (y+25));
-        			coords[i] = '('+(x+30)+', '+(y+60)+')';
+        			coords[i] = '('+(x+30)+', '+(y+80)+')';
         		}
         }
 
