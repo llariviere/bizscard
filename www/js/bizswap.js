@@ -1051,8 +1051,8 @@ function cropper_init() {
 	});
 	
 	$$("#corner1").css({left:'0px', top:'0px'});
-	$$("#corner2").css({left:(docw-50)+'px', top:'0px'});
-	$$("#corner3").css({left:(docw-50)+'px', top:(doch-50)+'px'});
+	$$("#corner2").css({left:(docw-60)+'px', top:'0px'});
+	$$("#corner3").css({left:(docw-60)+'px', top:(doch-50)+'px'});
 	$$("#corner4").css({left:'0px', top:(doch-50)+'px'});
 	
 	$$("#visualElements").append('<canvas id="demoCanvas" width="'+docw+'" height="'+doch+'"></canvas>');
