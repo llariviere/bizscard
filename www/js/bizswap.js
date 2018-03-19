@@ -896,11 +896,12 @@ socket.on('card connected', function(data){
   console.log("card connected response: "+data)
 });
 
-var champs = ['Name','Title','Company','Phone','Cell','Email'];
+var champs = ['Name','Title','Company','Phone','Cell','Email','Website'];
 var add_card_li = function (i,c,v) {
-	var Name = /^\w+\s\w+$/i;
-	var Company = /\s(lt[eéè]e)|\s(inc)/i;
+	var Name = /^[a-zéè\-]{2,}\s[a-zéè\-]{2,}$/i;
+	var Company = /\s(lt[eéè]e)|\s(inc)|\s(enr)/i;
 	var Email = /\w+@\w+/;
+	var Website = /(www.)|(.com)|(.ca)/i;
 	if (v.match(Company)) {
 		c = 'Company';
 	}
@@ -910,9 +911,13 @@ var add_card_li = function (i,c,v) {
 	else if (v.match(Email)) {
 		c = 'Email';
 	}
+	else if (v.match(Website)) {
+		c = 'Website';
+	}
 	
 	var li = '<li class="list-item">\
 	            <div class="item-content">\
+	              <div class="item-media color-red"><i class="fa fa-times-circle"></i></div>\
 	              <div class="item-inner"> \
 	                <div class="item-title label">\
 	                <select name="field_'+i+'">\
@@ -922,9 +927,9 @@ var add_card_li = function (i,c,v) {
 		                <option'+(c=='Company' ? ' selected' : '')+'>Company</option>\
 		                <option>Buziness phone</option>\
 		                <option>Cell phone</option>\
-		                <option>Website</option>\
 		                <option>Comment</option>\
 	                </select>\
+		                <option'+(c=='Website' ? ' selected' : '')+'>Website</option>\
 	                </div>\
 	                <div class="item-input">\
 	                  <input type="text" name="value_'+i+'" placeholder="" value="'+v+'"/>\
@@ -937,18 +942,17 @@ var add_card_li = function (i,c,v) {
 }
 
 socket.on('card ocr', function(data){
+	$$("#add_card_list").html('');
 	$$("#card-entry").find("img").attr("src",data.img);
-	
-	//$$("#card-entry").find("textarea").text(data.ocr);
-		
-	var ocr = data.ocr.replace(/[[^\d\w\.éàèïôç\s-\\\/,_@\[\]!?#%&*(){}|":;'<>]]/ig,'');
-	var lignes = ocr.split("\n");
+	var lignes = data.ocr.split("\n");
 	for (var i=0; i<lignes.length; i++) {
 		var ligne = lignes[i].replace(/^[ ]+|[ ]+$/g,'');
 		if (ligne.length) add_card_li(i,'Comment',ligne);
 	}
-	
+	$$("#add_card_list").find(".color-red").on("click", function () {
+	});
 	mainView.router.load({pageName: 'card-entry'});
+		$$(this).parents("li").remove();
 	
 	$$("#img_upload").attr('src','').hide();
 	cropper_init();
