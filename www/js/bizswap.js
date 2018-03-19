@@ -925,11 +925,11 @@ var add_card_li = function (i,c,v) {
 		                <option'+(c=='Email' ? ' selected' : '')+'>Email</option>\
 		                <option'+(c=='Name' ? ' selected' : '')+'>Name</option>\
 		                <option'+(c=='Company' ? ' selected' : '')+'>Company</option>\
+		                <option'+(c=='Website' ? ' selected' : '')+'>Website</option>\
 		                <option>Buziness phone</option>\
 		                <option>Cell phone</option>\
 		                <option>Comment</option>\
 	                </select>\
-		                <option'+(c=='Website' ? ' selected' : '')+'>Website</option>\
 	                </div>\
 	                <div class="item-input">\
 	                  <input type="text" name="value_'+i+'" placeholder="" value="'+v+'"/>\
@@ -950,9 +950,9 @@ socket.on('card ocr', function(data){
 		if (ligne.length) add_card_li(i,'Comment',ligne);
 	}
 	$$("#add_card_list").find(".color-red").on("click", function () {
+		$$(this).parents("li").remove();
 	});
 	mainView.router.load({pageName: 'card-entry'});
-		$$(this).parents("li").remove();
 	
 	$$("#img_upload").attr('src','').hide();
 	cropper_init();
