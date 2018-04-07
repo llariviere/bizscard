@@ -70,44 +70,46 @@ var welcomescreen = myApp.welcomescreen(welcomescreen_slides, welcomescreen_opti
 
 var $$ = Dom7;
 var mycard = {};
+var fields = {};
+var cards_fields = {};
 var cards = {
 	current:[],
 	waiting:[]
 };
 var cards_templates = [
-	'<div style="top:4px;left:0px;font-weight:bold;font-size:16px;">{{firstname}} {{lastname}}</div>\
+	'<div style="top:4px;left:0px;font-weight:bold;font-size:16px;">{{first name}} {{last name}}</div>\
 	<div style="top:28px;left:0px;">{{title}}</div>\
-	<div style="top:46px;left:0px;">{{company}}</div>\
+	<div style="top:46px;left:0px;">{{company name}}</div>\
 	<div style="top:75px;left:120px;">{{address}}</div>\
-	<div style="top:90px;left:120px;">{{city}}, {{state_prov}} {{country}} {{zip_postal}}</div>\
+	<div style="top:90px;left:120px;">{{city}}, {{state_prov}} {{country}} {{postal code}}</div>\
 	<div style="top:105px;left:120px;">{{website}}</div>\
-	<div style="top:120px;left:120px;">E: {{email}}</div>\
+	<div style="top:120px;left:120px;">E: {{email principal}}</div>\
 	<div style="top:135px;left:120px;">C: {{cellphone}}</div>\
 	<div style="top:150px;left:120px;">F: {{fax}}</div>\
 	<div class="img" style="top:75px;left:0px;background-image:url({{logo}});">\
 		<i class="fa fa-user fa-4x" style="margin-top:20px;"></i>\
 	</div>',
 	
-	'<div style="top:4px;left:120px;font-weight:bold;font-size:16px;">{{firstname}} {{lastname}}</div>\
+	'<div style="top:4px;left:120px;font-weight:bold;font-size:16px;">{{first name}} {{last name}}</div>\
 	<div style="top:28px;left:120px;">{{title}}</div>\
-	<div style="top:46px;left:120px;">{{company}}</div>\
+	<div style="top:46px;left:120px;">{{company name}}</div>\
 	<div style="top:75px;left:120px;">{{address}}</div>\
-	<div style="top:90px;left:120px;">{{city}}, {{state_prov}} {{country}} {{zip_postal}}</div>\
+	<div style="top:90px;left:120px;">{{city}}, {{state_prov}} {{country}} {{postal code}}</div>\
 	<div style="top:105px;left:120px;">{{website}}</div>\
-	<div style="top:120px;left:120px;">E: {{email}}</div>\
+	<div style="top:120px;left:120px;">E: {{email principal}}</div>\
 	<div style="top:135px;left:120px;">C: {{cellphone}}</div>\
 	<div style="top:150px;left:120px;">F: {{fax}}</div>\
 	<div class="img" style="top:0px;left:0px;background-image:url({{logo}});">\
 		<i class="fa fa-user fa-4x" style="margin-top:20px;"></i>\
 	</div>',
 	
-	'<div style="top:84px;width:50%;text-align:right;font-weight:bold;font-size:16px;">{{firstname}} {{lastname}} |</div>\
+	'<div style="top:84px;width:50%;text-align:right;font-weight:bold;font-size:16px;">{{first name}} {{last name}} |</div>\
 	<div style="top:88px;left:50%;width:50%;text-align:left;">&nbsp;{{title}}</div>\
-	<div style="top:104px;width:100%;text-align:center;">{{company}}</div>\
+	<div style="top:104px;width:100%;text-align:center;">{{company name}}</div>\
 	<div style="top:120px;width:100%;text-align:center;">{{address}}, {{city}}</div>\
-	<div style="top:136px;width:100%;text-align:center;">{{state_prov}} {{country}} {{zip_postal}}</div>\
+	<div style="top:136px;width:100%;text-align:center;">{{state_prov}} {{country}} {{postal code}}</div>\
 	<div style="top:152px;width:50%;text-align:right;">{{website}} |</div>\
-	<div style="top:152px;left:50%;width:50%;text-align:left;">&nbsp;E: {{email}}</div>\
+	<div style="top:152px;left:50%;width:50%;text-align:left;">&nbsp;E: {{email principal}}</div>\
 	<div style="top:168px;width:50%;text-align:right;">C: {{cellphone}} |</div>\
 	<div style="top:168px;left:50%;width:50%;text-align:left;">&nbsp;F: {{fax}}</div>\
 	<div class="img" style="top:0px;width:75px;height:75px;left:50%;margin-left:-38px;background-image:url({{logo}});">\
@@ -188,53 +190,6 @@ $$(document).on('form:success', 'form.ajax-submit', function (e) {
 	
 });
 
-$$(".share").on("click", function(){
-	var buttons1 = [
-        {
-            text: '<i class="fa fa-envelope fa-lg"></i><div class="eq_nutton"> Email</div>',
-            bold: true,
-            color: 'gray'
-        },
-        {
-            text: '<i class="fa fa-comment fa-lg"></i><div class="eq_nutton"> SMS</div>',
-            bold: true,
-            color: 'gray'
-        },
-        {
-            text: '<i class="fa fa-qrcode fa-lg"></i><div onclick="qrcode_open()" class="eq_nutton"> QR code</div>',
-            bold: true,
-            color: 'gray'
-        },
-        {
-            text: '<i class="fa fa-twitter fa-lg"></i><div class="eq_nutton"> Twitter</div>',
-            bold: true,
-            color: 'gray'
-        },
-        {
-            text: '<i class="fa fa-facebook-official fa-lg"></i><div class="eq_nutton"> Facebook</div>',
-            bold: true,
-            color: 'gray'
-        },
-        {
-            text: '<i class="fa fa-facebook-official fa-lg"></i><div class="eq_nutton"> Messenger</div>',
-            bold: true,
-            color: 'gray'
-        },
-        {
-            text: '<i class="fa fa-linkedin-square fa-lg"></i><div class="eq_nutton"> LinkedIn</div>',
-            bold: true,
-            color: 'gray'
-        }
-    ];
-    var buttons2 = [
-        {
-            text: 'Cancel',
-            color: 'red'
-        }
-    ];
-    var groups = [buttons1, buttons2];
-    myApp.actions(groups);
-});
 
 $$(".current-list-open").on("click", function(){
 	
@@ -258,18 +213,16 @@ $$(".waiting-list-open").on("click", function(){
 });
 
 $$(".card-cropper-open").on("click", function(){
-	
 	mainView.router.load({pageName: 'card-cropper'});
 	openCamera(false);
-	
 });
 
-
-
 $$(".my-card-open").on("click", function(){
-	
 	card_form_open(mycard);
-	
+});
+
+$$(".home-open").on("click", function () {
+	mainView.router.load({pageName: 'index'});
 });
 
 $$(document).on("click", ".radio_btn", function () {
@@ -281,6 +234,11 @@ $$(document).on("click", ".radio_btn", function () {
 $$(document).on("click", "li.reputation i.fa", function () {
 	if ($$(this).hasClass('own')) return false;
 	card_form_star($$(this).data("star"));
+});
+
+$$(document).on("click", "i.fa-edit", function () {
+	$$("ul.thecard").toggleClass("disabled");
+	$$("ul.card-form-ul-acc, div.card-form-buttons").toggleClass("hidden");
 });
 
 function card_offer() {
@@ -319,11 +277,6 @@ function card_offer_complete() {
 	);
 } 
 
-$$('#file_upload').on("change", function(event) {
-   var tmppath = URL.createObjectURL(event.target.files[0]);
-   $$("#img_upload").attr('src',tmppath);
-});
-
 $$(".log-off").on("click", function(){
 	myApp.formDeleteData('login_form');
 	welcomescreen.open();
@@ -336,8 +289,6 @@ $$(".card_template").on("click", function() {
 	$$("#template_text").text($$(this).data("name"));
 	$$("#template").val($$(this).attr("id"));
 });
-
-
 
 function card_form_star(star) {
 	star = parseFloat(star*1);
@@ -352,6 +303,7 @@ function card_form_star(star) {
 function card_form_open(context) {
 	
 	context["template_text"] = templates_name[context.template];
+	
 	if (context.birthdate) context["birthdate"] = context.birthdate.substr(0,10);
 	
 	var html = cardForm(context);
@@ -360,8 +312,80 @@ function card_form_open(context) {
 	
 	card_populate('thecard',context);
 	
+	var cardid = context.id;
+	var v = '', n = '', fieldid = '', h = '', h2 = '';
+	var h1 = '<input type="hidden" name="id" value="'+cardid+'"/>';
+ 	$$.each(fields, function (ii,f) {
+ 	  if (f.id == 36 || f.id == 37 || f.id == 30) return true;
+ 	  v = '';
+	  $$.each(cards_fields, function(iii,cf) {
+	  	 if (cf.card_id==cardid && cf.field_id==f.id) {
+	  	 	v = cf.value + '';
+	  	 	fieldid = cf.field_id;
+	  	 	return false;
+	  	 }
+	  });
+	  if (f.base || v!='') {
+       n = f['en'].charAt(0).toUpperCase() + f['en'].substr(1)
+       h = '<li> \
+            <div class="item-content"> \
+              <div class="item-inner"> \
+                <div class="item-title label">'+n+'</div> \
+                <div class="item-input"> \
+                  <input type="text" name="'+fieldid+'" placeholder="Your '+n+'" value="'+v+'"/> \
+                </div> \
+              </div> \
+            </div> \
+          </li>';
+       (f.base ? h1 += h : h2 += h);
+     }
+	});
+	$$(".card-form-ul-"+cardid).html(h1+h2);
+	
 	//card_form_star(context.reputation);
 	
+}
+
+function card_form_add_field(cardid) {
+	
+	var fields_keys = [];
+	var fields_vals = [];
+	$$.each(fields, function (k,v) {
+		if ($$(".card-form-ul-"+cardid).find("input[name='"+v.id+"']").length==0) {
+			fields_keys.push(v.id);
+			fields_vals.push(v.en);
+		}
+	});
+	fields_keys.push(0);
+	fields_vals.push('custom field');
+	
+	console.log(fields_vals.length)
+	
+	var fields_picker = myApp.picker({
+		input: ".card_form_add_field",
+		toolbarCloseText: 'Close',
+		cols: [
+			{
+				values: fields_keys,
+				displayValues: fields_vals
+			}
+		],
+		onClose: function(p){
+       	h = '<li> \
+            <div class="item-content"> \
+              <div class="item-inner"> \
+                <div class="item-title label">'+p.displayValue[0]+'</div> \
+                <div class="item-input"> \
+                  <input type="text" name="'+p.value[0]+'" placeholder="Your '+p.displayValue[0]+'" value=""/> \
+                </div> \
+              </div> \
+            </div> \
+          </li>';
+         $$(".card-form-ul-acc").append(h);
+			fields_picker.destroy();
+		}
+	});  
+	fields_picker.open();
 }
 
 function card_form_record(){
@@ -546,9 +570,21 @@ function geoloc() {
 
 function card_populate(id,data) { 
 	
+	var cardid = data.id;
 	var html = cards_templates[(data.template ? data.template : 0)];
-	$$.each(['firstname','lastname','title','company','address','city','state_prov','zip_postal','country','website','email','cellphone','fax','logo'], function(i,e){
-		var v = (data[e] ? data[e] : '') 
+	$$.each(['first name','last name','title','company name','address','city','state_prov','postal code','country','website','email principal','cellphone','fax','logo'], function(i,e){
+		var v = '';
+ 		$$.each(fields, function (ii,f) {
+			if(e==f.en) {
+			  $$.each(cards_fields, function(iii,cf) {
+			  	 if (cf.card_id==cardid && cf.field_id==f.id) {
+			  	 	v = cf.value + '';
+			  	 	return false;
+			  	 }
+			  });
+			  return false;
+			}
+		});
 		html = html.replace(new RegExp('{{'+e+'}}', 'g'), v);
 	});
 	
@@ -719,12 +755,21 @@ socket.on('card login', function (data) {
 
 socket.on('card load', function (data) {
 	
-	mycard = data;
+	console.log(data);
+	fields = data.fields;
+	cards_fields = data.cards_fields;
+	
+	mycard["id"] = data.id;
+	mycard["points"] = parseInt(data.points);
+	mycard["points_target"] = data.points_target;
+	mycard["points_img"] = data.points_img;
+	mycard["points_color"] = data.points_color;
+	mycard["gender"] = data.gender;
+	mycard["language"] = data.language;
 	mycard["titre"] = "My profile";
 	mycard["current"] = "0";
 	mycard["own"] = "1";
 	
-	mycard.points = parseInt(mycard.points);
 	$$(".pieID.pie_text").html(mycard.points_img +'<br>'+ Math.round(mycard.points/mycard.points_target*100)+"%");
 	$$(".pieID.legend span.actual").html(mycard.points+"");
 	$$(".pieID.legend span.missing").html(mycard.points_target-mycard.points+"");
@@ -746,6 +791,8 @@ socket.on('card load', function (data) {
 	
 	card_populate('mycard',mycard);
 	
+	
+	
 	var h = $$("#mycard").width() / 3.5 * 2.0;
 	var t = $$("#mycard").offset().top;
 	$$("#mycard").data("top", t);
@@ -753,7 +800,7 @@ socket.on('card load', function (data) {
 	
 	var draggie = new Draggabilly( '#mycard', { axis:"y" });
 	draggie.on( 'dragEnd', function( event, pointer ) {
-		if (this.position.y < 30) {
+		if (this.position.y < (t-h)) {
 			card_offered();
 		} else {
 			card_offer_complete();
@@ -761,17 +808,18 @@ socket.on('card load', function (data) {
 	});
 	draggie.on( 'staticClick', card_offer);
 	
-	if (mycard.cards) {
-		cards = mycard.cards;
+	if (data.cards) {
+		cards = data.cards;
 		if (cards.current) $$(".badge.current-list-nbr").html(cards.current.length);
 		if (cards.waiting) $$(".badge.waiting-list-nbr").html(cards.waiting.length);
 	}
 	
-	if (!mycard.firstname || !mycard.lastname || !mycard.cellphone) {
+	/*
+	if (!data.firstname || !data.lastname || !data.cellphone) {
 		card_form_open(mycard);
 		myApp.alert("Your card is not complete<br>Please enter something in the mandatory fields.");
 	}
-	
+	*/
 	myApp.hidePreloader();
 	
 }); // socket on load
@@ -896,49 +944,93 @@ socket.on('card connected', function(data){
   console.log("card connected response: "+data)
 });
 
-var champs = ['Name','Title','Company','Phone','Cell','Email','Website'];
-var add_card_li = function (i,c,v) {
+var add_card_li = function (ii,c,v) {
 	var Name = /^[a-zéè\-]{2,}\s[a-zéè\-]{2,}$/i;
 	var Company = /\s(lt[eéè]e)|\s(inc)|\s(enr)/i;
 	var Email = /\w+@\w+/;
 	var Website = /(www.)|(.com)|(.ca)/i;
 	if (v.match(Company)) {
-		c = 'Company';
+		i = 29;
 	}
 	else if (v.match(Name)) {
-		c = 'Name';
+		i = 30;
 	}
 	else if (v.match(Email)) {
-		c = 'Email';
+		i = 33;
 	}
 	else if (v.match(Website)) {
-		c = 'Website';
+		i = 41;
+	} 
+	else {
+		i = '';
 	}
+	
+	var l = ii, n = '';
+	
+	$.each(fields, function(ii,kv) {
+		if (i==kv.id) {
+			n = kv["en"];
+			l = n.substr(0,1).toUpperCase() + n.substr(1).toLowerCase();
+			return false;
+		}
+	});
 	
 	var li = '<li class="list-item">\
 	            <div class="item-content">\
 	              <div class="item-media color-red"><i class="fa fa-times-circle"></i></div>\
 	              <div class="item-inner"> \
-	                <div class="item-title label">\
-	                <select name="field_'+i+'">\
-		                <option>Skip</option>\
-		                <option'+(c=='Email' ? ' selected' : '')+'>Email</option>\
-		                <option'+(c=='Name' ? ' selected' : '')+'>Name</option>\
-		                <option'+(c=='Company' ? ' selected' : '')+'>Company</option>\
-		                <option'+(c=='Website' ? ' selected' : '')+'>Website</option>\
-		                <option>Buziness phone</option>\
-		                <option>Cell phone</option>\
-		                <option>Comment</option>\
-	                </select>\
-	                </div>\
+	                <div class="item-title label" onClick="card_set_field(0,'+ii+')">'+l+'</div>\
 	                <div class="item-input">\
-	                  <input type="text" name="value_'+i+'" placeholder="" value="'+v+'"/>\
+	                  <input type="text" name="'+i+'" value="'+v+'"/>\
 	                </div>\
 	              </div>\
 	            </div>\
 	          </li>';
-	
 	$$("#add_card_list").html($$("#add_card_list").html()+li);
+	
+}
+
+function card_field_add(p) {
+ 	h = '<li class="list-item"> \
+      <div class="item-content"> \
+	     <div class="item-media color-red"><i class="fa fa-times-circle"></i></div>\
+        <div class="item-inner"> \
+          <div class="item-title label">'+p.displayValue[0]+'</div> \
+          <div class="item-input"> \
+            <input type="text" name="'+p.value[0]+'" placeholder="Your '+p.displayValue[0]+'" value=""/> \
+          </div> \
+        </div> \
+      </div> \
+    </li>';
+   $$("#add_card_list").append(h);
+	p.destroy();
+}
+
+function card_set_field(add,id) {
+	
+	var fields_keys = [];
+	var fields_vals = [];
+	$$.each(fields, function (k,v) {
+		if ($$("#add_card_list").find("input[name='"+v.id+"']").length==0) {
+			fields_keys.push(v.id);
+			fields_vals.push(v.en);
+		}
+	});
+	fields_keys.push(0);
+	fields_vals.push('custom field');
+	
+	var fields_picker = myApp.picker({
+		input: ".card_set_field",
+		toolbarCloseText: 'Close',
+		cols: [
+			{
+				values: fields_keys,
+				displayValues: fields_vals
+			}
+		],
+		onClose: (add ? card_field_add : card_field_set)
+	});  
+	fields_picker.open();
 }
 
 socket.on('card ocr', function(data){
@@ -964,8 +1056,6 @@ function online(event) {
 
 function _init() {
 	
-	console.log($connected)
-	
 	var storedData = myApp.formGetData('login_form');
 	
 	if (storedData) {
@@ -984,7 +1074,7 @@ _init();
 	function setOptions(srcType) {
 	    var options = {
 	        // Some common settings are 20, 50, and 100
-	        quality: 75,
+	        quality: 50,
 	        destinationType: Camera.DestinationType.FILE_URI,
 	        // In this app, dynamically set the picture source, Camera or photo gallery
 	        sourceType: srcType,
@@ -1145,4 +1235,14 @@ $$("#img_record_btn").on("click", function(){
 
 (function (document) {
 	cropper_init();
+	
+	document.addEventListener("backbutton", function(e){
+       if($.mobile.activePage.is('#homepage')){
+           e.preventDefault();
+           navigator.app.exitApp();
+       }
+       else {
+           navigator.app.backHistory();
+       }
+    }, false);
 }(document));
