@@ -965,7 +965,7 @@ var add_card_li = function (ii,c,v) {
 	
 	var l = ii, n = '';
 	
-	$.each(fields, function(ii,kv) {
+	$$.each(fields, function(ii,kv) {
 		if (i==kv.id) {
 			n = kv["en"];
 			l = n.substr(0,1).toUpperCase() + n.substr(1).toLowerCase();
