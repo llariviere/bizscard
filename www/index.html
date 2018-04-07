@@ -12,7 +12,7 @@
 	 <link rel="stylesheet" href="css/font-awesome.min.css">
 	
     <link rel="stylesheet" href="css/welcomescreen.css">
-    <link rel="stylesheet" href="css/bizswap.css?v=20180212.2235">
+    <link rel="stylesheet" href="css/bizswap.css?v=20180402.2235">
     <link rel="shortcut icon" type="image/png" href="img/favicon.png"/>
     <link rel="manifest" href="js/manifest.json">
   </head>
@@ -104,10 +104,10 @@
         <div class="navbar">
         
           <div class="navbar-inner" data-page="index">
-            <div class="center sliding">Bizswiper</div>
-            <div class="right">
+            <div class="left">
               <a href="#" class="link icon-only open-panel"> <i class="fa fa-bars fa-lg"></i></a>
             </div>
+            <div class="center sliding"><h3>Bizswiper</h3></div>
           </div>
           
 	      <div class="navbar-inner cached" data-page="card-cropper">
@@ -116,7 +116,7 @@
             </div>
 	        <div class="center sliding">Crop card contour</div>
             <div class="right">
-              <a href="#" class="link icon-only open-panel"> <i class="fa fa-bars fa-lg"></i></a>
+              <a href="#card-entry" class="link icon-only"> <i class="fa fa-edit fa-lg"></i></a>
             </div>
 	      </div>
           
@@ -125,9 +125,6 @@
               <a href="#" class="link icon-only back"> <i class="icon icon-back"></i></a>
             </div>
 	        <div class="center sliding">Enter card fields</div>
-            <div class="right">
-              <a href="#" class="link icon-only open-panel"> <i class="fa fa-bars fa-lg"></i></a>
-            </div>
 	      </div>
           
           <div class="navbar-inner cached" data-page="current-list">
@@ -135,9 +132,6 @@
               <a href="#" class="link icon-only back"> <i class="icon icon-back"></i></a>
             </div>
             <div class="center sliding">Current card list</div>
-            <div class="right">
-              <a href="#" class="link icon-only open-panel"> <i class="fa fa-bars fa-lg"></i></a>
-            </div>
           </div>
           
           <div class="navbar-inner cached" data-page="waiting-list">
@@ -145,9 +139,6 @@
               <a href="#" class="link icon-only back"> <i class="icon icon-back"></i></a>
             </div>
             <div class="center sliding">Waiting card list</div>
-            <div class="right">
-              <a href="#" class="link icon-only open-panel"> <i class="fa fa-bars fa-lg"></i></a>
-            </div>
           </div>
           
           <div class="navbar-inner cached" data-page="card-form">
@@ -156,7 +147,7 @@
             </div>
             <div class="center sliding">Card form</div>
             <div class="right">
-              <a href="#" class="link icon-only open-panel"> <i class="fa fa-bars fa-lg"></i></a>
+              <a href="#" class="link icon-only"> <i class="fa fa-edit fa-lg"></i></a>
             </div>
           </div>
           
@@ -165,8 +156,8 @@
         
         <div class="toolbar tabbar">
 		    <div class="toolbar-inner">
-		        <a href="#" class="tab-link share">
-		            <i class="fa fa-share-alt fa-lg"></i>
+		        <a href="#" class="tab-link home-open">
+		            <i class="fa fa-home fa-2x"></i>
 		        </a>
 		        <a href="#" class="tab-link current-list-open">
 		            <i class="fa fa-id-card-o fa-lg"></i>
@@ -237,26 +228,26 @@
           
         <div class="page cached no-tabbar" data-page="card-cropper">
 		      
-		        <div class="page-content">
-		        
-					<div class="container"><img id="img_upload" src="" alt=""></div>
-					
-					<div class="container">
-					
-					  <div id="visualElements"></div>
-					
-					  <div id="cornercontainer">
-					    <div id="corner1" class="corner"><div class="handle"></div></div>
-					    <div id="corner2" class="corner"><div class="handle"></div></div>
-					    <div id="corner3" class="corner"><div class="handle"></div></div>
-					    <div id="corner4" class="corner"><div class="handle"></div></div>
-					    <div id="img_record_btn"><div>Save</div></div>
-					  </div>
-					</div>
-					
-					<div class="card-top-edge">Top edge of the card</div>
-
-		        </div>
+	        <div class="page-content">
+	        
+				<div class="container"><img id="img_upload" src="" alt=""></div>
+				
+				<div class="container">
+				
+				  <div id="visualElements"></div>
+				
+				  <div id="cornercontainer">
+				    <div id="corner1" class="corner"><div class="handle"></div></div>
+				    <div id="corner2" class="corner"><div class="handle"></div></div>
+				    <div id="corner3" class="corner"><div class="handle"></div></div>
+				    <div id="corner4" class="corner"><div class="handle"></div></div>
+				    <div id="img_record_btn"><div>Save</div></div>
+				  </div>
+				</div>
+				
+				<div class="card-top-edge">Top edge of the card</div>
+	
+	        </div>
 		        
         </div>
         
@@ -278,10 +269,9 @@
 				
 		      <div class="content-block">
 		        <div class="row">
-		          <div class="col-50"><a href="#" onclick="mainView.router.back()" class="button button-big button-fill color-red">Cancel</a></div>
-		          <div class="col-50">
-		            <input type="button" onclick="card_add()" value="Record" class="button button-big button-fill color-green"/>
-		          </div>
+		          <div class="col-33"><a href="#index" class="button button-big button-fill bg-red"><i class="fa fa-times-circle"></i> Cancel</a></div>
+		          <div class="col-33"><a href="#" onclick="card_set_field(1,0);" class="card_set_field button button-big button-fill bg-blue"><i class="fa fa-plus-square"></i> Field</a></div>
+		          <div class="col-33"><a href="#" onclick="card_add()" class="button button-big button-fill bg-green"><i class="fa fa-save"></i> Record</a></div>
 		        </div>
 		      </div>
 	        </div>
@@ -412,11 +402,6 @@
 		        </a>
 		    </div>
 			<div class="center "><h3>Card list</h3></div>
-			<div class="right">
-				<a href="#" data-panel="left" class="link open-panel icon-only">
-					<i class="fa fa-bars fa-lg"></i>
-				</a>
-			</div>
 		</div>
 	</div>
 
@@ -503,11 +488,6 @@
 		        </a>
 		    </div>
 			<div class="center "><h3>Waiting list</h3></div>
-			<div class="right">
-				<a href="#" data-panel="left" class="link open-panel icon-only">
-					<i class="fa fa-bars fa-lg"></i>
-				</a>
-			</div>
 		</div>
 	</div>
 
@@ -581,16 +561,12 @@
   <div class="navbar">
 	<div class="navbar-inner" data-page="card-{{id}}">
 		<div class="left">
-            <a href="#" class="link icon-only back">
-                <i class="icon icon-back"></i>
-            </a>
-        </div>
+         <a href="#" class="link icon-only back"><i class="icon icon-back"></i></a>
+      </div>
 		<div class="center "><h3>{{titre}}</h3></div>
-		<div class="right">
-			<a href="#" data-panel="left" class="link open-panel icon-only">
-				<i class="fa fa-bars fa-lg"></i>
-			</a>
-		</div>
+      <div class="right">
+        <a href="#" class="link icon-only"> <i class="fa fa-edit fa-lg thecard"></i></a>
+      </div>
 	</div>
   </div>
 
@@ -598,100 +574,14 @@
     
 	  <div class="page" data-page="card-{{id}}">
 	  
-	  <div class="page-content">
+	  <div class="page-content">	  
 	  
-	     <div id="thecard">
-	       <div class="content"></div>
-	       <div class="points"><img src="img/badge_none.png" alt="points"></div>
-	     </div>
-	  
-	  
-	  	<form id="thecard_form">
+	  	<form class="thecard_form ">
       <div class="list-block">
-        <ul>
-          <li>
-            <div class="item-content">
-              <div class="item-inner"> 
-                <div class="item-title label">First name</div>
-                <div class="item-input">
-                  <input type="hidden" name="id" value="{{id}}"/>
-                  <input type="text" name="firstname" placeholder="Your first name" value="{{firstname}}"/>
-                </div>
-              </div>
-            </div>
-          </li>
-          <li>
-            <div class="item-content">
-              <div class="item-inner"> 
-                <div class="item-title label">Last name</div>
-                <div class="item-input">
-                  <input type="text" name="lastname" placeholder="Your last name" value="{{lastname}}"/>
-                </div>
-              </div>
-            </div>
-          </li>
-          <li>
-            <div class="item-content">
-              <div class="item-inner"> 
-                <div class="item-title label">Title</div>
-                <div class="item-input">
-                  <input type="text" name="title" placeholder="Your job title" value="{{title}}"/>
-                </div>
-              </div>
-            </div>
-          </li>  
-          
-          <li>
-            <div class="item-content">
-              <div class="item-inner"> 
-                <div class="item-title label">E-mail</div>
-                <div class="item-input">
-                  <input type="email" name="email" placeholder="E-mail" value="{{email}}"/>
-                </div>
-              </div>
-            </div>
-          </li>
-          <li>
-            <div class="item-content">
-              <div class="item-inner"> 
-                <div class="item-title label">Cell phone</div>
-                <div class="item-input">
-                  <input type="tel" name="cellphone" placeholder="Phone" value="{{cellphone}}"/>
-                </div>
-              </div>
-            </div>
-          </li>
-          <li>
-            <div class="item-content">
-              <div class="item-inner"> 
-                <div class="item-title label">Fax numer</div>
-                <div class="item-input">
-                  <input type="tel" name="fax" placeholder="fax" value="{{fax}}"/>
-                </div>
-              </div>
-            </div>
-          </li>
-          <li>
-            <div class="item-content">
-              <div class="item-inner"> 
-                <div class="item-title label">Birth date</div>
-                <div class="item-input">
-                  <input type="date" name="birthdate" placeholder="Birth day" value="{{birthdate}}"/>
-                </div>
-              </div>
-            </div>
-          </li>
-          <li>
-            <div class="item-content">
-              <div class="item-inner"> 
-                <div class="item-title label">Company</div>
-                <div class="item-input">
-                  <input type="text" name="company" placeholder="Company" value="{{company}}"/>
-                </div>
-              </div>
-            </div>
-          </li>
 
+        <ul class="thecard card-form-ul-{{id}} disabled"></ul>
+        
+        <ul class="card-form-ul-acc hidden">
 		    <li>
             <div class="item-content" onClick="category_open()">
               <div class="item-inner"> 
@@ -702,72 +592,8 @@
                 <div class="item-after"><input type="hidden" name="category" id="category" value="{{category}}"/></div>
               </div>
             </div>
-		    </li>          
-          
-          <li>
-            <div class="item-content">
-              <div class="item-inner"> 
-                <div class="item-title label">Address</div>
-                <div class="item-input">
-                  <input type="text" name="address" value="{{address}}"/>
-                </div>
-              </div>
-            </div>
-          </li>         
-          
-          <li>
-            <div class="item-content">
-              <div class="item-inner"> 
-                <div class="item-title label">City</div>
-                <div class="item-input">
-                  <input type="text" name="city" value="{{city}}"/>
-                </div>
-              </div>
-            </div>
-          </li>         
-          
-          <li>
-            <div class="item-content">
-              <div class="item-inner"> 
-                <div class="item-title label">State/Province</div>
-                <div class="item-input">
-                  <input type="text" name="state_prov" value="{{state_prov}}"/>
-                </div>
-              </div>
-            </div>
-          </li>        
-          
-          <li>
-            <div class="item-content">
-              <div class="item-inner"> 
-                <div class="item-title label">Zip/Postal</div>
-                <div class="item-input">
-                  <input type="text" name="zip_postal" value="{{zip_postal}}"/>
-                </div>
-              </div>
-            </div>
-          </li>              
-          
-          <li>
-            <div class="item-content">
-              <div class="item-inner"> 
-                <div class="item-title label">Country</div>
-                <div class="item-input">
-                  <input type="text" name="country" value="{{country}}"/>
-                </div>
-              </div>
-            </div>
-          </li>    
-          <li>
-            <div class="item-content">
-              <div class="item-inner"> 
-                <div class="item-title label">Website</div>
-                <div class="item-input">
-                  <input type="url" name="website" placeholder="URL" value="{{website}}"/>
-                </div>
-              </div>
-            </div>
-          </li>
+		    </li>     
+		    
           <li>
             <div class="item-content">
               <div class="item-inner"> 
@@ -837,10 +663,11 @@
       
       {{#if own}}
       
-      <div class="content-block">
+      <div class="content-block card-form-buttons hidden">
         <div class="row">
-          <div class="col-50"><a href="#" onclick="mainView.router.back()" class="button button-big button-fill bg-gray">Cancel</a></div>
-          <div class="col-50"><a href="#" onclick="card_form_record()" class="button button-big button-fill bg-green">Record</a></div>
+          <div class="col-33"><a href="#" onclick="mainView.router.back()" class="button button-big button-fill bg-gray"><i class="fa fa-times-circle"></i> Cancel</a></div>
+          <div class="col-33"><a href="#" onclick="card_form_add_field({{id}});" class="card_form_add_field button button-big button-fill bg-blue"><i class="fa fa-plus-square"></i> Field</a></div>
+          <div class="col-33"><a href="#" onclick="card_form_record()" class="button button-big button-fill bg-green"><i class="fa fa-save"></i> Record</a></div>
         </div>
       </div>
       
@@ -850,10 +677,11 @@
 	      
 	      	{{#unless payed_date}}
 	      	
-      <div class="content-block">
+      <div class="content-block card-form-buttons hidden">
         <div class="row">
-          <div class="col-50"><a href="#" onclick="mainView.router.back()" class="button button-big button-fill bg-gray">Cancel</a></div>
-          <div class="col-50"><a href="#" onclick="card_form_record()" class="button button-big button-fill bg-green">Record</a></div>
+          <div class="col-33"><a href="#" onclick="mainView.router.back()" class="button button-big button-filfal bg-gray"><i class="fa fa-times-circle"></i> Cancel</a></div>
+          <div class="col-33"><a href="#" onclick="card_form_add_field({{id}});" class="card_form_add_field button button-big button-fill bg-blue"><i class="fa fa-plus-square"></i> Field</a></div>
+          <div class="col-33"><a href="#" onclick="card_form_record()" class="button button-big button-fill bg-green"><i class="fa fa-save"></i> Record</a></div>
         </div>
       </div>
 	      	
@@ -861,7 +689,7 @@
 	      	
 	      {{else}}
 	      
-      <div class="content-block">
+      <div class="content-block card-form-buttons hidden">
         <div class="row">
           <div class="col-50"><a href="#" onclick="card_auth('{{id}}','refuse')" class="button button-big button-fill bg-red">Refuse</a></div>
           <div class="col-50"><a href="#" onclick="card_auth('{{id}}','accept')" class="button button-big button-fill bg-green">Accept</a></div>
@@ -874,7 +702,7 @@
       
       {{#unless payed_date}}
       
-      <div class="content-block">
+      <div class="content-block card-form-buttons hidden">
         <div class="row">
           <div class="col-100">
           	<a href="#" class="button button-big button-fill bg-blue"> {{#if own}}Get the complete version{{else}}Pay for {{#js_compare "this.gender == 'm'"}}him{{else}}her{{/js_compare}}{{/if}} </a>
@@ -885,7 +713,15 @@
       {{/unless}}
       
       </form>
-    </div>
+	  
+     <div id="thecard">
+       <div class="content"></div>
+       <div class="points"><img src="img/badge_none.png" alt="points"></div>
+     </div>
+     
+     <div class="thecard-placeholder"></div>
+	     
+   </div>
     
     
   {{#if current}}
@@ -913,6 +749,6 @@
     <script type="text/javascript" src="js/category.js"></script>
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/socket.io.js"></script>
-    <script type="text/javascript" src="js/bizswap.js?v=201802121035"></script>
+    <script type="text/javascript" src="js/bizswap.js?v=201804030935"></script>
   </body>
 </html>
