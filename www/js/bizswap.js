@@ -1241,7 +1241,7 @@ $$("#img_record_btn").on("click", function(){
            navigator.app.exitApp();
        }
        else {
-           navigator.app.backHistory();
+           mainView.router.back();
        }
     }, false);
 }(document));
