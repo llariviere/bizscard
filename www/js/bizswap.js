@@ -949,6 +949,7 @@ var add_card_li = function (ii,c,v) {
 	var Company = /\s(lt[eéè]e)|\s(inc)|\s(enr)/i;
 	var Email = /\w+@\w+/;
 	var Website = /(www.)|(.com)|(.ca)/i;
+	var i = '';
 	if (v.match(Company)) {
 		i = 29;
 	}
@@ -961,9 +962,6 @@ var add_card_li = function (ii,c,v) {
 	else if (v.match(Website)) {
 		i = 41;
 	} 
-	else {
-		i = '';
-	}
 	
 	var l = ii, n = '';
 	
