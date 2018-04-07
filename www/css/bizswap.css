@@ -12,14 +12,15 @@
 	max-width: 400px;
 	height: 220px;
 	position: absolute;
-	bottom: 65px;
+	bottom: 45px;
 	padding: 15px;
 	box-sizing: border-box;
+	border: solid 5px rgba(0,0,0,.10);
+	z-index: 20;
 } 
 
 #thecard {
-	position: relative;
-	bottom: auto;
+	position: fixed;
 }
 
 
@@ -33,6 +34,10 @@
 	color: #000000;
 	text-shadow: 1px 2px 4px #ffffff;
 	font-size: 12px;
+}
+
+.thecard-placeholder {
+	height: 220px;
 }
 
 #mycard .thumb {
@@ -322,6 +327,8 @@
  }
 }
 
+
+	
 .corner {width:50px; height:50px; position:absolute; }
 
 #cornercontainer .corner {display:block;}
@@ -345,7 +352,7 @@
 
 .container {
 	position: absolute;
-	top: 88px;
+	top: 0;
 	left: 0;
 	width: 360px;
 }
@@ -388,6 +395,7 @@
 #img_record_btn.on > div {
 	background-color: rgba(255,170,0, 0.2);
 	color: rgba(255,170,0, 1);
+	font-size: 20px;
 }
 
 .card-top-edge {
@@ -403,3 +411,7 @@
   	text-orientation: sideways;
 }
 
+ul.hidden,
+div.hidden {
+	display: none;
+}
