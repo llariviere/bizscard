@@ -1036,6 +1036,7 @@ function card_set_field(add,id) {
 socket.on('card ocr', function(data){
 	$$("#add_card_list").html('');
 	$$("#card-entry").find("img").attr("src",data.img);
+	myApp.alert(data.ocr);
 	var lignes = data.ocr.split("\n");
 	for (var i=0; i<lignes.length; i++) {
 		var ligne = lignes[i].replace(/^[ ]+|[ ]+$/g,'');
