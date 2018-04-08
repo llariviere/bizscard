@@ -945,6 +945,9 @@ socket.on('card connected', function(data){
 });
 
 var add_card_li = function (ii,c,v) {
+	
+	if (v.replace(/^[^\d\w]$/,'')=='') return false;
+	
 	var Name = /^[a-zéè\-]{2,}\s[a-zéè\-]{2,}$/i;
 	var Company = /\s(lt[eéè]e)|\s(inc)|\s(enr)/i;
 	var Email = /\w+@\w+/;
