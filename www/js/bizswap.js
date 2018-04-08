@@ -1036,20 +1036,24 @@ function card_set_field(add,ii) {
 	fields_keys.push(0);
 	fields_vals.push('custom field');
 	
-	var fields_picker2 = myApp.picker({
-		input: "#card_set_field",
-		toolbarCloseText: 'Close',
-		cols: [{values: fields_keys, displayValues: fields_vals}]
-	});  
-	
 	if (add) {
-		fields_picker2.onClose(card_field_add);
-	} else {
-		fields_picker2.onClose(function(){
-			$$("#add_card_list > li.ii_"+ii).find(".item-title.label").html(fields_picker2.displayValue[0]);
-			$$("#add_card_list > li.ii_"+ii).find("input").attr("name",fields_picker2.value[0]);
-			fields_picker2.destroy();
+		var fields_picker2 = myApp.picker({
+			input: "#card_set_field",
+			toolbarCloseText: 'Close',
+			cols: [{values: fields_keys, displayValues: fields_vals}],
+			onClose: card_field_add
 		});
+	} else {
+		var fields_picker2 = myApp.picker({
+			input: "#card_set_field",
+			toolbarCloseText: 'Close',
+			cols: [{values: fields_keys, displayValues: fields_vals}],
+			onClose: function(){
+				$$("#add_card_list > li.ii_"+ii).find(".item-title.label").html(fields_picker2.displayValue[0]);
+				$$("#add_card_list > li.ii_"+ii).find("input").attr("name",fields_picker2.value[0]);
+				fields_picker2.destroy();
+			}
+		});  
 	}
 	
 	fields_picker2.open();
