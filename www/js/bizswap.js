@@ -990,7 +990,7 @@ var add_card_li = function (ii,c,v) {
 		}
 	});
 	
-	var li = '<li class="list-item '+ii+'">\
+	var li = '<li class="list-item ii_'+ii+'">\
 	            <div class="item-content">\
 	              <div class="item-media color-red"><i class="fa fa-times-circle"></i></div>\
 	              <div class="item-inner"> \
@@ -1006,7 +1006,8 @@ var add_card_li = function (ii,c,v) {
 }
 
 function card_field_add(p) {
- 	h = '<li class="list-item"> \
+ 	var ii =  $$("#add_card_list > li").length;
+ 	h = '<li class="list-item ii_'+ii+'"> \
       <div class="item-content"> \
 	     <div class="item-media color-red"><i class="fa fa-times-circle"></i></div>\
         <div class="item-inner"> \
@@ -1047,8 +1048,8 @@ function card_set_field(add,ii) {
 			toolbarCloseText: 'Close',
 			cols: [{values: fields_keys, displayValues: fields_vals}],
 			onClose: function(){
-				$$("#add_card_list >li."+ii).find(".item-title.label").html(fields_picker2.displayValue[0]);
-				$$("#add_card_list >li."+ii).find("input").attr("name",fields_picker2.value[0]);
+				$$("#add_card_list > li.ii_"+ii).find(".item-title.label").html(fields_picker2.displayValue[0]);
+				$$("#add_card_list > li.ii_"+ii).find("input").attr("name",fields_picker2.value[0]);
 			}
 		});  
 	}
