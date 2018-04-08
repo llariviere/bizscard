@@ -949,21 +949,34 @@ var add_card_li = function (ii,c,v) {
 	var Company = /\s(lt[eéè]e)|\s(inc)|\s(enr)/i;
 	var Email = /\w+@\w+/;
 	var Website = /(www.)|(.com)|(.ca)/i;
+	var Fax = /(fax)/i;
+	var Cel = /(cel)/i;
+	var Tel = /(.+\d{3}.{1,2}\d{3}.?\d{4})/i;
+	
 	var i = '';
 	if (v.match(Company)) {
-		i = 29;
+		if ($$("#add_card_list").find("input[name='29']").length==0) i = 29;
 	}
 	else if (v.match(Name)) {
-		i = 30;
+		if ($$("#add_card_list").find("input[name='30']").length==0) i = 30;
 	}
 	else if (v.match(Email)) {
-		i = 33;
+		if ($$("#add_card_list").find("input[name='33']").length==0) i = 33;
 	}
 	else if (v.match(Website)) {
-		i = 41;
-	} 
+		if ($$("#add_card_list").find("input[name='41']").length==0) i = 41;
+	}
+	else if (v.match(Fax)) {
+		if ($$("#add_card_list").find("input[name='34']").length==0) i = 34;
+	}
+	else if (v.match(Cel)) {
+		if ($$("#add_card_list").find("input[name='26']").length==0) i = 26;
+	}
+	else if (v.match(Tel)) {
+		if ($$("#add_card_list").find("input[name='24']").length==0) i = 24;
+	}
 	
-	var l = ii, n = '';
+	var l = '', n = '';
 	
 	$$.each(fields, function(ii,kv) {
 		if (i==kv.id) {
@@ -1034,7 +1047,7 @@ function card_set_field(add,id) {
 socket.on('card ocr', function(data){
 	$$("#add_card_list").html('');
 	$$("#card-entry").find("img").attr("src",data.img);
-	myApp.alert(data.ocr);
+	
 	var lignes = data.ocr.split("\n");
 	for (var i=0; i<lignes.length; i++) {
 		var ligne = lignes[i].replace(/^[ ]+|[ ]+$/g,'');
@@ -1220,7 +1233,7 @@ function cropper_init() {
 
 $$("#img_record_btn").on("click", function(){
 	
-	if (!img_base64) return;
+	if (!img_base64) return false;
 	
 	$$(this).addClass("on")
 	$$(this).find('div').text("Saving");
@@ -1238,7 +1251,7 @@ $$("#img_record_btn").on("click", function(){
 	document.addEventListener("backbutton", function(e){
        if($.mobile.activePage.is('#homepage')){
            e.preventDefault();
-           navigator.app.exitApp();
+           //navigator.app.exitApp();
        }
        else {
            mainView.router.back();
