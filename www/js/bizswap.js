@@ -952,6 +952,7 @@ var add_card_li = function (ii,c,v) {
 	var Fax = /(fax)/i;
 	var Cel = /(cel)/i;
 	var Tel = /(.+\d{3}.{1,2}\d{3}.?\d{4})/i;
+	var Add = /^(\d{1,2}[,\d]\d+[\s,].+)/i;
 	
 	var i = '';
 	if (v.match(Company)) {
@@ -975,8 +976,11 @@ var add_card_li = function (ii,c,v) {
 	else if (v.match(Tel)) {
 		if ($$("#add_card_list").find("input[name='24']").length==0) i = 24;
 	}
+	else if (v.match(Add)) {
+		if ($$("#add_card_list").find("input[name='22']").length==0) i = 22;
+	}
 	
-	var l = '', n = '';
+	var l = '-change-', n = '';
 	
 	$$.each(fields, function(ii,kv) {
 		if (i==kv.id) {
@@ -986,11 +990,11 @@ var add_card_li = function (ii,c,v) {
 		}
 	});
 	
-	var li = '<li class="list-item">\
+	var li = '<li class="list-item '+ii+'">\
 	            <div class="item-content">\
 	              <div class="item-media color-red"><i class="fa fa-times-circle"></i></div>\
 	              <div class="item-inner"> \
-	                <div class="item-title label" onClick="card_set_field(0,'+ii+')">'+l+'</div>\
+	                <div class="item-title label" data-ii="'+ii+'">'+l+'</div>\
 	                <div class="item-input">\
 	                  <input type="text" name="'+i+'" value="'+v+'"/>\
 	                </div>\
@@ -1017,7 +1021,7 @@ function card_field_add(p) {
 	p.destroy();
 }
 
-function card_set_field(add,id) {
+function card_set_field(add,ii) {
 	
 	var fields_keys = [];
 	var fields_vals = [];
@@ -1030,18 +1034,26 @@ function card_set_field(add,id) {
 	fields_keys.push(0);
 	fields_vals.push('custom field');
 	
-	var fields_picker = myApp.picker({
-		input: ".card_set_field",
-		toolbarCloseText: 'Close',
-		cols: [
-			{
-				values: fields_keys,
-				displayValues: fields_vals
+	if (add) {
+		var fields_picker2 = myApp.picker({
+			input: ".card_set_field",
+			toolbarCloseText: 'Close',
+			cols: [{values: fields_keys, displayValues: fields_vals}],
+			onClose: card_field_add
+		});  
+	} else {
+		var fields_picker2 = myApp.picker({
+			input: ".card_set_field",
+			toolbarCloseText: 'Close',
+			cols: [{values: fields_keys, displayValues: fields_vals}],
+			onClose: function(){
+				$$("#add_card_list >li."+ii).find(".item-title.label").html(fields_picker2.displayValue[0]);
+				$$("#add_card_list >li."+ii).find("input").attr("name",fields_picker2.value[0]);
 			}
-		],
-		onClose: (add ? card_field_add : card_field_set)
-	});  
-	fields_picker.open();
+		});  
+	}
+	
+	fields_picker2.open();
 }
 
 socket.on('card ocr', function(data){
@@ -1056,6 +1068,10 @@ socket.on('card ocr', function(data){
 	$$("#add_card_list").find(".color-red").on("click", function () {
 		$$(this).parents("li").remove();
 	});
+	$$("#add_card_list").find(".item-title.label").on("click", function () {
+		card_set_field(0,$$(this).data("ii"));
+		
+	}); // item-title label
 	mainView.router.load({pageName: 'card-entry'});
 	
 	$$("#img_upload").attr('src','').hide();
