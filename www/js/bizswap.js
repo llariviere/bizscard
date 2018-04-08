@@ -1023,6 +1023,12 @@ function card_field_add(p) {
 	p.destroy();
 }
 
+function card_field_set(p){
+	$$("#add_card_list > li.ii_"+p.ii).find(".item-title.label").html(p.displayValue[0]);
+	$$("#add_card_list > li.ii_"+p.ii).find("input").attr("name",p.value[0]);
+	p.destroy();
+}
+
 function card_set_field(add,ii) {
 	
 	var fields_keys = [];
@@ -1048,11 +1054,7 @@ function card_set_field(add,ii) {
 			input: "#card_set_field",
 			toolbarCloseText: 'Close',
 			cols: [{values: fields_keys, displayValues: fields_vals}],
-			onClose: function(){
-				$$("#add_card_list > li.ii_"+ii).find(".item-title.label").html(fields_picker2.displayValue[0]);
-				$$("#add_card_list > li.ii_"+ii).find("input").attr("name",fields_picker2.value[0]);
-				fields_picker2.destroy();
-			}
+			onClose: card_field_set
 		});  
 	}
 	
