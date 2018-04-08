@@ -357,7 +357,7 @@ function card_form_add_field(cardid) {
 		}
 	});
 	fields_keys.push(0);
-	fields_vals.push('custom field');=
+	fields_vals.push('custom field');
 	
 	var fields_picker = myApp.picker({
 		input: ".card_form_add_field",
