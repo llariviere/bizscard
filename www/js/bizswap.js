@@ -1031,6 +1031,21 @@ function card_field_set(p){
 
 function card_set_field(add,ii) {
 	
+	if (add) {
+		var html = '<select onchange="card_field_add(this.value)"><option value="">-change-</option>';
+	} else {
+		var html = '<select onchange="card_field_set('+ii+',this.options[this.selectedIndex])"><option value="">-change-</option>';
+	}
+	$$.each(fields, function (k,v) {
+		if ($$("#add_card_list").find("input[name='"+v.id+"']").length==0) {
+			html += '<option value="'+v.id+'">'+v['en']+'</option>';
+		}
+	});
+	html += '<option value="0">Custom field</option></select>';
+	$$("#add_card_list > li.ii_"+ii).find(".item-title.label").html(html);
+	
+	return false;
+	
 	var fields_keys = [];
 	var fields_vals = [];
 	$$.each(fields, function (k,v) {
