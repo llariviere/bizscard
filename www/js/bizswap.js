@@ -214,7 +214,7 @@ $$(".waiting-list-open").on("click", function(){
 
 $$(".card-cropper-open").on("click", function(){
 	mainView.router.load({pageName: 'card-cropper'});
-	openCamera(false);
+	camera_open(false);
 });
 
 $$(".my-card-open").on("click", function(){
@@ -348,42 +348,43 @@ function card_form_open(context) {
 
 function card_form_add_field(cardid) {
 	
-	var fields_keys = [];
-	var fields_vals = [];
+	var html = '';
+	
 	$$.each(fields, function (k,v) {
 		if ($$(".card-form-ul-"+cardid).find("input[name='"+v.id+"']").length==0) {
-			fields_keys.push(v.id);
-			fields_vals.push(v.en);
+			
+			html += '<li> \
+		      <label class="label-radio item-content"> \
+		        <input type="radio" name="card_set_field_input" value="'+v.id+'"> \
+		        <div class="item-inner"> \
+		          <div class="item-title">'+v['en']+'</div> \
+		        </div> \
+		      </label> \
+		    </li>';
 		}
 	});
-	fields_keys.push(0);
-	fields_vals.push('custom field');
 	
-	var fields_picker = myApp.picker({
-		input: ".card_form_add_field",
-		toolbarCloseText: 'Close',
-		cols: [
-			{
-				values: fields_keys,
-				displayValues: fields_vals
-			}
-		],
-		onClose: function(p){
-       	h = '<li> \
-            <div class="item-content"> \
-              <div class="item-inner"> \
-                <div class="item-title label">'+p.displayValue[0]+'</div> \
-                <div class="item-input"> \
-                  <input type="text" name="'+p.value[0]+'" placeholder="Your '+p.displayValue[0]+'" value=""/> \
-                </div> \
-              </div> \
-            </div> \
-          </li>';
-         $$(".card-form-ul-acc").append(h);
-			fields_picker.destroy();
-		}
-	});  
-	fields_picker.open();
+	html += '<li> \
+      <label class="label-radio item-content"> \
+        <input type="radio" name="card_set_field_input" value="0"> \
+        <div class="item-inner"> \
+          <div class="item-title">Custom field</div> \
+        </div> \
+      </label> \
+    </li>';
+	
+	$$("#fields_page_ul").html(html);
+	
+	$$("#fields_page_ul > li").on("click", function(){
+		$$(this).find("input").prop("checked",true);
+	});
+	
+	$$("#fields_page_close").on("click", function(){
+		var field = $$("#fields_page_ul input.checked")
+		myApp.alert($$("#fields_page_ul input[name='card_set_field_input']").val() +' '+ $$("#fields_page_ul input[name='card_set_field_input']").text())
+	});
+	
+	mainView.router.load({pageName: "fields"})
 }
 
 function card_form_record(){
@@ -942,7 +943,7 @@ socket.on('card connected', function(data){
   console.log("card connected response: "+data)
 });
 
-var add_card_li = function (ii,c,v) {
+var add_card_li = function (ii,v) {
 	
 	if (v.replace(/^[^\d\w]$/,'')=='') return false;
 	
@@ -950,7 +951,7 @@ var add_card_li = function (ii,c,v) {
 	var Company = /\s(lt[eéè]e)|\s(inc)|\s(enr)/i;
 	var Email = /\w+@\w+/;
 	var Website = /(www.)|(.com)|(.ca)/i;
-	var Fax = /(fax)/i;
+	var Fax = /(fax)|(telec)|(téléc)/i;
 	var Cel = /(cel)/i;
 	var Tel = /(.+\d{3}.{1,2}\d{3}.?\d{4})/i;
 	var Add = /^(\d{1,2}[,\d]\d+[\s,].+)/i;
@@ -1007,6 +1008,7 @@ var add_card_li = function (ii,c,v) {
 }
 
 function card_field_add(p) {
+	myApp.closeModal();
  	var ii =  $$("#add_card_list > li").length;
  	h = '<li class="list-item ii_'+ii+'"> \
       <div class="item-content"> \
@@ -1023,14 +1025,44 @@ function card_field_add(p) {
 	p.destroy();
 }
 
-function card_field_set(p){
-	$$("#add_card_list > li.ii_"+p.ii).find(".item-title.label").html(p.displayValue[0]);
-	$$("#add_card_list > li.ii_"+p.ii).find("input").attr("name",p.value[0]);
+function card_field_set(ii,p){
+	myApp.closeModal();
+	$$("#add_card_list > li.ii_"+ii).find(".item-title.label").html(p.displayValue[0]);
+	$$("#add_card_list > li.ii_"+ii).find("input").attr("name",p.value[0]);
 	p.destroy();
 }
 
 function card_set_field(add,ii) {
 	
+	var html = '';
+	
+	$$.each(fields, function (k,v) {
+		if ($$("#add_card_list").find("input[name='"+v.id+"']").length==0) {
+			html += '<li> \
+		      <label class="label-radio item-content"> \
+		        <input type="radio" name="card_set_field_input" value="'+v.id+'"> \
+		        <div class="item-inner"> \
+		          <div class="item-title">'+v['en']+'</div> \
+		        </div> \
+		      </label> \
+		    </li>';
+		}
+	});
+	
+	html += '<li> \
+      <label class="label-radio item-content"> \
+        <input type="radio" name="card_set_field_input" value="0"> \
+        <div class="item-inner"> \
+          <div class="item-title">Custom field</div> \
+        </div> \
+      </label> \
+    </li>';
+	
+	$$("#fields_page_ul").html(html);
+	mainView.router.loadPage("fields")
+	
+	return false;
+
 	if (add) {
 		var html = '<select onchange="card_field_add(this.value)"><option value="">-change-</option>';
 	} else {
@@ -1042,9 +1074,6 @@ function card_set_field(add,ii) {
 		}
 	});
 	html += '<option value="0">Custom field</option></select>';
-	$$("#add_card_list > li.ii_"+ii).find(".item-title.label").html(html);
-	
-	return false;
 	
 	var fields_keys = [];
 	var fields_vals = [];
@@ -1058,6 +1087,7 @@ function card_set_field(add,ii) {
 	fields_vals.push('custom field');
 	
 	if (add) {
+		myApp.pickerModal('.picker-info')
 		var fields_picker2 = myApp.picker({
 			input: "#card_set_field",
 			toolbarCloseText: 'Close',
@@ -1067,6 +1097,7 @@ function card_set_field(add,ii) {
 	} else {
 		var fields_picker2 = myApp.picker({
 			input: "#card_set_field",
+			ii: ii,
 			toolbarCloseText: 'Close',
 			cols: [{values: fields_keys, displayValues: fields_vals}],
 			onClose: card_field_set
@@ -1076,33 +1107,15 @@ function card_set_field(add,ii) {
 	fields_picker2.open();
 }
 
-socket.on('card ocr', function(data){
-	$$("#add_card_list").html('');
-	$$("#card-entry").find("img").attr("src",data.img);
-	
-	var lignes = data.ocr.split("\n");
-	for (var i=0; i<lignes.length; i++) {
-		var ligne = lignes[i].replace(/^[ ]+|[ ]+$/g,'');
-		if (ligne.length) add_card_li(i,'Comment',ligne);
-	}
-	$$("#add_card_list").find(".color-red").on("click", function () {
-		$$(this).parents("li").remove();
-	});
-	$$("#add_card_list").find(".item-title.label").on("click", function () {
-		card_set_field(0,$$(this).data("ii"));
-		
-	}); // item-title label
-	mainView.router.load({pageName: 'card-entry'});
-	
-	$$("#img_upload").attr('src','').hide();
-	cropper_init();
-});
-
 function online(event) {
   $online = (event.type=='online');
 }
 
-function _init() {
+(function (document) {
+	document.addEventListener("backbutton", function(e){
+		e.preventDefault();
+		mainView.router.back();
+	}, false);
 	
 	var storedData = myApp.formGetData('login_form');
 	
@@ -1112,185 +1125,4 @@ function _init() {
 		welcomescreen.open();
 		$$("#email").focus();
 	}
-	
-}
-
-_init();
-
-// camera....
-
-	function setOptions(srcType) {
-	    var options = {
-	        // Some common settings are 20, 50, and 100
-	        quality: 50,
-	        destinationType: Camera.DestinationType.FILE_URI,
-	        // In this app, dynamically set the picture source, Camera or photo gallery
-	        sourceType: srcType,
-	        encodingType: Camera.EncodingType.JPEG,
-	        mediaType: Camera.MediaType.PICTURE,
-	        allowEdit: false,
-	        correctOrientation: true  //Corrects Android orientation quirks
-	    }
-	    return options;
-	}
-	
-	function openCamera(selection) {
- 
-	    var srcType = Camera.PictureSourceType.CAMERA;
-	    var options = setOptions(srcType);
-	    var func = displayImage;
-	 
-	    navigator.camera.getPicture(function cameraSuccess(imageUri) {
-	        func(imageUri);
-	    }, function cameraError(error) {
-	        console.debug("Unable to obtain picture: " + error, "app");
-	    }, options);
-	}
-	
-	function displayImage(imgUri) {
-	 	 $$("#img_upload").attr('src',imgUri).show();
-	 	 readImage(imgUri,  function(base64) {  
-	 	 	img_base64 = base64.replace(/^data:image\/(png|jpg|jpeg);base64,/, "");
-		 });
-	}
-	
-	function readImage(url, callback) {
-	  var xhr = new XMLHttpRequest();
-	  xhr.onload = function() {
-	    var reader = new FileReader();
-	    reader.onloadend = function() {
-	      callback(reader.result);
-	    }
-	    reader.readAsDataURL(xhr.response);
-	  };
-	  xhr.open('GET', url);
-	  xhr.responseType = 'blob';
-	  xhr.send();
-	}
-	
-	
-var opacity = .5;
-function pulsation(e) { if (e.hasClass("on")) e.animate({opacity:opacity},{complete: pulsation(e)}); opacity = (opacity==.5 ? 1 : .5) }
-
-var coords = [];
-var doch = $$("body").height()-44;
-var docw = $$("body").width();
-var img_base64 = ''; 
-var img_ratio = doch; 
-
-	
-function cropper_init() {
-   'use strict';
-    	
-	$$("#img_record_btn").removeClass("on")
-	$$("#img_record_btn").find('div').text("Save");
-	
-	$$(".container").css({
-		"width": docw+'px',
-		"height": doch+'px',
-		"top": '44px',
-		"left": '0'	
-	});
-	
-	$$("#corner1").css({left:'0px', top:'0px'});
-	$$("#corner2").css({left:(docw-60)+'px', top:'0px'});
-	$$("#corner3").css({left:(docw-60)+'px', top:(doch-50)+'px'});
-	$$("#corner4").css({left:'0px', top:(doch-50)+'px'});
-	
-	$$("#visualElements").append('<canvas id="demoCanvas" width="'+docw+'" height="'+doch+'"></canvas>');
-		
-	var canvas = document.getElementById("demoCanvas");
-	var c2 = canvas.getContext("2d");
-    
-    var drawPoly = function() {
-    	
-        c2.clearRect(0, 0, docw, doch);
-        c2.beginPath();
-        c2.moveTo(0,0);
-        c2.lineTo(docw, 0);
-        c2.lineTo(docw, doch);
-        c2.lineTo(0, doch);
-        c2.closePath();
-        c2.fillStyle = "rgba(0, 0, 0, .5)";
-        c2.fill();
-        
-        c2.globalCompositeOperation='destination-out';
-        
-        c2.beginPath();
-        
-        var $vs = document.querySelectorAll("#cornercontainer .corner")
-        for (var i=0; i<$vs.length; i++) {
-        		var x = parseInt($$($vs[i]).css("left").replace('px',''));
-        		var y = parseInt($$($vs[i]).css("top").replace('px',''));
-        		
-        		if (i==0) {
-	        		c2.moveTo((x+25), (y+25));
-	        		coords[i] = '('+(x+30)+', '+(y+35)+')';
-        		}
-        		else if (i==1) {
-        			c2.lineTo((x+25), (y+25));
-        			coords[i] = '('+(x+55)+', '+(y+35)+')';
-        		}
-        		else if (i==2) {
-        			c2.lineTo((x+25), (y+25));
-        			coords[i] = '('+(x+55)+', '+(y+80)+')';
-        		}
-        		else {
-        			c2.lineTo((x+25), (y+25));
-        			coords[i] = '('+(x+30)+', '+(y+80)+')';
-        		}
-        }
-
-        c2.closePath();
-        c2.fill();
-  		  c2.globalCompositeOperation='source-over';
-        c2.strokeStyle = "rgba(0, 255, 0, .5)";
-		  c2.stroke();
-
-    };
-
-    drawPoly();
-    
-	var draggableElems = document.querySelectorAll('.corner');
-	var draggies = []
-	for ( var i=0, len = draggableElems.length; i < len; i++ ) {
-		var draggableElem = draggableElems[i];
-		var draggie = new Draggabilly( draggableElem );
-		draggie.on( 'dragMove', function() {
-			$$(this).css({
-				"left": this.position.x + 'px', 
-				"top": this.position.y + 'px'
-			})
-			drawPoly();
-		});
-		draggie.on( 'dragEnd', drawPoly);
-	}
-}
-
-$$("#img_record_btn").on("click", function(){
-	
-	if (!img_base64) return false;
-	
-	$$(this).addClass("on")
-	$$(this).find('div').text("Saving");
-	$$("#img_record_btn").off("click");		
-	
-	var photo_data = {"cardid":mycard.id, "photo":img_base64, "coords":coords, "ratio":img_ratio};
-	
-	socket.emit('card photo', photo_data);
-	
-});
-
-(function (document) {
-	cropper_init();
-	
-	document.addEventListener("backbutton", function(e){
-       if($.mobile.activePage.is('#homepage')){
-           e.preventDefault();
-           //navigator.app.exitApp();
-       }
-       else {
-           mainView.router.back();
-       }
-    }, false);
 }(document));
