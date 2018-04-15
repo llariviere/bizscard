@@ -137,10 +137,6 @@ function sendFileToCloudVision (content) {
 			}]
 		}]
 	};
-	
-	$$("#add_card_list").html('');
-	mainView.router.load({pageName: 'card-entry'});
-	myApp.alert('Loading...');
   
 	$$.post({
 		url: CV_URL,
