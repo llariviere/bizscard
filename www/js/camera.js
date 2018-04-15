@@ -137,13 +137,11 @@ function sendFileToCloudVision(content) {
 			}]
 		}]
 	};
-  
-	$$.post({
-		url: CV_URL,
-		data: JSON.stringify(request),
-		contentType: 'application/json'
-	}).fail(function (jqXHR, textStatus, errorThrown) {
+	
+	$$.post(CV_URL, JSON.stringify(request), function(data, status, xhr){
+		card_ocr_process(data);
+	}, function(xhr, status){
 		myApp.hidePreloader();
-		myApp.alert('ERRORS: ' + textStatus + ' ' + errorThrown);
-	}).done(card_ocr_process);
+		myApp.alert('ERRORS: ' + status);
+	});
 }
