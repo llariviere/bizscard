@@ -78,7 +78,7 @@ function card_image2dataUrl(imgUri, callback) {
     }
     reader.readAsDataURL(xhr.response);
   };
-  xhr.open('GET', url);
+  xhr.open('GET', imgUri);
   xhr.responseType = 'blob';
   xhr.send();
 }
