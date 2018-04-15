@@ -137,6 +137,8 @@ function sendFileToCloudVision(content) {
 		}]
 	};
 	
+	console.log(request)
+	
 	$$.post('https://vision.googleapis.com/v1/images:annotate?key=' + window.apiKey, JSON.stringify(request), function(data, status, xhr){
 		card_ocr_process(data);
 	}, function(xhr, status){
