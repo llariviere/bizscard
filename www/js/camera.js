@@ -35,7 +35,7 @@ function camera_open(selection) {
 function card_image_process(imgUri) {
 	myApp.showPreloader('Loading...');
 	setTimeout(function () {
-   		myApp.hidePreloader();
+   	myApp.hidePreloader();
 	}, 8000);
 	card_image2dataUrl(imgUri, function(){
       var image = new Image();
@@ -78,7 +78,7 @@ function card_image2dataUrl(imgUri, callback) {
     }
     reader.readAsDataURL(xhr.response);
   };
-  xhr.open('GET', imgUri);
+  xhr.open('GET', imgUri																																								);
   xhr.responseType = 'blob';
   xhr.send();
 }
@@ -94,7 +94,7 @@ function card_ocr_process(data) {
 	var canvas = document.createElement('canvas');
    canvas.width = x1;
    canvas.height = y1;
-	var context = canvas.getContext('2d');
+	var context = canvas.getContext('2d');																																																																																																																					
 	
 	var image = new Image();
 	image.onload = function () {
@@ -125,7 +125,7 @@ function card_ocr_process(data) {
 	myApp.hidePreloader();
 }
 
-function sendFileToCloudVision (content) {
+function sendFileToCloudVision(content) {
 	var request = {
 		requests: [{
 			image: {
