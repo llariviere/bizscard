@@ -213,6 +213,8 @@ $$(".waiting-list-open").on("click", function(){
 });
 
 $$(".card-camera-open").on("click", function(){
+	$$("#add_card_list").html('');
+	mainView.router.load({pageName: 'card-entry'});
 	camera_open(false);
 });
 
