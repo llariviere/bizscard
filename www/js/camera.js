@@ -33,7 +33,10 @@ function camera_open(selection) {
 }
 
 function card_image_process(imgUri) {
-	myApp.showPreloader('Loading...')
+	myApp.showPreloader('Loading...');
+	setTimeout(function () {
+   		myApp.hidePreloader();
+	}, 8000);
 	card_image2dataUrl(imgUri, function(){
       var image = new Image();
       image.onload = function (imageEvent) {
