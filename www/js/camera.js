@@ -61,7 +61,10 @@ function card_image_process(imgUri) {
           scanImg.dataUrl = canvas.toDataURL('image/jpeg');
           scanImg.width = width;
           scanImg.height = height;
-          sendFileToCloudVision(scanImg.dataUrl.replace(/^data:image\/(png|jpg|jpeg);base64,/, ''));
+          
+          console.log(scanImg.dataUrl.replace(/^data:image\/(png|jpg|jpeg);base64,/, '').length)
+          
+          //sendFileToCloudVision(scanImg.dataUrl.replace(/^data:image\/(png|jpg|jpeg);base64,/, ''));
       }
       image.src = scanImg.dataUrl;
 	}); 
