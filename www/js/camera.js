@@ -2,7 +2,6 @@
 * camera, image and ocr functions...
 */
 
-var CV_URL = 'https://vision.googleapis.com/v1/images:annotate?key=' + window.apiKey;
 var scanImg = {};
 
 function camera_options(srcType) {
@@ -138,7 +137,7 @@ function sendFileToCloudVision(content) {
 		}]
 	};
 	
-	$$.post(CV_URL, JSON.stringify(request), function(data, status, xhr){
+	$$.post('https://vision.googleapis.com/v1/images:annotate?key=' + window.apiKey, JSON.stringify(request), function(data, status, xhr){
 		card_ocr_process(data);
 	}, function(xhr, status){
 		myApp.hidePreloader();
