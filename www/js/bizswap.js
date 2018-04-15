@@ -212,8 +212,7 @@ $$(".waiting-list-open").on("click", function(){
 	
 });
 
-$$(".card-cropper-open").on("click", function(){
-	mainView.router.load({pageName: 'card-cropper'});
+$$(".card-camera-open").on("click", function(){
 	camera_open(false);
 });
 
