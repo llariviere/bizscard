@@ -128,7 +128,7 @@ function sendFileToCloudVision(content) {
 	var request = {
 		"requests": [{
 			"image": {
-				"content": '"'+content'"'
+				"content": '"'+content+'"'
 			},
 			"features": [{
 				"type": 'TEXT_DETECTION',
