@@ -61,10 +61,7 @@ function card_image_process(imgUri) {
           scanImg.dataUrl = canvas.toDataURL('image/jpeg');
           scanImg.width = width;
           scanImg.height = height;
-          
-          console.log(scanImg.dataUrl.replace(/^data:image\/(png|jpg|jpeg);base64,/, '').length)
-          
-          //sendFileToCloudVision(scanImg.dataUrl.replace(/^data:image\/(png|jpg|jpeg);base64,/, ''));
+          sendFileToCloudVision(scanImg.dataUrl.replace(/^data:image\/(png|jpg|jpeg);base64,/, ''));
       }
       image.src = scanImg.dataUrl;
 	}); 
@@ -140,9 +137,7 @@ function sendFileToCloudVision(content) {
 		}]
 	};
 	
-	console.log(request)
-	
-	$$.post('https://vision.googleapis.com/v1/images:annotate?key=' + window.apiKey, JSON.stringify(request), function(data, status, xhr){
+	$$.getJSON('https://vision.googleapis.com/v1/images:annotate?key=' + window.apiKey, JSON.stringify(request), function(data){
 		card_ocr_process(data);
 	}, function(xhr, status){
 		myApp.hidePreloader();
