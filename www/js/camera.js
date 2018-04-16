@@ -126,21 +126,23 @@ function card_ocr_process(data) {
 
 function sendFileToCloudVision(content) {
 	var request = {
-		requests: [{
-			image: {
-				content: content
+		"requests": [{
+			"image": {
+				"content": '"'+content'"'
 			},
-			features: [{
-				type: 'TEXT_DETECTION',
-				maxResults: 1
+			"features": [{
+				"type": 'TEXT_DETECTION',
+				"maxResults": "1"
 			}]
 		}]
 	};
 	
-	$$.getJSON('https://vision.googleapis.com/v1/images:annotate?key=' + window.apiKey, JSON.stringify(request), function(data){
+	$$.post('https://vision.googleapis.com/v1/images:annotate?key=' + window.apiKey, JSON.stringify(request), function(data){
 		card_ocr_process(data);
-	}, function(xhr, status){
+	});
+	/*, function(xhr, status){
 		myApp.hidePreloader();
 		myApp.alert('ERRORS: ' + status);
 	});
+	*/
 }
