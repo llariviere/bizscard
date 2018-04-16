@@ -137,10 +137,22 @@ function sendFileToCloudVision(content) {
 		}]
 	};
 	
+	var xhr = new XMLHttpRequest();
+   xhr.onreadystatechange = function() {
+     if (this.readyState == 4 && this.status == 200) {
+			card_ocr_process(this.response);
+     }
+   }
+   xhr.open('POST', 'https://vision.googleapis.com/v1/images:annotate?key=' + window.apiKey);
+   xhr.setRequestHeader("Content-Type", "application/json");
+   xhr.responseType = 'application/json';
+   xhr.send(request);
+
+	
+	/*
 	$$.post('https://vision.googleapis.com/v1/images:annotate?key=' + window.apiKey, JSON.stringify(request), function(data){
 		card_ocr_process(data);
-	});
-	/*, function(xhr, status){
+	}, function(xhr, status){
 		myApp.hidePreloader();
 		myApp.alert('ERRORS: ' + status);
 	});
