@@ -144,12 +144,12 @@ function sendFileToCloudVision(content) {
      }
    }
    xhr.open('POST', 'https://vision.googleapis.com/v1/images:annotate?key=' + window.apiKey);
+   xhr.setRequestHeader("Content-Type", "application/json");
    xhr.responseType = 'json';
    xhr.send(JSON.stringify(request));
 
 	
 	/*
-   xhr.setRequestHeader("Content-Type", "application/json");
 	$$.post('https://vision.googleapis.com/v1/images:annotate?key=' + window.apiKey, JSON.stringify(request), function(data){
 		card_ocr_process(data);
 	}, function(xhr, status){
