@@ -126,17 +126,29 @@ function card_ocr_process(data) {
 
 function sendFileToCloudVision(content) {
 	var request = {
-		"requests": [{
-			"image": {
-				"content": '"'+content+'"'
-			},
-			"features": [{
-				"type": 'TEXT_DETECTION',
-				"maxResults": "1"
-			}]
-		}]
+		"requests":[
+			{
+				"image":{
+					"content":'"'+content+'"'
+				},
+				"features":[
+					{
+						"type":"TEXT_DETECTION",
+						"maxResults":1
+					}
+				]
+			}
+		]
 	};
 	
+	$$.post('https://vision.googleapis.com/v1/images:annotate?key=' + window.apiKey, JSON.stringify(request), function(data){
+		card_ocr_process(data);
+	}, function(xhr, status){
+		myApp.hidePreloader();
+		myApp.alert('ERRORS: ' + status);
+	});
+	
+	/*
 	var xhr = new XMLHttpRequest();
    xhr.onreadystatechange = function() {
      if (this.readyState == 4 && this.status == 200) {
@@ -149,12 +161,5 @@ function sendFileToCloudVision(content) {
    xhr.send(JSON.stringify(request));
 
 	
-	/*
-	$$.post('https://vision.googleapis.com/v1/images:annotate?key=' + window.apiKey, JSON.stringify(request), function(data){
-		card_ocr_process(data);
-	}, function(xhr, status){
-		myApp.hidePreloader();
-		myApp.alert('ERRORS: ' + status);
-	});
 	*/
 }
