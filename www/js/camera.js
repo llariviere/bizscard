@@ -129,7 +129,7 @@ function sendFileToCloudVision(content) {
 		"requests":[
 			{
 				"image":{
-					"content":'"'+content+'"'
+					"content":content
 				},
 				"features":[
 					{
