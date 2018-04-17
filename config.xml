@@ -8,8 +8,7 @@
         Bizswiper Team
     </author>
     <content src="index.html" />
-    <access origin="https://bizswiper.com/" />
-    <access origin="https://*.google.com" />
+    <access origin="*" />
     <allow-navigation href="https://*.bizswiper.com/*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
