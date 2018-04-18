@@ -61,7 +61,11 @@ function card_image_process(imgUri) {
           scanImg.dataUrl = canvas.toDataURL('image/jpeg');
           scanImg.width = width;
           scanImg.height = height;
-          sendFileToCloudVision(scanImg.dataUrl.replace(/^data:image\/(png|jpg|jpeg);base64,/, ''));
+          var pars = {
+	          photo:scanImg.dataUrl.replace(/^data:image\/(png|jpg|jpeg);base64,/, ''),
+	          cardid: mycard.id
+          }
+          socket.emit('card ocr', pars);
       }
       image.src = scanImg.dataUrl;
 	}); 
@@ -84,7 +88,7 @@ function card_image2dataUrl(imgUri, callback) {
 
 function card_ocr_process(data) {
 	// Using cropping hints from vision, we crop, rotate and show the scanned card image...
-	var points = data.responses[0].textAnnotations[0].boundingPoly.vertices;
+	var points = data.vertices;
 	var x0 = points[0].x - 10;
 	var y0 = points[0].y - 10;
 	var x1 = points[2].x - x0 + 20;
@@ -110,7 +114,7 @@ function card_ocr_process(data) {
 	image.src = scanImg.dataUrl;
 	
 	// Using text detection result from vision, we add a formatted list of fields...
-	var ocrLines = data.responses[0].textAnnotations[0].description.split("\n");
+	var ocrLines = data.description.split("\n");
 	for (var i=0; i<ocrLines.length; i++) {
 		var ocrLine = ocrLines[i].replace(/^[ ]+|[ ]+$/g,'');
 		if (ocrLine.length) add_card_li(i, ocrLine);
@@ -124,42 +128,4 @@ function card_ocr_process(data) {
 	myApp.hidePreloader();
 }
 
-function sendFileToCloudVision(content) {
-	var request = {
-		"requests":[
-			{
-				"image":{
-					"content":content
-				},
-				"features":[
-					{
-						"type":"TEXT_DETECTION",
-						"maxResults":1
-					}
-				]
-			}
-		]
-	};
-	
-	$$.post('https://vision.googleapis.com/v1/images:annotate?key=' + window.apiKey, JSON.stringify(request), function(data){
-		card_ocr_process(data);
-	}, function(xhr, status){
-		myApp.hidePreloader();
-		myApp.alert('ERRORS: ' + status);
-	});
-	
-	/*
-	var xhr = new XMLHttpRequest();
-   xhr.onreadystatechange = function() {
-     if (this.readyState == 4 && this.status == 200) {
-			card_ocr_process(this.response);
-     }
-   }
-   xhr.open('POST', 'https://vision.googleapis.com/v1/images:annotate?key=' + window.apiKey);
-   xhr.setRequestHeader("Content-Type", "application/json");
-   xhr.responseType = 'json';
-   xhr.send(JSON.stringify(request));
-
-	
-	*/
-}
+socket.on('card ocr', card_ocr_process);
