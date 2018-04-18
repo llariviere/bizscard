@@ -99,14 +99,12 @@ function card_ocr_process(data) {
    canvas.height = y1;
 	var context = canvas.getContext('2d');
 	var cardImage = $$("#card-entry").find("img");
-	var imgWidth = cardImage.width();
 	
 	var image = new Image();
 	image.onload = function () {
 		context.drawImage(image, x0, y0, x1, y1, 0, 0, x1, y1);
 		
 		cardImage.attr("src",canvas.toDataURL('image/jpeg'));
-		cardImage.css({'max-height':imgWidth});
 		if (x1 < y1) {
 			cardImage.css({
 				'transform-origin': 'top left',
