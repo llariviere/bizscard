@@ -81,7 +81,7 @@ function card_image2dataUrl(imgUri, callback) {
     }
     reader.readAsDataURL(xhr.response);
   };
-  xhr.open('GET', imgUri																																								);
+  xhr.open('GET', imgUri);
   xhr.responseType = 'blob';
   xhr.send();
 }
@@ -105,12 +105,14 @@ function card_ocr_process(data) {
 		context.drawImage(image, x0, y0, x1, y1, 0, 0, x1, y1);
 		
 		cardImage.attr("src",canvas.toDataURL('image/jpeg'));
+		/*
 		if (x1 < y1) {
 			cardImage.css({
 				'transform-origin': 'top left',
 				'transform': 'rotate(270deg) translateY(-100%)'
 			});
 		}
+		*/
 	}
 	image.src = scanImg.dataUrl;
 	
