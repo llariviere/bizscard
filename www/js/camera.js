@@ -105,8 +105,10 @@ function card_ocr_process(data) {
 		context.drawImage(image, x0, y0, x1, y1, 0, 0, x1, y1);
 		
 		cardImage.attr("src",canvas.toDataURL('image/jpeg'));
-		/*
-		if (x1 < y1) {
+		
+		if (x1 < y1) cardImage.transform('rotate(270deg)')
+		/*		
+		{
 			cardImage.css({
 				'transform-origin': 'top left',
 				'transform': 'rotate(270deg) translateY(-100%)'
