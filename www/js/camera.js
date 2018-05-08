@@ -106,15 +106,11 @@ function card_ocr_process(data) {
 		
 		cardImage.attr("src",canvas.toDataURL('image/jpeg'));
 		
-		if (x1 < y1) cardImage.transform('rotate(270deg)')
-		/*		
-		{
-			cardImage.css({
-				'transform-origin': 'top left',
-				'transform': 'rotate(270deg) translateY(-100%)'
-			});
-		}
-		*/
+		if (x1 < y1) {
+			var offset = ((x1-x0)-(y1-y1))/2;
+			cardImage.transform('rotateZ(270deg)');
+			cardImage.transform('translate('+offset+'px, '+offset+'px)');
+		} 
 	}
 	image.src = scanImg.dataUrl;
 	
