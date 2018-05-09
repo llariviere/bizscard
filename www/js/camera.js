@@ -108,8 +108,11 @@ function card_ocr_process(data) {
 		
 		if (x1 < y1) {
 			var offset = ((x1-x0)-(y1-y0))/2;
-			//cardImage.transform('rotate(270deg)');
-			//cardImage.transform('translate('+offset+'px, '+offset+'px)');
+			myApp.alert(x1+' '+y1+' '+offset);
+			cardImage.css({
+				'transform':'rotate(270deg)',
+				'transform':'translate('+offset+'px, '+offset+'px)'
+			});
 		} 
 	}
 	image.src = scanImg.dataUrl;
