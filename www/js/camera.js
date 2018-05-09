@@ -107,12 +107,17 @@ function card_ocr_process(data) {
 		cardImage.attr("src",canvas.toDataURL('image/jpeg'));
 		
 		if (x1 < y1) {
-			var offset = ((x1-x0)-(y1-y0))/2;
+			var offset = ((y1-y1)-(x1-x0))/2;
 			myApp.alert(x1+' '+y1+' '+offset);
+			context.translate(canvas.width/2,canvas.height/2);
+			context.rotate(270*Math.PI/180);
+			
+			/*
 			cardImage.css({
 				'transform':'rotate(270deg)',
 				'transform':'translate('+offset+'px, '+offset+'px)'
 			});
+			*/
 		} 
 	}
 	image.src = scanImg.dataUrl;
