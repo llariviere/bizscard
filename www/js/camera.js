@@ -107,7 +107,7 @@ function card_ocr_process(data) {
 		cardImage.attr("src",canvas.toDataURL('image/jpeg'));
 		
 		if (x1 < y1) {
-			var offset = ((x1-x0)-(y1-y1))/2;
+			var offset = ((x1-x0)-(y1-y0))/2;
 			cardImage.transform('rotate(270deg)');
 			cardImage.transform('translate('+offset+'px, '+offset+'px)');
 		} 
