@@ -108,7 +108,7 @@ function card_ocr_process(data) {
 		
 		if (x1 < y1) {
 			var offset = ((x1-x0)-(y1-y1))/2;
-			cardImage.transform('rotateZ(270deg)');
+			cardImage.transform('rotate(270deg)');
 			cardImage.transform('translate('+offset+'px, '+offset+'px)');
 		} 
 	}
