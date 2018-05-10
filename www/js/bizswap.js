@@ -944,7 +944,7 @@ socket.on('card connected', function(data){
   console.log("card connected response: "+data)
 });
 
- = function  add_card_li(ii,v) {
+function  add_card_li(ii,v) {
 	
 	if (v.replace(/^[^\d\w]$/,'')=='') return false;
 	
