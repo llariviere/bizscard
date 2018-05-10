@@ -944,7 +944,7 @@ socket.on('card connected', function(data){
   console.log("card connected response: "+data)
 });
 
-var add_card_li = function (ii,v) {
+ = function  add_card_li(ii,v) {
 	
 	if (v.replace(/^[^\d\w]$/,'')=='') return false;
 	
@@ -1036,6 +1036,8 @@ function card_field_set(ii,p){
 function card_set_field(add,ii) {
 	
 	var html = '';
+	var html2 = '<div class="item-input"><select>';
+	var previd = $$("#add_card_list").find("li.list-item ii_"+ii).find(".item-title.label").text();
 	
 	$$.each(fields, function (k,v) {
 		if ($$("#add_card_list").find("input[name='"+v.id+"']").length==0) {
@@ -1047,6 +1049,7 @@ function card_set_field(add,ii) {
 		        </div> \
 		      </label> \
 		    </li>';
+		    html2 += '<option value="'+v.id+'" '+()+'>'+v['en']+'</option>';
 		}
 	});
 	
@@ -1058,9 +1061,13 @@ function card_set_field(add,ii) {
         </div> \
       </label> \
     </li>';
+    
+   html2 += '<option value="0">Custom field</option></select></div>';
+    
+   return html2;
 	
-	$$("#fields_page_ul").html(html);
-	mainView.router.loadPage("fields")
+	//$$("#fields_page_ul").html(html);
+	//mainView.router.loadPage("fields")
 	
 	return false;
 
