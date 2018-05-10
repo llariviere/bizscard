@@ -104,8 +104,6 @@ function card_ocr_process(data) {
 	image.onload = function () {
 		context.drawImage(image, x0, y0, x1, y1, 0, 0, x1, y1);
 		
-		cardImage.attr("src",canvas.toDataURL('image/jpeg'));
-		
 		if (x1 < y1) {
 			var offset = ((y1-y1)-(x1-x0))/2;
 			myApp.alert(x1+' '+y1+' '+offset);
@@ -119,6 +117,8 @@ function card_ocr_process(data) {
 			});
 			*/
 		} 
+		
+		cardImage.attr("src",canvas.toDataURL('image/jpeg'));
 	}
 	image.src = scanImg.dataUrl;
 	
@@ -132,7 +132,7 @@ function card_ocr_process(data) {
 		$$(this).parents("li").remove();
 	});
 	$$("#add_card_list").find(".item-title.label").on("click", function () {
-		card_set_field(0,$$(this).data("ii"));
+		$$(this).html(card_set_field(false,$$(this).data("ii")));
 	});
 	myApp.hidePreloader();
 }
