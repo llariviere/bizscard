@@ -1049,7 +1049,7 @@ function card_set_field(add,ii) {
 		        </div> \
 		      </label> \
 		    </li>';
-		    html2 += '<option value="'+v.id+'" '+()+'>'+v['en']+'</option>';
+		    html2 += '<option value="'+v.id+'" '+(previd==v['en'] ? 'selected' : '')+'>'+v['en']+'</option>';
 		}
 	});
 	
