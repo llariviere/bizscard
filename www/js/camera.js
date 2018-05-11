@@ -132,7 +132,9 @@ function card_ocr_process(data) {
 		$$(this).parents("li").remove();
 	});
 	$$("#add_card_list").find(".item-title.label > select").on("click", function () {
-		$$(this).html(card_set_field(false,$$(this).data("ii")));
+		var html = card_set_field(false,$$(this).data("ii"));
+		myApp.alert(html)
+		$$(this).html(html);
 	});
 	myApp.hidePreloader();
 }
