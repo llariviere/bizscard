@@ -997,7 +997,7 @@ function  add_card_li(ii,v) {
 	            <div class="item-content">\
 	              <div class="item-media color-red"><i class="fa fa-times-circle"></i></div>\
 	              <div class="item-inner"> \
-	                <div class="item-title label" data-ii="'+ii+'">'+l+'</div>\
+	                <div class="item-title label" data-ii="'+ii+'"><div class="item-input"><select><option value="'+i+'">'+l+'</option></select></div></div>\
 	                <div class="item-input">\
 	                  <input type="text" name="'+i+'" value="'+v+'"/>\
 	                </div>\
@@ -1036,7 +1036,7 @@ function card_field_set(ii,p){
 function card_set_field(add,ii) {
 	
 	var html = '';
-	var html2 = '<div class="item-input"><select>';
+	var html2 = '';
 	var previd = $$("#add_card_list").find("li.list-item ii_"+ii).find(".item-title.label").text();
 	
 	$$.each(fields, function (k,v) {
@@ -1062,7 +1062,7 @@ function card_set_field(add,ii) {
       </label> \
     </li>';
     
-   html2 += '<option value="0">Custom field</option></select></div>';
+   html2 += '<option value="0">Custom field</option>';
     
    return html2;
 	
