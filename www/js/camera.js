@@ -131,7 +131,7 @@ function card_ocr_process(data) {
 	$$("#add_card_list").find(".color-red").on("click", function () {
 		$$(this).parents("li").remove();
 	});
-	$$("#add_card_list").find(".item-title.label").on("click", function () {
+	$$("#add_card_list").find(".item-title.label > select").on("click", function () {
 		$$(this).html(card_set_field(false,$$(this).data("ii")));
 	});
 	myApp.hidePreloader();
