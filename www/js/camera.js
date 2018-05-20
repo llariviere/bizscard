@@ -20,6 +20,12 @@ function camera_options(srcType) {
 }
 
 function camera_open(selection) {
+	
+	if (typeof Camera === "undefined") {
+		myApp.alert('Camera not availlable');
+		card_ocr_process(card_data)
+		return false;
+	}
     var srcType = Camera.PictureSourceType.CAMERA;
     var options = camera_options(srcType);
     var func = card_image_process;
@@ -40,7 +46,7 @@ function card_image_process(imgUri) {
       var image = new Image();
       image.onload = function (imageEvent) {
           var canvas = document.createElement('canvas'),
-          	  max_size = 544,
+          	  max_size = 1024,
               width = image.width,
               height = image.height;
           if (width > height) {
@@ -99,14 +105,15 @@ function card_ocr_process(data) {
    canvas.height = y1;
 	var context = canvas.getContext('2d');
 	var cardImage = $$("#card-entry").find("img");
-	
+	cardImage.attr("src",scanImg.dataUrl);
+	/*
 	var image = new Image();
 	image.onload = function () {
 		context.drawImage(image, x0, y0, x1, y1, 0, 0, x1, y1);
 		
 		if (x1 < y1) {
 			var offset = ((y1-y1)-(x1-x0))/2;
-			myApp.alert(x1+' '+y1+' '+offset);
+			//myApp.alert(x1+' '+y1+' '+offset);
 			context.translate(canvas.width/2,canvas.height/2);
 			context.rotate(270*Math.PI/180);
 			
@@ -115,12 +122,13 @@ function card_ocr_process(data) {
 				'transform':'rotate(270deg)',
 				'transform':'translate('+offset+'px, '+offset+'px)'
 			});
-			*/
+			
 		} 
 		
 		cardImage.attr("src",canvas.toDataURL('image/jpeg'));
 	}
 	image.src = scanImg.dataUrl;
+	*/
 	
 	// Using text detection result from vision, we add a formatted list of fields...
 	var ocrLines = data.description.split("\n");
@@ -140,3 +148,8 @@ function card_ocr_process(data) {
 }
 
 socket.on('card ocr', card_ocr_process);
+
+var card_data = {
+	vertices:[{x:0,y:0},{x:0,y:0},{x:0,y:0},{x:0,y:0}],
+	description:'Louis Larivière \nAnalyste sénior	 \nCell: (514) 714-2011 \nllariviere@dubo.qc.ca \nwww.dubo.qc.ca \n5780, rue Ontario Est \nMontréal (Québec) HIN 0A2 \nTél.:(514)255-7711 \nDirect:(514) 255-8855, poste221 \n1 800 361-4503 \nFax:(514) 255-9949'
+};
