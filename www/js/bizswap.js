@@ -390,12 +390,6 @@ function card_form_add_field(cardid) {
 
 function card_form_record(){
 	
-	//////////////////////////////////////////
-	mainView.router.load({pageName: 'index'});
-	cropper_init();
-	return false;
-	//////////////////////////////////////////
-	
 	var pars = {};
 	
 	$$.each($$("#thecard_form").find("input, select"), function(i,e){
@@ -518,21 +512,17 @@ function category_open() {
 	});
 }
 
-function card_add() {
-	
-	//////////////////////////////////////////
-	mainView.router.load({pageName: 'index'});
-	cropper_init();
-	return false;
-	//////////////////////////////////////////
-	
+function card_add() {	
 	var pars = {};
 	$$.each($$("#add_card_list > li"), function(i,li) {
-		var name = $$(li).find(".label").text().toLowerCase();
+		//var name = $$(li).find(".label").text().toLowerCase();
+		var name = $$(li).find("input").attr("name").toLowerCase();
+		if (!name) return true;
 		pars[name] = $$(li).find("input").val();
 	});
 	pars['cardid'] = mycard.id;
-	socket.emit('card record', pars);
+	console.log(pars)
+	//socket.emit('card record', pars);
 }
 
 
@@ -564,9 +554,6 @@ function geoloc() {
 	navigator.geolocation.getCurrentPosition(success, error, options);
 	//success({lat:45.6105491,lng:-73.5094794,alt:0}); // manual override for testing...
 }
-
-
-
 
 function card_populate(id,data) { 
 	
@@ -657,9 +644,6 @@ function pie_create(dataElement, pieElement) {
   }
 }
 
-// ...section ranking.
-
-
 function card_login(email,password,create,auto_login) {
 	
 	// validation des champs de login...
@@ -689,12 +673,12 @@ function card_login(email,password,create,auto_login) {
 		"uuid":uuid
 	}
 	
-	console.log(login_data)
-	
 	socket.emit('card login', login_data);
-	
-	
 
+}
+
+function card_reload() {
+	socket.emit('card load', mycard["id"]);
 }
 
 var socket = io('https://bizswiper.com:3333/');
@@ -754,8 +738,6 @@ socket.on('card login', function (data) {
 
 
 socket.on('card load', function (data) {
-	
-	console.log(data);
 	fields = data.fields;
 	cards_fields = data.cards_fields;
 	
