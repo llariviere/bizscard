@@ -71,7 +71,7 @@
 		      </a>
 		    </li>
 		    <li>
-		    	<a href="#" onclick="_init();" class="item-link my-preferences-open">
+		    	<a href="#" onclick="card_reload();" class="item-link my-preferences-open">
 		      <div class="item-content close-panel">
 		         <div class="item-inner">
 		            <div class="item-title">Reload my data</div>
@@ -151,6 +151,13 @@
             </div>
           </div>
           
+          <div class="navbar-inner cached" data-page="fields">
+            <div class="center sliding">Choose a field name</div>
+            <div class="right">
+              <a href="#" class="link" id="fields_page_close">Close</a>
+            </div>
+          </div>
+          
         </div>
         
         
@@ -226,7 +233,7 @@
           </div>
           
           
-        <div class="page cached no-tabbar" data-page="card-cropper">
+        <!--div class="page cached no-tabbar" data-page="card-cropper">
 		      
 	        <div class="page-content">
 	        
@@ -249,7 +256,7 @@
 	
 	        </div>
 		        
-        </div>
+        </div-->
         
         
           
@@ -268,7 +275,7 @@
 				</div>
 				
 		      <div class="content-block">
-		        <div class="row">
+		        <div class="row"><!--  onclick="card_set_field(1,0);" -->
 		          <div class="col-33"><a href="#index" class="button button-big button-fill bg-red"><i class="fa fa-times-circle"></i> Cancel</a></div>
 		          <div class="col-33"><a href="#" id="card_set_field" class="button button-big button-fill bg-blue"><i class="fa fa-plus-square"></i> Field</a></div>
 		          <div class="col-33"><a href="#" onclick="card_add()" class="button button-big button-fill bg-green"><i class="fa fa-save"></i> Record</a></div>
@@ -277,9 +284,14 @@
 	        </div>
 		        
         </div>
-        
-        
-        
+                  
+			<div data-page="fields" id="fields_page" class="page cached no-tabbar">
+				<div class="page-content">
+					<div class="list-block">
+						<ul id="fields_page_ul"></ul>
+					</div>
+				</div>
+			</div>
         
         
 		
@@ -389,8 +401,6 @@
     </div>
    <div class="content-block" style="padding:2px 2px;"></div>
   </div>
-  
-  
     
 <script id="current-list" type="text/template7">
 
