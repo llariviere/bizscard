@@ -132,18 +132,11 @@ function card_ocr_process(data) {
 	
 	// Using text detection result from vision, we add a formatted list of fields...
 	var ocrLines = data.description.split("\n");
-	for (var i=0; i<ocrLines.length; i++) {
-		var ocrLine = ocrLines[i].replace(/^[ ]+|[ ]+$/g,'');
-		if (ocrLine.length) add_card_li(i, ocrLine);
+	for (var ii=0; ii<ocrLines.length; ii++) {
+		var ocrLine = ocrLines[ii].replace(/^[ ]+|[ ]+$/g,'');
+		if (ocrLine.length) add_card_li(ii, ocrLine);
 	}
-	$$("#add_card_list").find(".color-red").on("click", function () {
-		$$(this).parents("li").remove();
-	});
-	$$("#add_card_list").find(".item-title.label > select").on("click", function () {
-		var html = card_set_field(false,$$(this).data("ii"));
-		myApp.alert(html)
-		$$(this).html(html);
-	});
+	add_card_init();
 	myApp.hidePreloader();
 }
 
