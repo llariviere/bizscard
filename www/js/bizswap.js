@@ -77,39 +77,39 @@ var cards = {
 	waiting:[]
 };
 var cards_templates = [
-	'<div style="top:4px;left:0px;font-weight:bold;font-size:16px;">{{first name}} {{last name}}</div>\
+	'<div style="top:4px;left:0px;font-weight:bold;font-size:16px;">{{complete name}}</div>\
 	<div style="top:28px;left:0px;">{{title}}</div>\
 	<div style="top:46px;left:0px;">{{company name}}</div>\
 	<div style="top:75px;left:120px;">{{address}}</div>\
 	<div style="top:90px;left:120px;">{{city}}, {{state_prov}} {{country}} {{postal code}}</div>\
 	<div style="top:105px;left:120px;">{{website}}</div>\
-	<div style="top:120px;left:120px;">E: {{email principal}}</div>\
+	<div style="top:120px;left:120px;">E: {{email}}</div>\
 	<div style="top:135px;left:120px;">C: {{cellphone}}</div>\
 	<div style="top:150px;left:120px;">F: {{fax}}</div>\
 	<div class="img" style="top:75px;left:0px;background-image:url({{logo}});">\
 		<i class="fa fa-user fa-4x" style="margin-top:20px;"></i>\
 	</div>',
 	
-	'<div style="top:4px;left:120px;font-weight:bold;font-size:16px;">{{first name}} {{last name}}</div>\
+	'<div style="top:4px;left:120px;font-weight:bold;font-size:16px;">{{complete name}}</div>\
 	<div style="top:28px;left:120px;">{{title}}</div>\
 	<div style="top:46px;left:120px;">{{company name}}</div>\
 	<div style="top:75px;left:120px;">{{address}}</div>\
 	<div style="top:90px;left:120px;">{{city}}, {{state_prov}} {{country}} {{postal code}}</div>\
 	<div style="top:105px;left:120px;">{{website}}</div>\
-	<div style="top:120px;left:120px;">E: {{email principal}}</div>\
+	<div style="top:120px;left:120px;">E: {{email}}</div>\
 	<div style="top:135px;left:120px;">C: {{cellphone}}</div>\
 	<div style="top:150px;left:120px;">F: {{fax}}</div>\
 	<div class="img" style="top:0px;left:0px;background-image:url({{logo}});">\
 		<i class="fa fa-user fa-4x" style="margin-top:20px;"></i>\
 	</div>',
 	
-	'<div style="top:84px;width:50%;text-align:right;font-weight:bold;font-size:16px;">{{first name}} {{last name}} |</div>\
+	'<div style="top:84px;width:50%;text-align:right;font-weight:bold;font-size:16px;">{{complete name}} |</div>\
 	<div style="top:88px;left:50%;width:50%;text-align:left;">&nbsp;{{title}}</div>\
 	<div style="top:104px;width:100%;text-align:center;">{{company name}}</div>\
 	<div style="top:120px;width:100%;text-align:center;">{{address}}, {{city}}</div>\
 	<div style="top:136px;width:100%;text-align:center;">{{state_prov}} {{country}} {{postal code}}</div>\
 	<div style="top:152px;width:50%;text-align:right;">{{website}} |</div>\
-	<div style="top:152px;left:50%;width:50%;text-align:left;">&nbsp;E: {{email principal}}</div>\
+	<div style="top:152px;left:50%;width:50%;text-align:left;">&nbsp;E: {{email}}</div>\
 	<div style="top:168px;width:50%;text-align:right;">C: {{cellphone}} |</div>\
 	<div style="top:168px;left:50%;width:50%;text-align:left;">&nbsp;F: {{fax}}</div>\
 	<div class="img" style="top:0px;width:75px;height:75px;left:50%;margin-left:-38px;background-image:url({{logo}});">\
@@ -169,7 +169,7 @@ $$(document).on("click", ".card-item .item-content", function(){
 	
 	var context = $$(this).parent().dataset();
 	
-	context["titre"] = context.firstname +" "+ context.lastname;
+	context["titre"] = context.completename;
 	
 	card_form_open(context);
 	
@@ -242,41 +242,7 @@ $$(document).on("click", "i.fa-edit", function () {
 	$$("ul.card-form-ul-acc, div.card-form-buttons").toggleClass("hidden");
 });
 
-function card_offer() {
-	
-	$$("#mycard .thumb").show();
-	$$('#mycard').css({ 'top': $$('#mycard').data('top') })
-	
-	if (navigator.userAgent.match(/(iPod|iPhone|iPad|Android)/) && 0) {
-		$$('#mycard').css("bottom", 500);
-	} 
-	else {
-		
-		$$('#mycard').animate(
-		    { 'top': 10 },
-		    {
-		        duration: 500,
-		        easing: 'swing',
-		        begin: function (elements) {},
-		        complete: card_offered
-		    }
-		);
-	}
-}
 
-function card_offered() {
-   myApp.alert('Card offered...');
-   geoloc();
-   card_offer_complete();
-}
-
-function card_offer_complete() {
-	$$('#mycard .thumb').hide();
-	$$('#mycard').animate( 
-		{ 'top': $$('#mycard').data('top') }, 
-		{ complete: function(){ $$(".no-thumb").show() } }
-	);
-} 
 
 $$(".log-off").on("click", function(){
 	myApp.formDeleteData('login_form');
@@ -317,7 +283,6 @@ function card_form_open(context) {
 	var v = '', n = '', fieldid = '', h = '', h2 = '';
 	var h1 = '<input type="hidden" name="id" value="'+cardid+'"/>';
  	$$.each(fields, function (ii,f) {
- 	  if (f.id == 36 || f.id == 37 || f.id == 30) return true;
  	  v = '';
 	  $$.each(cards_fields, function(iii,cf) {
 	  	 if (cf.card_id==cardid && cf.field_id==f.id) {
@@ -402,11 +367,11 @@ function card_form_record(){
 	
 	card_populate("thecard",pars);
 	
-	if ($$("#thecard_form input[name='id']").val()!=mycard.id) return false;
+	if ($$("#thecard_form input[name='id']").val()==mycard.id) {
+		mycard = pars;
+		card_populate("mycard",mycard);
+	}
 	
-	mycard = pars;
-	
-	card_populate("mycard",mycard);
 }
 
 
@@ -520,46 +485,22 @@ function card_add() {
 		if (!name) return true;
 		pars[name] = $$(li).find("input").val();
 	});
-	pars['cardid'] = mycard.id;
-	console.log(pars)
-	//socket.emit('card record', pars);
-}
-
-
-function geoloc() {
-		
-	if (!navigator.geolocation){
-		myApp.alert("Geolocation is not supported by your device!");
+	
+	if (pars['33']==undefined || !validateEmail(pars['33'])) {
+		myApp.alert("You MUST have a valid value for the 'Email' field!");
 		return false;
 	}
-
-	function success(o) {
-		//socket.emit('card offer', {"cardid":mycard.id, "lat":o.lat, "lng":o.lng, "alt":o.alt}); // manual override for testing...
-		var p = o.coords;
-		socket.emit('card offer', {"cardid":mycard.id, "lat":p.latitude, "lng":p.longitude, "alt":p.altitude});
-	};
-
-	function error(err) {
-		console.log(err);
-		myApp.hidePreloader();
-		myApp.alert("Impossible to determine your location: "+err);
-	}
-	
-	var options = {
-	  enableHighAccuracy: true,
-	  timeout: 5000,
-	  maximumAge: 0
-	};
-	
-	navigator.geolocation.getCurrentPosition(success, error, options);
-	//success({lat:45.6105491,lng:-73.5094794,alt:0}); // manual override for testing...
+	pars['cardid'] = mycard.id;
+	pars['44'] = scanImg.dataUrl;
+	console.log(pars)
+	socket.emit('card record', pars);
 }
 
 function card_populate(id,data) { 
 	
 	var cardid = data.id;
 	var html = cards_templates[(data.template ? data.template : 0)];
-	$$.each(['first name','last name','title','company name','address','city','state_prov','postal code','country','website','email principal','cellphone','fax','logo'], function(i,e){
+	$$.each(['complete name','title','company name','address','city','state_prov','postal code','country','website','email','cellphone','fax','logo'], function(i,e){
 		var v = '';
  		$$.each(fields, function (ii,f) {
 			if(e==f.en) {
@@ -738,8 +679,9 @@ socket.on('card login', function (data) {
 
 
 socket.on('card load', function (data) {
-	fields = data.fields;
-	cards_fields = data.cards_fields;
+	
+	if (data.fields) fields = data.fields;
+	if (data.cards_fields) cards_fields = data.cards_fields;
 	
 	mycard["id"] = data.id;
 	mycard["points"] = parseInt(data.points);
@@ -783,12 +725,12 @@ socket.on('card load', function (data) {
 	var draggie = new Draggabilly( '#mycard', { axis:"y" });
 	draggie.on( 'dragEnd', function( event, pointer ) {
 		if (this.position.y < (t-h)) {
-			card_offered();
+			card_offered('mycard',mycard.id);
 		} else {
-			card_offer_complete();
+			card_offer_completed('mycard');
 		}
 	});
-	draggie.on( 'staticClick', card_offer);
+	draggie.on( 'staticClick', function(){ card_offer('mycard',mycard.id); });
 	
 	if (data.cards) {
 		cards = data.cards;
@@ -825,7 +767,7 @@ socket.on('card record', function (data) {
 			pars['cardid'] = mycard.id;
 			pars["id"] = data.id;
 			cards.current.push(pars);
-			myApp.alert("New card added to your current list!");
+			myApp.alert("New card added to your waiting list!");
 			mainView.router.load({pageName: 'index'});
 			break;
 	}
@@ -925,6 +867,11 @@ socket.on('card qr', function(data){
 socket.on('card connected', function(data){
   console.log("card connected response: "+data)
 });
+socket.on('custom field', function(data){
+  	myApp.alert(data.msg);
+  	fields.push({"id":data.id,"en":data.field,"fr":data.field,"base":0,"order":255});
+  	$$(".picker-modal").find("input").attr("name",data.id);
+});
 
 function  add_card_li(ii,v) {
 	
@@ -979,33 +926,30 @@ function  add_card_li(ii,v) {
 	            <div class="item-content">\
 	              <div class="item-media color-red"><i class="fa fa-times-circle"></i></div>\
 	              <div class="item-inner"> \
-	                <div class="item-title label" data-ii="'+ii+'"><div class="item-input"><select><option value="'+i+'">'+l+'</option></select></div></div>\
+	                <div class="item-title label" data-i="'+i+'" data-id="'+ii+'">'+l+'</div>\
 	                <div class="item-input">\
 	                  <input type="text" name="'+i+'" value="'+v+'"/>\
 	                </div>\
 	              </div>\
 	            </div>\
 	          </li>';
-	$$("#add_card_list").html($$("#add_card_list").html()+li);
+	$$("#add_card_list").append(li);
 	
 }
 
-function card_field_add(p) {
-	myApp.closeModal();
- 	var ii =  $$("#add_card_list > li").length;
- 	h = '<li class="list-item ii_'+ii+'"> \
-      <div class="item-content"> \
-	     <div class="item-media color-red"><i class="fa fa-times-circle"></i></div>\
-        <div class="item-inner"> \
-          <div class="item-title label">'+p.displayValue[0]+'</div> \
-          <div class="item-input"> \
-            <input type="text" name="'+p.value[0]+'" placeholder="Your '+p.displayValue[0]+'" value=""/> \
-          </div> \
-        </div> \
-      </div> \
-    </li>';
-   $$("#add_card_list").append(h);
-	p.destroy();
+function add_card_init() {
+	$$("#add_card_list").find(".color-red").on("click", function () {
+		$$(this).parents("li").remove();
+	});
+	$$("#add_card_list").find(".item-title.label").on("click", function(){
+		card_open_picker($$(this).attr("data-id"),$$(this).attr("data-i"));
+	});
+}
+
+function card_field_add() {
+	var ii = $$("#add_card_list > li").length;
+ 	add_card_li(ii,'-change-')
+ 	add_card_init();
 }
 
 function card_field_set(ii,p){
@@ -1070,7 +1014,7 @@ function card_set_field(add,ii) {
 	$$.each(fields, function (k,v) {
 		if ($$("#add_card_list").find("input[name='"+v.id+"']").length==0) {
 			fields_keys.push(v.id);
-			fields_vals.push(v.en);
+			fields_vals.push(v['en']);
 		}
 	});
 	fields_keys.push(0);
@@ -1097,8 +1041,148 @@ function card_set_field(add,ii) {
 	fields_picker2.open();
 }
 
+function card_open_picker(ii,i) {
+	var l = '', n = '', html = '';
+	var li_tpl = '<li>' +
+			      '<label class="label-radio item-content">' +
+			        '<input type="radio" name="{{ii}}" value="{{i}}" data-name="{{l}}" {{checked}}>' +
+			        '<div class="item-media">' +
+			          '<i class="icon icon-form-checkbox"></i>' +
+			        '</div>' +
+			        '<div class="item-inner">' +
+			          '<div class="item-title">{{l}}</div>' +
+			        '</div>' +
+			      '</label>' +
+			    '</li>';
+	
+	$$.each(fields, function(k,v) {
+		if ($$("#add_card_list").find("input[name='"+v.id+"']").length==0) {
+			n = v["en"];
+			l = n.substr(0,1).toUpperCase() + n.substr(1).toLowerCase();
+			html += li_tpl.replace(/{{ii}}/,ii).replace(/{{i}}/,v.id).replace(/{{l}}/g,l);
+		}
+		if (v.id==i) {
+			n = v["en"];
+			l = n.substr(0,1).toUpperCase() + n.substr(1).toLowerCase();
+			html += li_tpl.replace(/{{ii}}/,ii).replace(/{{i}}/,v.id).replace(/{{l}}/g,l).replace(/{{checked}}/,'checked="checked"');
+		}
+	});
+	
+	myApp.pickerModal(
+    '<div class="picker-modal">' +
+      '<div class="toolbar">' +
+        '<div class="toolbar-inner">' +
+          '<div class="left"></div>' +
+          '<div class="right"><a href="#" class="close-picker">Close</a></div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="picker-modal-inner" style="overflow:scroll;">' +
+        '<div class="list-block" style="overflow:scroll;">' +
+			  '<ul style="overflow:scroll;">' +
+			  	  '<li>' +
+			      '<label class="label-radio item-content">' +
+			        '<input type="radio" name="'+ii+'" value="" data-name="-change-">' +
+			        '<div class="item-media">' +
+			          '<i class="icon icon-form-checkbox"></i>' +
+			        '</div>' +
+			        '<div class="item-inner">' +
+			          '<div class="item-title">Not used</div>' +
+			        '</div>' +
+			      '</label>' +
+			    '</li>' +html+
+			  	  '<li>' +
+			      '<label class="label-radio item-content">' +
+			        '<input type="radio" name="'+ii+'" value="999" data-name="Custom field">' +
+			        '<div class="item-media">' +
+			          '<i class="icon icon-form-checkbox"></i>' +
+			        '</div>' +
+			        '<div class="item-inner">' +
+			          '<div class="item-title">Custom field</div>' +
+			        '</div>' +
+			      '</label>' +
+			    '</li>' +
+			  '</ul>' +
+			'</div>' +
+      '</div>' +
+    '</div>'
+  );
+  
+  $$(".picker-modal").on("close", function(){
+  		var n = $$(".picker-modal").find("input[name='"+ii+"']:checked").data("name");
+  		var i = $$(".picker-modal").find("input[name='"+ii+"']:checked").val();
+  		if (i==999) {
+  			$$(".picker-modal").on("closed", function(){
+  				card_custom_field_picker(ii);
+  			});
+  		}  else {
+			var li = $$("#add_card_list").find("li.ii_"+ii);
+			li.find(".label").attr("data-i",i);
+			li.find(".label").text(n);
+			li.find("input").attr("name",i);
+		}
+  });
+}
+
+function card_custom_field_picker(ii) {
+	myApp.pickerModal(
+    '<div class="picker-modal">' +
+      '<div class="toolbar">' +
+        '<div class="toolbar-inner">' +
+          '<div class="left"></div>' +
+          '<div class="right"><a href="#" class="close-picker">Close</a></div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="picker-modal-inner">' +
+        '<div class="list-block">' +
+				'<ul>' +
+					'<li>' +
+						'<div class="item-content">' +
+							'<div class="item-inner">' +
+								'<div class="item-title label">Custom Name</div>' +
+								'<div class="item-input">' +
+									'<input type="text" name="">' +
+								'</div>' +
+							'</div>' +
+						'</div>' +
+					'</li>' +
+					'<li>' +
+						'<div class="item-content">' +
+							'<div class="item-inner">' +
+								'<div class="item-input">' +
+									'<a href="#" onClick="card_custom_field_validate()" class="button button-fill color-green">Validate</a>' +
+								'</div>' +
+							'</div>' +
+						'</div>' +
+					'</li>' +
+				'</ul>' +
+		  '</div>' +
+      '</div>' +
+    '</div>'
+  );
+  
+  $$(".picker-modal").on("close", function(){
+  		var i = $$(".picker-modal").find("input").attr("name");
+  		var n = $$(".picker-modal").find("input").val();
+		var li = $$("#add_card_list").find("li.ii_"+ii);
+		li.find(".label").data("i",i);
+		li.find(".label").text(n);
+		li.find("input").attr("name",i);
+  });
+}
+
+function card_custom_field_validate() {
+	if ($$(".picker-modal").find("input").val()=="") return false;
+	var pars = {"owner":mycard.id,"field":$$(".picker-modal").find("input").val()}
+	socket.emit('custom field', pars);
+}
+
 function online(event) {
   $online = (event.type=='online');
+}
+
+function validateEmail(email) {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
 }
 
 (function (document) {
