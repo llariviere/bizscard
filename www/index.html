@@ -164,7 +164,7 @@
         <div class="toolbar tabbar">
 		    <div class="toolbar-inner">
 		        <a href="#" class="tab-link home-open">
-		            <i class="fa fa-home fa-2x"></i>
+		            <i class="fa fa-home fa-lg"></i>
 		        </a>
 		        <a href="#" class="tab-link current-list-open">
 		            <i class="fa fa-id-card-o fa-lg"></i>
@@ -230,34 +230,7 @@
           	 
             </div>
                 	
-          </div>
-          
-          
-        <!--div class="page cached no-tabbar" data-page="card-cropper">
-		      
-	        <div class="page-content">
-	        
-				<div class="container"><img id="img_upload" src="" alt=""></div>
-				
-				<div class="container">
-				
-				  <div id="visualElements"></div>
-				
-				  <div id="cornercontainer">
-				    <div id="corner1" class="corner"><div class="handle"></div></div>
-				    <div id="corner2" class="corner"><div class="handle"></div></div>
-				    <div id="corner3" class="corner"><div class="handle"></div></div>
-				    <div id="corner4" class="corner"><div class="handle"></div></div>
-				    <div id="img_record_btn"><div>Save</div></div>
-				  </div>
-				</div>
-				
-				<div class="card-top-edge">Top edge of the card</div>
-	
-	        </div>
-		        
-        </div-->
-        
+          </div>        
         
           
         <div class="page cached no-tabbar" id="card-entry" data-page="card-entry">
@@ -276,8 +249,8 @@
 				
 		      <div class="content-block">
 		        <div class="row"><!--  onclick="card_set_field(1,0);" -->
-		          <div class="col-33"><a href="#index" class="button button-big button-fill bg-red"><i class="fa fa-times-circle"></i> Cancel</a></div>
-		          <div class="col-33"><a href="#" id="card_set_field" class="button button-big button-fill bg-blue"><i class="fa fa-plus-square"></i> Field</a></div>
+		          <div class="col-33"><a href="#index" class="back button button-big button-fill bg-red"><i class="fa fa-times-circle"></i> Cancel</a></div>
+		          <div class="col-33"><a href="#" onclick="card_field_add()" class="button button-big button-fill bg-blue"><i class="fa fa-plus-square"></i> Field</a></div>
 		          <div class="col-33"><a href="#" onclick="card_add()" class="button button-big button-fill bg-green"><i class="fa fa-save"></i> Record</a></div>
 		        </div>
 		      </div>
@@ -438,17 +411,11 @@
 	    {{#each current}}
 	    <li class="swipeout card-item" 
 	    	data-id="{{id}}" 
-	    	data-firstname="{{firstname}}"
-	    	data-lastname="{{lastname}}"
-	    	data-company="{{company}}"
+	    	data-completename="{{completename}}"
 	    	data-birthdate="{{birthdate}}"
 	    	data-email="{{email}}"
-	    	data-website="{{website}}"
-	    	data-cellphone="{{cellphone}}"
 	    	data-gender="{{gender}}"
 	    	data-comment="{{comment}}" 
-	    	data-title="{{title}}" 
-	    	data-fax="{{fax}}" 
 	    	data-language="{{language}}" 
 	    	data-logo="{{logo}}" 
 	    	data-template="{{template}}" 
@@ -459,7 +426,7 @@
 	    	data-current=true >
 	      <div class="swipeout-content item-content">
 	         <div class="item-inner">
-	            <div class="item-title">{{firstname}} {{lastname}}</div>
+	            <div class="item-title">{{completename}}</div>
 	            <div class="item-after">{{company}}</div>
 	          </div>
 	      </div>
@@ -510,22 +477,11 @@
 	    {{#each waiting}}
 	    <li class="swipeout card-item" 
 	    	data-id="{{id}}" 
-	    	data-firstname="{{firstname}}"
-	    	data-lastname="{{lastname}}"
-	    	data-title="{{title}}"
-	    	data-address="{{address}}"
-	    	data-city="{{city}}"
-	    	data-state_prov="{{state_prov}}"
-	    	data-zip_postal="{{zip_postal}}"
-	    	data-country="{{country}}"
-	    	data-company="{{company}}"
+	    	data-completename="{{completename}}"
 	    	data-category="{{category}}"
 	    	data-category_text="{{category_text}}"
 	    	data-birthdate="{{birthdate}}"
 	    	data-email="{{email}}"
-	    	data-website="{{website}}"
-	    	data-password="{{password}}"
-	    	data-cellphone="{{cellphone}}"
 	    	data-gender="{{gender}}"
 	    	data-comment="{{comment}}" 
 	    	data-language="{{language}}"
@@ -538,7 +494,7 @@
 	    	data-current="" >
 	      <div class="swipeout-content item-content">
 	         <div class="item-inner">
-	            <div class="item-title">{{firstname}} {{lastname}}</div>
+	            <div class="item-title">{{completename}}</div>
 	            <div class="item-after">{{company}}</div>
 	          </div>
 	      </div>
@@ -592,7 +548,7 @@
         <ul class="thecard card-form-ul-{{id}} disabled"></ul>
         
         <ul class="card-form-ul-acc hidden">
-		    <li>
+		    <!--li>
             <div class="item-content" onClick="category_open()">
               <div class="item-inner"> 
                 <div class="item-title label">Category</div>
@@ -654,7 +610,7 @@
                 </div>
               </div>
             </div>
-          </li>
+          </li-->
           {{#if own}}
           <li class="align-top">
             <div class="item-content">
@@ -760,6 +716,7 @@
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/socket.io.js"></script>
     <script type="text/javascript" src="js/bizswap.js"></script>
+    <script type="text/javascript" src="js/exchange.js"></script>
     <script type="text/javascript" src="js/camera.js"></script>
     <script type="text/javascript" src="js/key.js"></script>
   </body>
