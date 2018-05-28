@@ -492,8 +492,23 @@ function card_add() {
 	}
 	pars['cardid'] = mycard.id;
 	pars['44'] = scanImg.dataUrl;
-	console.log(pars)
 	socket.emit('card record', pars);
+}
+
+function card_record(data) {
+	var list_field = ['company','completename','email','id','poinst_img']
+	var pars = {};
+	$$.each($$("#add_card_list > li"), function(i,li) {
+		var name = $$(li).find(".label").text().toLowerCase().replace(/\s/g,'');
+		if (list_field.indexOf(name)!==false) pars[name] = $$(li).find("input").val();
+	});
+	pars['cardid'] = mycard.id;
+	pars["accepted"] = null;
+	pars["id"] = data.id;
+	cards.waiting.push(pars);
+	myApp.alert("New card added to your waiting list!");
+	$$(".badge.waiting-list-nbr").html(cards.waiting.length);
+	mainView.router.load({pageName: 'index'});
 }
 
 function card_populate(id,data) { 
@@ -755,20 +770,28 @@ socket.on('card record', function (data) {
 			myApp.alert("Card updated!");
 			break;
 		case "EMAIL_EXIST":
-			myApp.alert("<b>This email address is already used on a card!</b><br>Please change it and try again.");
-			$$("#add_card_list input[type='email']").focus();
+			if (data.id==mycard.id) {
+				myApp.alert("<b>This email address is exactly like your's!</b><br>Please change it and try again.");
+			} else {
+				myApp.modal({
+					title: 'Existing email?', 
+					text: '<b>This email address is already used on a card!</b><br>Do you want to add it?', 
+					buttons: [
+						{ text: "No thanks", onClick: function(){
+							myApp.alert("You should change the email address...");
+							$$("#add_card_list input[type='email']").focus();
+						} },
+						{ text: "Yes, add it", onClick: function(){
+							data["cardid"] = mycard.id;
+							socket.emit("card add",data);
+							mainView.router.load({pageName: 'index'});
+						}}
+					]
+				});
+			}
 			break;
 		case "INSERTED":
-			var pars = {};
-			$$.each($$("#add_card_list > li"), function(i,li) {
-				var name = $$(li).find(".label").text().toLowerCase();
-				pars[name] = $$(li).find("input").val();
-			});
-			pars['cardid'] = mycard.id;
-			pars["id"] = data.id;
-			cards.current.push(pars);
-			myApp.alert("New card added to your waiting list!");
-			mainView.router.load({pageName: 'index'});
+			card_record(data);
 			break;
 	}
 	
