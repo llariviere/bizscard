@@ -645,7 +645,7 @@
 	      	
       <div class="content-block card-form-buttons hidden">
         <div class="row">
-          <div class="col-33"><a href="#" onclick="mainView.router.back()" class="button button-big button-filfal bg-gray"><i class="fa fa-times-circle"></i> Cancel</a></div>
+          <div class="col-33"><a href="#" onclick="mainView.router.back()" class="button button-big button-fill bg-gray"><i class="fa fa-times-circle"></i> Cancel</a></div>
           <div class="col-33"><a href="#" onclick="card_form_add_field({{id}});" class="card_form_add_field button button-big button-fill bg-blue"><i class="fa fa-plus-square"></i> Field</a></div>
           <div class="col-33"><a href="#" onclick="card_form_record()" class="button button-big button-fill bg-green"><i class="fa fa-save"></i> Record</a></div>
         </div>
@@ -671,7 +671,7 @@
       <div class="content-block card-form-buttons hidden">
         <div class="row">
           <div class="col-100">
-          	<a href="#" class="button button-big button-fill bg-blue"> {{#if own}}Get the complete version{{else}}Pay for {{#js_compare "this.gender == 'm'"}}him{{else}}her{{/js_compare}}{{/if}} </a>
+          	<a href="#" class="button button-big button-fill bg-blue"> {{#if own}}Get the complete version{{else}}Pay for {{#js_compare "this.gender == 'f'"}}her{{else}}him{{/js_compare}}{{/if}} </a>
           </div>
         </div>
       </div>
