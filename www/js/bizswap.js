@@ -506,6 +506,9 @@ function card_record(data) {
 	pars["accepted"] = null;
 	pars["id"] = data.id;
 	cards.waiting.push(pars);
+	for (var i=0; i<data.cards_fields.length; i++) {
+		cards_fields.push(data.cards_fields[i]);
+	}
 	myApp.alert("New card added to your waiting list!");
 	$$(".badge.waiting-list-nbr").html(cards.waiting.length);
 	mainView.router.load({pageName: 'index'});
@@ -652,12 +655,10 @@ socket.on('connect', function () {
 socket.on('disconnect', function () {
     $connected = false;
     console.log('$connected = '+$connected);
-    //myApp.alert("You have lost your connection with the server!")
 });
 socket.on('reconnect', function () {
     $connected = true;
     console.log('$connected = '+$connected);
-    //myApp.alert("You are re-connected with the server!")
 });
 socket.on('card msg', function(data){
 	myApp.alert(data)
@@ -830,9 +831,12 @@ socket.on('cards list', function(data){
 });
 socket.on('card details', function(data){
 	// si la carte n'est pas deja dans mes listes (added!=null)...
-	if (data.added==null) {
+	if (data.card.added==null) {
 		myApp.alert("Card added to your waiting list!")
-		cards.waiting.push(data);
+		cards.waiting.push(data.card);
+		for (var i=0; i<data.cards_fields.length; i++) {
+			cards_fields.push(data.cards_fields[i]);
+		}
 		$$(".badge.waiting-list-nbr").html(cards.waiting.length);
 	}
 });
@@ -1017,7 +1021,7 @@ function card_set_field(add,ii) {
 	
 	//$$("#fields_page_ul").html(html);
 	//mainView.router.loadPage("fields")
-	
+	/*
 	return false;
 
 	if (add) {
@@ -1062,6 +1066,7 @@ function card_set_field(add,ii) {
 	}
 	
 	fields_picker2.open();
+	*/
 }
 
 function card_open_picker(ii,i) {
@@ -1217,7 +1222,25 @@ function validateEmail(email) {
 	var storedData = myApp.formGetData('login_form');
 	
 	if (storedData) {
-		card_login(storedData.email,storedData.password,false,true);
+		navigator.permissions.query({name:'geolocation'}).then(function(result) {
+		  // Will return ['granted', 'prompt', 'denied']
+		  console.log(result.state);
+		  if (result.state!='granted') {
+		  	
+			   myApp.modal({
+			   	title: 'GeoLocation is not allowed', 
+			   	text: 'You have to grant access to GeoLocation in your app parameters for card exchange to work.', 
+			   	buttons: [
+						{ text: "Ok", onClick: function () {
+							card_login(storedData.email,storedData.password,false,true);
+						} }
+					]
+				});
+		  } else {
+		  		card_login(storedData.email,storedData.password,false,true);
+		  }
+		  
+		});
 	} else {
 		welcomescreen.open();
 		$$("#email").focus();
