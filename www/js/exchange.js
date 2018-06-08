@@ -18,23 +18,25 @@ function card_offer(context,id) {
 }
 
 function card_offered(context,id) {
-   myApp.alert('Card offered...');
+   myApp.modal({
+   	title: 'Card offered...', 
+   	text: 'Clic below to cancel', 
+   	buttons: [
+			{ text: "Cancel", onClick: card_offer_cancel }
+		]
+	});
    card_offer_complete(id);
    card_offer_completed(context);
 }
 
-function card_offer_completed(context) {
-	$$('#'+context+' .thumb').hide();
-	$$('#'+context).animate( 
-		{ 'top': $$('#'+context).data('top') }, 
-		{ complete: function(){ $$(".no-thumb").show() } }
-	);
-} 
+function card_offer_cancel() {
+	socket.emit('card offer cancel', {"cardid":mycard.id});
+}
 
 function card_offer_complete(id) {
 		
 	if (!navigator.geolocation){
-		myApp.alert("Geolocation is not supported by your device!");
+		myApp.alert("Geolocation is not supported by your device!<br>Please activate in the application parameters.");
 		return false;
 	}
 
@@ -59,3 +61,11 @@ function card_offer_complete(id) {
 	navigator.geolocation.getCurrentPosition(success, error, options);
 	//success({lat:45.6105491,lng:-73.5094794,alt:0}); // manual override for testing...
 }
+
+function card_offer_completed(context) {
+	$$('#'+context+' .thumb').hide();
+	$$('#'+context).animate( 
+		{ 'top': $$('#'+context).data('top') }, 
+		{ complete: function(){ $$(".no-thumb").show() } }
+	);
+} 
