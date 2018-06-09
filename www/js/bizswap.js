@@ -689,6 +689,7 @@ socket.on('card login', function (data) {
 			socket.emit('card load', data.id);
 		   welcomescreen.close();
 		   myApp.alert('Synchronizing your data...<br>Please wait.');
+		   geoPermission();
 	}
 	
 });
@@ -1213,6 +1214,23 @@ function validateEmail(email) {
     return re.test(String(email).toLowerCase());
 }
 
+function geoPermission() {
+	locationPermission.getStatus(function(status) {
+	    switch(status) {
+	        case locationPermission.GRANTED: console.log('Granted !'); break;
+	        case locationPermission.DENIED: myApp.modal({
+			   	title: 'GeoLocation is not allowed', 
+			   	text: 'You have to grant access to GeoLocation in your app parameters for card exchange to work.', 
+			   	buttons: [
+						{ text: "Ok", onClick: function () {
+							
+						} }
+					]
+				});
+	    }
+	});
+}
+
 (function (document) {
 	document.addEventListener("backbutton", function(e){
 		e.preventDefault();
@@ -1222,25 +1240,7 @@ function validateEmail(email) {
 	var storedData = myApp.formGetData('login_form');
 	
 	if (storedData) {
-		navigator.permissions.query({name:'geolocation'}).then(function(result) {
-		  // Will return ['granted', 'prompt', 'denied']
-		  console.log(result.state);
-		  if (result.state!='granted') {
-		  	
-			   myApp.modal({
-			   	title: 'GeoLocation is not allowed', 
-			   	text: 'You have to grant access to GeoLocation in your app parameters for card exchange to work.', 
-			   	buttons: [
-						{ text: "Ok", onClick: function () {
-							card_login(storedData.email,storedData.password,false,true);
-						} }
-					]
-				});
-		  } else {
-		  		card_login(storedData.email,storedData.password,false,true);
-		  }
-		  
-		});
+		card_login(storedData.email,storedData.password,false,true);
 	} else {
 		welcomescreen.open();
 		$$("#email").focus();
