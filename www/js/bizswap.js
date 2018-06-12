@@ -1215,20 +1215,73 @@ function validateEmail(email) {
 }
 
 function geoPermission() {
-	locationPermission.getStatus(function(status) {
-	    switch(status) {
-	        case locationPermission.GRANTED: console.log('Granted !'); break;
-	        case locationPermission.DENIED: myApp.modal({
-			   	title: 'GeoLocation is not allowed', 
-			   	text: 'You have to grant access to GeoLocation in your app parameters for card exchange to work.', 
-			   	buttons: [
-						{ text: "Ok", onClick: function () {
-							
-						} }
-					]
-				});
+	if (typeof locationPermission!=="undefined") {
+		locationPermission.getStatus(function(status) {
+		    switch(status) {
+		        case locationPermission.GRANTED: console.log('Granted !'); break;
+		        case locationPermission.DENIED: myApp.modal({
+				   	title: 'GeoLocation is not permitted on your device', 
+				   	text: 'You have to activate GeoLocation in your app parameters for Bizswiper card exchange to work.', 
+				   	buttons: [
+							{ text: "Ok", onClick: function () {
+								
+							} }
+						]
+					});
+		    }
+		});
+	}
+	if (typeof navigator.permissions!=="undefined") {		
+	  navigator.permissions.query({name:'geolocation'}).then(function(result) {
+	    if (result.state !== 'granted') {
+	      myApp.modal({
+		   	title: 'GeoLocation is not permitted on your device', 
+		   	text: 'You have to activate GeoLocation in your app parameters for Bizswiper card exchange to work.', 
+		   	buttons: [
+					{ text: "Ok", onClick: function () {} }
+				]
+	  		});
 	    }
-	});
+	  });
+	}
+}
+
+function geoLocation() {
+		
+	if (!navigator.geolocation){
+		myApp.modal({
+	   	title: 'GeoLocation is not permitted on your device', 
+	   	text: 'You have to activate GeoLocation in your app parameters for Bizswiper card exchange to work.', 
+	   	buttons: [
+				{ text: "Ok", onClick: function () {} }
+			]
+  		});
+		return false;
+	}
+
+	function success(o) {
+		return o.coords;
+	};
+
+	function error(err) {
+		myApp.hidePreloader();
+		myApp.modal({
+	   	title: 'GeoLocation is not permitted on your device', 
+	   	text: 'You have to activate GeoLocation in your app parameters for Bizswiper card exchange to work.', 
+	   	buttons: [
+				{ text: "Ok", onClick: function () {} }
+			]
+  		});
+	}
+	
+	var options = {
+	  enableHighAccuracy: true,
+	  timeout: 5000,
+	  maximumAge: 0
+	};
+	
+	navigator.geolocation.getCurrentPosition(success, error, options);
+	//success({lat:45.6105491,lng:-73.5094794,alt:0}); // manual override for testing...
 }
 
 (function (document) {
