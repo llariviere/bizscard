@@ -25,6 +25,7 @@ function card_offered(context,id) {
 			{ text: "Cancel", onClick: card_offer_cancel }
 		]
 	});
+	setTimeout(function () { myApp.closeModal(); },5000)
    card_offer_complete(id);
    card_offer_completed(context);
 }
@@ -34,32 +35,8 @@ function card_offer_cancel() {
 }
 
 function card_offer_complete(id) {
-		
-	if (!navigator.geolocation){
-		myApp.alert("Geolocation is not supported by your device!<br>Please activate in the application parameters.");
-		return false;
-	}
-
-	function success(o) {
-		//socket.emit('card offer', {"cardid":mycard.id, "lat":o.lat, "lng":o.lng, "alt":o.alt}); // manual override for testing...
-		var p = o.coords;
-		socket.emit('card offer', {"cardid":mycard.id, "id":id ,"lat":p.latitude, "lng":p.longitude, "alt":p.altitude});
-	};
-
-	function error(err) {
-		console.log(err);
-		myApp.hidePreloader();
-		myApp.alert("Impossible to determine your location: "+err);
-	}
-	
-	var options = {
-	  enableHighAccuracy: true,
-	  timeout: 5000,
-	  maximumAge: 0
-	};
-	
-	navigator.geolocation.getCurrentPosition(success, error, options);
-	//success({lat:45.6105491,lng:-73.5094794,alt:0}); // manual override for testing...
+	var p = geoLocation();
+	if (p) socket.emit('card offer', {"cardid":mycard.id, "id":id ,"lat":p.latitude, "lng":p.longitude, "alt":p.altitude});
 }
 
 function card_offer_completed(context) {
