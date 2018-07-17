@@ -363,6 +363,8 @@ function card_form_record(){
 		}
 	});
 	
+	pars['owner'] = mycard.id;
+	
 	socket.emit('card record', pars);
 	
 	card_populate("thecard",pars);
@@ -480,10 +482,11 @@ function category_open() {
 function card_add() {	
 	var pars = {};
 	$$.each($$("#add_card_list > li"), function(i,li) {
-		//var name = $$(li).find(".label").text().toLowerCase();
-		var name = $$(li).find("input").attr("name").toLowerCase();
-		if (!name) return true;
-		pars[name] = $$(li).find("input").val();
+		var champ = $$(li).find("input").attr("name").toLowerCase();
+		var valeur = $$(li).find("input").val();
+		if (!champ || !valeur || valeur=='-change-') return true;
+		if (['24','26','34','43','53','54'].indexOf(champ)>=0) valeur = valeur.replace(/[^0-9]/g, '');
+		pars[champ] = valeur;
 	});
 	
 	if (pars['33']==undefined || !validateEmail(pars['33'])) {
@@ -503,13 +506,13 @@ function card_record(data) {
 		if (list_field.indexOf(name)!==false) pars[name] = $$(li).find("input").val();
 	});
 	pars['cardid'] = mycard.id;
-	pars["accepted"] = null;
+	pars["accepted"] = 1;
 	pars["id"] = data.id;
-	cards.waiting.push(pars);
+	cards.current.push(pars);
 	for (var i=0; i<data.cards_fields.length; i++) {
 		cards_fields.push(data.cards_fields[i]);
 	}
-	myApp.alert("New card added to your waiting list!");
+	myApp.alert("New card added to your current list!");
 	$$(".badge.waiting-list-nbr").html(cards.waiting.length);
 	mainView.router.load({pageName: 'index'});
 }
@@ -774,6 +777,23 @@ socket.on('card record', function (data) {
 		case "EMAIL_EXIST":
 			if (data.id==mycard.id) {
 				myApp.alert("<b>This email address is exactly like your's!</b><br>Please change it and try again.");
+			} else if (data.accepted) {
+				myApp.alert("<b>This email address is already in your current cards!</b>");
+				mainView.router.load({pageName: 'index'});
+			} else if (data.added) {
+				myApp.modal({
+					title: 'Existing card', 
+					text: '<b>This email address is already in your waiting cards!</b><br>Do you want to accept it?', 
+					buttons: [
+						{ text: "No thanks", onClick: function(){
+							mainView.router.load({pageName: 'index'});
+						} },
+						{ text: "Yes, accept it", onClick: function(){
+							card_auth(data.id,'accept')
+							mainView.router.load({pageName: 'index'});
+						}}
+					]
+				});
 			} else {
 				myApp.modal({
 					title: 'Existing email?', 
@@ -897,8 +917,14 @@ socket.on('card connected', function(data){
 });
 socket.on('custom field', function(data){
   	myApp.alert(data.msg);
+			
   	fields.push({"id":data.id,"en":data.field,"fr":data.field,"base":0,"order":255});
-  	$$(".picker-modal").find("input").attr("name",data.id);
+  	
+	var li = $$("#add_card_list").find("li.ii_"+data.ii);
+	li.find(".label").attr("data-i",data.id);
+	li.find(".label").text(data.field);
+	li.find("input").attr("name",data.id);
+	myApp.closeModal(".choseModal");
 });
 
 function  add_card_li(ii,v) {
@@ -976,8 +1002,7 @@ function add_card_init() {
 
 function card_field_add() {
 	var ii = $$("#add_card_list > li").length;
- 	add_card_li(ii,'-change-')
- 	add_card_init();
+	card_open_picker(ii,0,true);
 }
 
 function card_field_set(ii,p){
@@ -1070,7 +1095,7 @@ function card_set_field(add,ii) {
 	*/
 }
 
-function card_open_picker(ii,i) {
+function card_open_picker(ii,i,add_new) {
 	var l = '', n = '', html = '';
 	var li_tpl = '<li>' +
 			      '<label class="label-radio item-content">' +
@@ -1084,6 +1109,20 @@ function card_open_picker(ii,i) {
 			      '</label>' +
 			    '</li>';
 	
+	var not_used = '';
+	if (!add_new && 0) {
+		not_used = '<li>' +
+			      '<label class="label-radio item-content">' +
+			        '<input type="radio" name="'+ii+'" value="" data-name="-change-">' +
+			        '<div class="item-media">' +
+			          '<i class="icon icon-form-checkbox"></i>' +
+			        '</div>' +
+			        '<div class="item-inner">' +
+			          '<div class="item-title">Not used</div>' +
+			        '</div>' +
+			      '</label>' +
+			    '</li>';
+	}
 	$$.each(fields, function(k,v) {
 		if ($$("#add_card_list").find("input[name='"+v.id+"']").length==0) {
 			n = v["en"];
@@ -1095,38 +1134,30 @@ function card_open_picker(ii,i) {
 			l = n.substr(0,1).toUpperCase() + n.substr(1).toLowerCase();
 			html += li_tpl.replace(/{{ii}}/,ii).replace(/{{i}}/,v.id).replace(/{{l}}/g,l).replace(/{{checked}}/,'checked="checked"');
 		}
-	});
+	});	
 	
 	myApp.pickerModal(
-    '<div class="picker-modal">' +
+    '<div class="picker-modal choseModal" style="height:100%">' +
       '<div class="toolbar">' +
         '<div class="toolbar-inner">' +
-          '<div class="left"></div>' +
-          '<div class="right"><a href="#" class="close-picker">Close</a></div>' +
+          '<div class="left"><a href="#" class="close-picker">Cancel</a></div>' +
+          'Choose a field' +
+          '<div class="right"><a href="#" class="ok-picker">Ok</a></div>' +
         '</div>' +
       '</div>' +
       '<div class="picker-modal-inner" style="overflow:scroll;">' +
         '<div class="list-block" style="overflow:scroll;">' +
 			  '<ul style="overflow:scroll;">' +
-			  	  '<li>' +
-			      '<label class="label-radio item-content">' +
-			        '<input type="radio" name="'+ii+'" value="" data-name="-change-">' +
-			        '<div class="item-media">' +
-			          '<i class="icon icon-form-checkbox"></i>' +
-			        '</div>' +
-			        '<div class="item-inner">' +
-			          '<div class="item-title">Not used</div>' +
-			        '</div>' +
-			      '</label>' +
-			    '</li>' +html+
-			  	  '<li>' +
+			  	 not_used +
+			    html +
+			  	 '<li>' +
 			      '<label class="label-radio item-content">' +
 			        '<input type="radio" name="'+ii+'" value="999" data-name="Custom field">' +
 			        '<div class="item-media">' +
 			          '<i class="icon icon-form-checkbox"></i>' +
 			        '</div>' +
 			        '<div class="item-inner">' +
-			          '<div class="item-title">Custom field</div>' +
+			          '<div class="item-title">Custom Field <i class="fa fa-cube"></i></div>' +
 			        '</div>' +
 			      '</label>' +
 			    '</li>' +
@@ -1136,19 +1167,33 @@ function card_open_picker(ii,i) {
     '</div>'
   );
   
-  $$(".picker-modal").on("close", function(){
+  $$(".picker-modal .ok-picker").on("click", function(){
   		var n = $$(".picker-modal").find("input[name='"+ii+"']:checked").data("name");
   		var i = $$(".picker-modal").find("input[name='"+ii+"']:checked").val();
+  		
+	  	if (add_new) {
+		 	add_card_li(ii,'-change-')
+		 	add_card_init();  			
+	  	}
   		if (i==999) {
+  			myApp.prompt('What is the field\'s name?', 'Custom Field <i class="fa fa-cube"></i>', function (value) {
+  				if (value.replace(/\s/g,'')=='') return false;
+  				card_custom_field_validate(ii, value);
+		   });
+
+		   /*
   			$$(".picker-modal").on("closed", function(){
   				card_custom_field_picker(ii);
   			});
+			*/
   		}  else {
 			var li = $$("#add_card_list").find("li.ii_"+ii);
 			li.find(".label").attr("data-i",i);
 			li.find(".label").text(n);
 			li.find("input").attr("name",i);
+			myApp.closeModal(".choseModal");
 		}
+		
   });
 }
 
@@ -1199,9 +1244,9 @@ function card_custom_field_picker(ii) {
   });
 }
 
-function card_custom_field_validate() {
-	if ($$(".picker-modal").find("input").val()=="") return false;
-	var pars = {"owner":mycard.id,"field":$$(".picker-modal").find("input").val()}
+function card_custom_field_validate(ii, v) {
+	if (v=="") return false;
+	var pars = {"owner":mycard.id,"ii":ii,"field":v}
 	socket.emit('custom field', pars);
 }
 
