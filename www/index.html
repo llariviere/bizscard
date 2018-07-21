@@ -237,7 +237,8 @@
 		      		        
 	        <div class="page-content">
 	        	
-	        	<img src="img/bcard.jpg" style="width:100%;max-width:400px;"/>
+	        	<!--img src="img/bcard.jpg" style="width:100%;max-width:400px;"/-->
+	        	<img src="" style="width:100%;max-width:400px;"/>
 	        	
 				<div class="">
 					<div class="list-block"> 
@@ -250,8 +251,8 @@
 		      <div class="content-block">
 		        <div class="row"><!--  onclick="card_set_field(1,0);" -->
 		          <div class="col-33"><a href="#index" class="back button button-big button-fill bg-red"><i class="fa fa-times-circle"></i> Cancel</a></div>
-		          <div class="col-33"><a href="#" onclick="card_field_add()" class="button button-big button-fill bg-blue"><i class="fa fa-plus-square"></i> Field</a></div>
-		          <div class="col-33"><a href="#" onclick="card_add()" class="button button-big button-fill bg-green"><i class="fa fa-save"></i> Record</a></div>
+		          <div class="col-33"><a href="#" onclick="card_field_add('#add_card_list');" class="button button-big button-fill bg-blue"><i class="fa fa-plus-square"></i> Field</a></div>
+		          <div class="col-33"><a href="#" onclick="card_record('#add_card_list')" class="button button-big button-fill bg-green"><i class="fa fa-save"></i> Record</a></div>
 		        </div>
 		      </div>
 	        </div>
@@ -409,7 +410,7 @@
 	<div class="list-block list-block-search searchbar-found">
 	  <ul>
 	    {{#each current}}
-	    <li class="swipeout card-item" 
+	    <li class="swipeout card-item  item{{id}}" 
 	    	data-id="{{id}}" 
 	    	data-completename="{{completename}}"
 	    	data-birthdate="{{birthdate}}"
@@ -427,7 +428,7 @@
 	      <div class="swipeout-content item-content">
 	         <div class="item-inner">
 	            <div class="item-title">{{completename}}</div>
-	            <div class="item-after">{{company}}</div>
+	            <div class="item-after">{{companyname}}</div>
 	          </div>
 	      </div>
 	      <div class="swipeout-actions-left">
@@ -475,7 +476,7 @@
 	<div class="list-block">
 	  <ul>
 	    {{#each waiting}}
-	    <li class="swipeout card-item" 
+	    <li class="swipeout card-item item{{id}}" 
 	    	data-id="{{id}}" 
 	    	data-completename="{{completename}}"
 	    	data-category="{{category}}"
@@ -542,7 +543,7 @@
 	  
 	  <div class="page-content">	  
 	  
-	  	<form class="thecard_form ">
+	  	<form class="thecard_form " data-id="{{id}}">
       <div class="list-block">
 
         <ul class="thecard card-form-ul-{{id}} disabled"></ul>
@@ -631,9 +632,9 @@
       
       <div class="content-block card-form-buttons hidden">
         <div class="row">
-          <div class="col-33"><a href="#" onclick="mainView.router.back()" class="button button-big button-fill bg-gray"><i class="fa fa-times-circle"></i> Cancel</a></div>
-          <div class="col-33"><a href="#" onclick="card_form_add_field({{id}});" class="card_form_add_field button button-big button-fill bg-blue"><i class="fa fa-plus-square"></i> Field</a></div>
-          <div class="col-33"><a href="#" onclick="card_form_record()" class="button button-big button-fill bg-green"><i class="fa fa-save"></i> Record</a></div>
+          <div class="col-33"><a href="#" onclick="card_auth('{{id}}','delete');" class="button button-big button-fill bg-red"><i class="fa fa-times-circle"></i> Delete</a></div>
+          <div class="col-33"><a href="#" onclick="card_field_add('.card-form-ul-{{id}}');" class="card_form_add_field button button-big button-fill bg-blue"><i class="fa fa-plus-square"></i> Field</a></div>
+          <div class="col-33"><a href="#" onclick="card_record('.thecard_form')" class="button button-big button-fill bg-green"><i class="fa fa-save"></i> Record</a></div>
         </div>
       </div>
       
@@ -645,9 +646,9 @@
 	      	
       <div class="content-block card-form-buttons hidden">
         <div class="row">
-          <div class="col-33"><a href="#" onclick="mainView.router.back()" class="button button-big button-fill bg-gray"><i class="fa fa-times-circle"></i> Cancel</a></div>
-          <div class="col-33"><a href="#" onclick="card_form_add_field({{id}});" class="card_form_add_field button button-big button-fill bg-blue"><i class="fa fa-plus-square"></i> Field</a></div>
-          <div class="col-33"><a href="#" onclick="card_form_record()" class="button button-big button-fill bg-green"><i class="fa fa-save"></i> Record</a></div>
+          <div class="col-33"><a href="#" onclick="card_auth('{{id}}','delete')" class="button button-big button-fill bg-red"><i class="fa fa-times-circle"></i> Delete</a></div>
+          <div class="col-33"><a href="#" onclick="card_field_add('.card-form-ul-{{id}}');" class="card_form_add_field button button-big button-fill bg-blue"><i class="fa fa-plus-square"></i> Field</a></div>
+          <div class="col-33"><a href="#" onclick="card_record('.thecard_form')" class="button button-big button-fill bg-green"><i class="fa fa-save"></i> Record</a></div>
         </div>
       </div>
 	      	
