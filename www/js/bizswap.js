@@ -428,9 +428,29 @@ function card_record(container) {
 		
 		// Skip incomplete fields 
 		if (!champ || !valeur || valeur=='-change-') return true;
+		
 		// For phone-like fields we filter all except number...
 		if (['24','26','34','43','53','54'].indexOf(champ)>=0) valeur = valeur.replace(/[^0-9]/g, '');
 		pars[champ] = valeur;
+		
+		// If card exist, we update fields list...
+		if (pars.id) {
+			var updated = false;
+			$$.each(cards_fields, function(i,cf){
+				if (cf.card_id==pars['id'] && cf.field_id==champ) {
+					cf.value = valeur;
+					updated = true;
+					return false;
+				}
+			});
+			if (!updated) {
+				cards_fields.push({
+					"card_id": pars.id,
+					"field_id":champ,
+					"value":valeur
+				});
+			}
+		}
 	});
 	
 	// Validate that email field is present and valid...
