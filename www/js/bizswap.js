@@ -240,7 +240,7 @@ $$(document).on("click", "li.reputation i.fa", function () {
 });
 
 $$(document).on("click", "i.fa-edit", function () {
-	$$("ul.thecard").toggleClass("disabled");
+	$$("ul.thecard, #thecard").toggleClass("disabled");
 	$$("ul.card-form-ul-acc, div.card-form-buttons").toggleClass("hidden");
 });
 
@@ -424,14 +424,17 @@ function card_record(container) {
 	
 	$$.each($$(container+" li"), function(i,li) {
 		var champ = $$(li).find("input").attr("name").toLowerCase();
-		var valeur = $$(li).find("input").val();
+		var valeur = $$(li).find("input").val().replace('-change-','').trim();
 		
-		// Skip incomplete fields 
-		if (!champ || !valeur || valeur=='-change-') return true;
+		// Skip incomplete fields name...
+		if (!champ) return true;
 		
 		// For phone-like fields we filter all except number...
 		if (['24','26','34','43','53','54'].indexOf(champ)>=0) valeur = valeur.replace(/[^0-9]/g, '');
 		pars[champ] = valeur;
+		
+		// Delete field without value...
+		if (valeur=='') $$(li).remove();
 		
 		// If card exist, we update fields list...
 		if (pars.id) {
