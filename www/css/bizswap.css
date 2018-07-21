@@ -23,6 +23,11 @@
 	position: fixed;
 }
 
+#thecard.disabled {
+	position: relative;
+	margin-top:50px;
+}
+
 
 #mycard .content, 
 #thecard .content,
