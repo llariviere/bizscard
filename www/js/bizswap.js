@@ -1,5 +1,7 @@
 /* Bizswiper specific /var/www/node/socket/bizswiper/app/js/bizswap.js */
 
+// card_field_add('#add_card_list');
+
  var myApp = new Framework7({
 	precompileTemplates: true,
 	template7Pages: true,
@@ -312,70 +314,6 @@ function card_form_open(context) {
 	
 }
 
-function card_form_add_field(cardid) {
-	
-	var html = '';
-	
-	$$.each(fields, function (k,v) {
-		if ($$(".card-form-ul-"+cardid).find("input[name='"+v.id+"']").length==0) {
-			
-			html += '<li> \
-		      <label class="label-radio item-content"> \
-		        <input type="radio" name="card_set_field_input" value="'+v.id+'"> \
-		        <div class="item-inner"> \
-		          <div class="item-title">'+v['en']+'</div> \
-		        </div> \
-		      </label> \
-		    </li>';
-		}
-	});
-	
-	html += '<li> \
-      <label class="label-radio item-content"> \
-        <input type="radio" name="card_set_field_input" value="0"> \
-        <div class="item-inner"> \
-          <div class="item-title">Custom field</div> \
-        </div> \
-      </label> \
-    </li>';
-	
-	$$("#fields_page_ul").html(html);
-	
-	$$("#fields_page_ul > li").on("click", function(){
-		$$(this).find("input").prop("checked",true);
-	});
-	
-	$$("#fields_page_close").on("click", function(){
-		var field = $$("#fields_page_ul input.checked")
-		myApp.alert($$("#fields_page_ul input[name='card_set_field_input']").val() +' '+ $$("#fields_page_ul input[name='card_set_field_input']").text())
-	});
-	
-	mainView.router.load({pageName: "fields"})
-}
-
-function card_form_record(){
-	
-	var pars = {};
-	
-	$$.each($$("#thecard_form").find("input, select"), function(i,e){
-		if (e.name) {
-			pars[e.name] = e.value;
-		}
-	});
-	
-	pars['owner'] = mycard.id;
-	
-	socket.emit('card record', pars);
-	
-	card_populate("thecard",pars);
-	
-	if ($$("#thecard_form input[name='id']").val()==mycard.id) {
-		mycard = pars;
-		card_populate("mycard",mycard);
-	}
-	
-}
-
 
 function storageAvailable() {
     var test = 'test';
@@ -479,27 +417,48 @@ function category_open() {
 	});
 }
 
-function card_add() {	
+function card_record(container) {	
 	var pars = {};
-	$$.each($$("#add_card_list > li"), function(i,li) {
+	
+	if ($$(container).data('id')) pars['id'] = $$(container).data('id');
+	
+	$$.each($$(container+" li"), function(i,li) {
 		var champ = $$(li).find("input").attr("name").toLowerCase();
 		var valeur = $$(li).find("input").val();
+		
+		// Skip incomplete fields 
 		if (!champ || !valeur || valeur=='-change-') return true;
+		// For phone-like fields we filter all except number...
 		if (['24','26','34','43','53','54'].indexOf(champ)>=0) valeur = valeur.replace(/[^0-9]/g, '');
 		pars[champ] = valeur;
 	});
 	
+	// Validate that email field is present and valid...
 	if (pars['33']==undefined || !validateEmail(pars['33'])) {
 		myApp.alert("You MUST have a valid value for the 'Email' field!");
 		return false;
 	}
-	pars['cardid'] = mycard.id;
-	pars['44'] = scanImg.dataUrl;
+	
+	// Always identify the user...
+	pars['owner'] = mycard.id;
+	
+	// For scan entry we record the original image...
+	if (container=='#add_card_list' && scanImg.dataUrl!=undefined) pars['44'] = scanImg.dataUrl;
+	
+	// Send to sender...
+	console.log(pars); //return;
 	socket.emit('card record', pars);
+	
+	card_populate("thecard", pars);
+	
+	if ($$("#thecard_form input[name='id']").val()==mycard.id) {
+		card_populate("mycard", pars);
+	}
+	
 }
 
-function card_record(data) {
-	var list_field = ['company','completename','email','id','poinst_img']
+function card_recorder(data) {
+	var list_field = ['companyname','completename','email','id','poinst_img']
 	var pars = {};
 	$$.each($$("#add_card_list > li"), function(i,li) {
 		var name = $$(li).find(".label").text().toLowerCase().replace(/\s/g,'');
@@ -513,7 +472,7 @@ function card_record(data) {
 		cards_fields.push(data.cards_fields[i]);
 	}
 	myApp.alert("New card added to your current list!");
-	$$(".badge.waiting-list-nbr").html(cards.waiting.length);
+	$$(".badge.current-list-nbr").html(cards.current.length);
 	mainView.router.load({pageName: 'index'});
 }
 
@@ -813,11 +772,36 @@ socket.on('card record', function (data) {
 			}
 			break;
 		case "INSERTED":
-			card_record(data);
+			card_recorder(data);
 			break;
 	}
 	
 });
+
+socket.on('card add', function(data){
+	var list_field = ['companyname','completename','email','id','poinst_img']
+	var pars = {};
+	for (var i=0; i<data.cards_fields.length; i++) {
+		var name = '';
+		for (var ii=0; ii<fields.length; ii++) {
+			if (fields[ii].id==data.cards_fields[i].field_id) {
+				name = fields[ii].en.toLowerCase().replace(/\s/g,'');
+				break;
+			}
+		}
+		if (list_field.indexOf(name)!==false) pars[name] = data.cards_fields[i].value;
+		cards_fields.push(data.cards_fields[i]);
+	}
+	pars['cardid'] = mycard.id;
+	pars["accepted"] = 1;
+	pars["id"] = data.card.id;	
+	cards.current.push(pars);
+	
+	myApp.alert("New card added to your current list!");
+	$$(".badge.current-list-nbr").html(cards.current.length);
+	mainView.router.load({pageName: 'index'});
+});
+
 socket.on('cards list', function(data){
 	
 	myApp.hidePreloader();
@@ -851,14 +835,20 @@ socket.on('cards list', function(data){
 
 });
 socket.on('card details', function(data){
+	card_recorder(data); return;
 	// si la carte n'est pas deja dans mes listes (added!=null)...
-	if (data.card.added==null) {
+	for (var i=0; i<data.cards_fields.length; i++) {
+		cards_fields.push(data.cards_fields[i]);
+	}
+	if (data.card.accepted==null) {
 		myApp.alert("Card added to your waiting list!")
 		cards.waiting.push(data.card);
-		for (var i=0; i<data.cards_fields.length; i++) {
-			cards_fields.push(data.cards_fields[i]);
-		}
 		$$(".badge.waiting-list-nbr").html(cards.waiting.length);
+	} 
+	else {
+		myApp.alert("Card added to your current list!")
+		cards.current.push(data.card);
+		$$(".badge.current-list-nbr").html(cards.current.length);
 	}
 });
 socket.on('card accepted', function(data){
@@ -898,7 +888,9 @@ socket.on('card deleted', function(data){
 		for (var i=0; i<cards.current.length; i++) {
 			if (cards.current[i].id==data.id) {
 				cards.current.splice(i,1);
-				mainView.router.load({pageName: 'index'});
+				$$("li.card-item.item"+data.id).remove();
+				mainView.router.back();
+				//mainView.router.load({pageName: 'index'});
 			}
 		}
 		
@@ -927,7 +919,7 @@ socket.on('custom field', function(data){
 	myApp.closeModal(".choseModal");
 });
 
-function  add_card_li(ii,v) {
+function add_card_li(container,ii,v) {
 	
 	if (v.replace(/^[^\d\w]$/,'')=='') return false;
 	
@@ -942,28 +934,28 @@ function  add_card_li(ii,v) {
 	
 	var i = '';
 	if (v.match(Company)) {
-		if ($$("#add_card_list").find("input[name='29']").length==0) i = 29;
+		if ($$(container).find("input[name='29']").length==0) i = 29;
 	}
 	else if (v.match(Name)) {
-		if ($$("#add_card_list").find("input[name='30']").length==0) i = 30;
+		if ($$(container).find("input[name='30']").length==0) i = 30;
 	}
 	else if (v.match(Email)) {
-		if ($$("#add_card_list").find("input[name='33']").length==0) i = 33;
+		if ($$(container).find("input[name='33']").length==0) i = 33;
 	}
 	else if (v.match(Website)) {
-		if ($$("#add_card_list").find("input[name='41']").length==0) i = 41;
+		if ($$(container).find("input[name='41']").length==0) i = 41;
 	}
 	else if (v.match(Fax)) {
-		if ($$("#add_card_list").find("input[name='34']").length==0) i = 34;
+		if ($$(container).find("input[name='34']").length==0) i = 34;
 	}
 	else if (v.match(Cel)) {
-		if ($$("#add_card_list").find("input[name='26']").length==0) i = 26;
+		if ($$(container).find("input[name='26']").length==0) i = 26;
 	}
 	else if (v.match(Tel)) {
-		if ($$("#add_card_list").find("input[name='24']").length==0) i = 24;
+		if ($$(container).find("input[name='24']").length==0) i = 24;
 	}
 	else if (v.match(Add)) {
-		if ($$("#add_card_list").find("input[name='22']").length==0) i = 22;
+		if ($$(container).find("input[name='22']").length==0) i = 22;
 	}
 	
 	var l = '-change-', n = '';
@@ -978,7 +970,7 @@ function  add_card_li(ii,v) {
 	
 	var li = '<li class="list-item ii_'+ii+'">\
 	            <div class="item-content">\
-	              <div class="item-media color-red"><i class="fa fa-times-circle"></i></div>\
+	              '+(container=='#add_card_list' ? '<div class="item-media color-red"><i class="fa fa-times-circle"></i></div>' : '')+'\
 	              <div class="item-inner"> \
 	                <div class="item-title label" data-i="'+i+'" data-id="'+ii+'">'+l+'</div>\
 	                <div class="item-input">\
@@ -987,115 +979,25 @@ function  add_card_li(ii,v) {
 	              </div>\
 	            </div>\
 	          </li>';
-	$$("#add_card_list").append(li);
+	$$(container).append(li);
 	
 }
 
-function add_card_init() {
-	$$("#add_card_list").find(".color-red").on("click", function () {
+function add_card_init(container) {
+	$$(container).find(".color-red").on("click", function () {
 		$$(this).parents("li").remove();
 	});
-	$$("#add_card_list").find(".item-title.label").on("click", function(){
-		card_open_picker($$(this).attr("data-id"),$$(this).attr("data-i"));
+	$$(container).find(".item-title.label").on("click", function(){
+		card_open_picker(container, $$(this).attr("data-id"), $$(this).attr("data-i"));
 	});
 }
 
-function card_field_add() {
-	var ii = $$("#add_card_list > li").length;
-	card_open_picker(ii,0,true);
+function card_field_add(container) {
+	var ii = $$(container+" > li").length;
+	card_open_picker(container,ii,0,true);
 }
 
-function card_field_set(ii,p){
-	myApp.closeModal();
-	$$("#add_card_list > li.ii_"+ii).find(".item-title.label").html(p.displayValue[0]);
-	$$("#add_card_list > li.ii_"+ii).find("input").attr("name",p.value[0]);
-	p.destroy();
-}
-
-function card_set_field(add,ii) {
-	
-	var html = '';
-	var html2 = '';
-	var previd = $$("#add_card_list").find("li.list-item ii_"+ii).find(".item-title.label").text();
-	
-	$$.each(fields, function (k,v) {
-		if ($$("#add_card_list").find("input[name='"+v.id+"']").length==0) {
-			html += '<li> \
-		      <label class="label-radio item-content"> \
-		        <input type="radio" name="card_set_field_input" value="'+v.id+'"> \
-		        <div class="item-inner"> \
-		          <div class="item-title">'+v['en']+'</div> \
-		        </div> \
-		      </label> \
-		    </li>';
-		    html2 += '<option value="'+v.id+'" '+(previd==v['en'] ? 'selected' : '')+'>'+v['en']+'</option>';
-		}
-	});
-	
-	html += '<li> \
-      <label class="label-radio item-content"> \
-        <input type="radio" name="card_set_field_input" value="0"> \
-        <div class="item-inner"> \
-          <div class="item-title">Custom field</div> \
-        </div> \
-      </label> \
-    </li>';
-    
-   html2 += '<option value="0">Custom field</option>';
-    
-   return html2;
-	
-	//$$("#fields_page_ul").html(html);
-	//mainView.router.loadPage("fields")
-	/*
-	return false;
-
-	if (add) {
-		var html = '<select onchange="card_field_add(this.value)"><option value="">-change-</option>';
-	} else {
-		var html = '<select onchange="card_field_set('+ii+',this.options[this.selectedIndex])"><option value="">-change-</option>';
-	}
-	$$.each(fields, function (k,v) {
-		if ($$("#add_card_list").find("input[name='"+v.id+"']").length==0) {
-			html += '<option value="'+v.id+'">'+v['en']+'</option>';
-		}
-	});
-	html += '<option value="0">Custom field</option></select>';
-	
-	var fields_keys = [];
-	var fields_vals = [];
-	$$.each(fields, function (k,v) {
-		if ($$("#add_card_list").find("input[name='"+v.id+"']").length==0) {
-			fields_keys.push(v.id);
-			fields_vals.push(v['en']);
-		}
-	});
-	fields_keys.push(0);
-	fields_vals.push('custom field');
-	
-	if (add) {
-		myApp.pickerModal('.picker-info')
-		var fields_picker2 = myApp.picker({
-			input: "#card_set_field",
-			toolbarCloseText: 'Close',
-			cols: [{values: fields_keys, displayValues: fields_vals}],
-			onClose: card_field_add
-		});
-	} else {
-		var fields_picker2 = myApp.picker({
-			input: "#card_set_field",
-			ii: ii,
-			toolbarCloseText: 'Close',
-			cols: [{values: fields_keys, displayValues: fields_vals}],
-			onClose: card_field_set
-		});  
-	}
-	
-	fields_picker2.open();
-	*/
-}
-
-function card_open_picker(ii,i,add_new) {
+function card_open_picker(container,ii,i,add_new) {
 	var l = '', n = '', html = '';
 	var li_tpl = '<li>' +
 			      '<label class="label-radio item-content">' +
@@ -1124,7 +1026,7 @@ function card_open_picker(ii,i,add_new) {
 			    '</li>';
 	}
 	$$.each(fields, function(k,v) {
-		if ($$("#add_card_list").find("input[name='"+v.id+"']").length==0) {
+		if ($$(container).find("input[name='"+v.id+"']").length==0) {
 			n = v["en"];
 			l = n.substr(0,1).toUpperCase() + n.substr(1).toLowerCase();
 			html += li_tpl.replace(/{{ii}}/,ii).replace(/{{i}}/,v.id).replace(/{{l}}/g,l);
@@ -1172,8 +1074,8 @@ function card_open_picker(ii,i,add_new) {
   		var i = $$(".picker-modal").find("input[name='"+ii+"']:checked").val();
   		
 	  	if (add_new) {
-		 	add_card_li(ii,'-change-')
-		 	add_card_init();  			
+		 	add_card_li(container, ii,'-change-')
+		 	add_card_init(container);  			
 	  	}
   		if (i==999) {
   			myApp.prompt('What is the field\'s name?', 'Custom Field <i class="fa fa-cube"></i>', function (value) {
@@ -1187,7 +1089,7 @@ function card_open_picker(ii,i,add_new) {
   			});
 			*/
   		}  else {
-			var li = $$("#add_card_list").find("li.ii_"+ii);
+			var li = $$(container).find("li.ii_"+ii);
 			li.find(".label").attr("data-i",i);
 			li.find(".label").text(n);
 			li.find("input").attr("name",i);
