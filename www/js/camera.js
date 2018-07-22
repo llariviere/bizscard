@@ -134,7 +134,7 @@ function card_ocr_process(data) {
 	var ocrLines = data.description.split("\n");
 	for (var ii=0; ii<ocrLines.length; ii++) {
 		var ocrLine = ocrLines[ii].replace(/^[ ]+|[ ]+$/g,'');
-		if (ocrLine.length) add_card_li(ii, ocrLine);
+		if (ocrLine.length) add_card_li('#add_card_list',ii, ocrLine);
 	}
 	add_card_init();
 	myApp.hidePreloader();
