@@ -944,6 +944,7 @@ socket.on('custom field', function(data){
 
 function add_card_li(container,ii,v) {
 	
+	if (v===undefined) return false;
 	if (v.toString().replace(/^[^\d\w]$/,'')=='') return false;
 	
 	var Name = /^[a-zéè\-]{2,}\s[a-zéè\-]{2,}$/i;
