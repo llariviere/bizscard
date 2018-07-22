@@ -136,7 +136,7 @@ function card_ocr_process(data) {
 		var ocrLine = ocrLines[ii].replace(/^[ ]+|[ ]+$/g,'');
 		if (ocrLine.length) add_card_li('#add_card_list',ii, ocrLine);
 	}
-	add_card_init();
+	add_card_init('#add_card_list');
 	myApp.hidePreloader();
 }
 
