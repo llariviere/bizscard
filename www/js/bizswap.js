@@ -1,7 +1,5 @@
 /* Bizswiper specific /var/www/node/socket/bizswiper/app/js/bizswap.js */
 
-// card_field_add('#add_card_list');
-
  var myApp = new Framework7({
 	precompileTemplates: true,
 	template7Pages: true,
@@ -271,16 +269,6 @@ function card_form_star(star) {
 
 function card_form_open(context) {
 	
-	context["template_text"] = templates_name[context.template];
-	
-	if (context.birthdate) context["birthdate"] = context.birthdate.substr(0,10);
-	
-	var html = cardForm(context);
-	
-	mainView.router.loadContent(html);
-	
-	card_populate('thecard',context);
-	
 	var cardid = context.id;
 	var v = '', n = '', fieldid = '', h = '', h2 = '';
 	var h1 = '<input type="hidden" name="id" value="'+cardid+'"/>';
@@ -293,14 +281,24 @@ function card_form_open(context) {
 	  	 	return false;
 	  	 }
 	  });
-	  if (f.base || v!='') {
+	  // We handle all "system" field...
+	  if (fieldid<22) {
+	  	 console.log('fieldid='+fieldid);
+	  	 if (fieldid==1 && !context['payed_date']) { // payed_date
+	  	 	//$$(".fa-edit.thecard").prop("disabled",true);
+	  	 	console.log('fieldid='+fieldid+' = '+v);
+	  	 	context['payed_date'] = v;
+	  	 }
+	  }
+	  else if (f.base || v!='') {
        n = f['en'].charAt(0).toUpperCase() + f['en'].substr(1)
+       // if (context.birthdate) context["birthdate"] = context.birthdate.substr(0,10);
        h = '<li> \
             <div class="item-content"> \
               <div class="item-inner"> \
                 <div class="item-title label">'+n+'</div> \
                 <div class="item-input"> \
-                  <input type="text" name="'+fieldid+'" placeholder="Your '+n+'" value="'+v+'"/> \
+                  <input type="text" name="'+fieldid+'" placeholder="Your '+n.toLowerCase()+'" value="'+v+'"/> \
                 </div> \
               </div> \
             </div> \
@@ -308,6 +306,17 @@ function card_form_open(context) {
        (f.base ? h1 += h : h2 += h);
      }
 	});
+	
+	context["template_text"] = templates_name[context.template];
+	
+	console.log(context);	
+	
+	var html = cardForm(context);
+	
+	mainView.router.loadContent(html);
+	
+	card_populate('thecard',context);
+	
 	$$(".card-form-ul-"+cardid).html(h1+h2);
 	
 	//card_form_star(context.reputation);
@@ -944,7 +953,7 @@ socket.on('custom field', function(data){
 
 function add_card_li(container,ii,v) {
 	
-	if (v===undefined) return false;
+	if (typeof v === "undefined") return false;
 	if (v.toString().replace(/^[^\d\w]$/,'')=='') return false;
 	
 	var Name = /^[a-zéè\-]{2,}\s[a-zéè\-]{2,}$/i;
@@ -982,7 +991,7 @@ function add_card_li(container,ii,v) {
 		if ($$(container).find("input[name='22']").length==0) i = 22;
 	}
 	
-	var l = '-change-', n = '';
+	var l = '-change-', n = '', p = '';
 	
 	$$.each(fields, function(ii,kv) {
 		if (i==kv.id) {
@@ -992,17 +1001,22 @@ function add_card_li(container,ii,v) {
 		}
 	});
 	
+	if (v=="-change-") {
+		p = v; v = '';
+	}
+	
 	var li = '<li class="list-item ii_'+ii+'">\
 	            <div class="item-content">\
 	              '+(container=='#add_card_list' ? '<div class="item-media color-red"><i class="fa fa-times-circle"></i></div>' : '')+'\
 	              <div class="item-inner"> \
 	                <div class="item-title label" data-i="'+i+'" data-id="'+ii+'">'+l+'</div>\
 	                <div class="item-input">\
-	                  <input type="text" name="'+i+'" value="'+v+'"/>\
+	                  <input type="text" name="'+i+'" value="'+v+'" placeholder="'+p+'"/>\
 	                </div>\
 	              </div>\
 	            </div>\
 	          </li>';
+	          
 	$$(container).append(li);
 	
 }
