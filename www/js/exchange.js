@@ -5,7 +5,7 @@
 function card_offer(context,id) {
 	
 	$$("#"+context+" .thumb").show();
-	$$('#'+context).css({ 'top': $$('#mycard'+context).data('top') })
+	$$('#'+context).css({ 'top': $$('#'+context).data('top') })
 	$$('#'+context).animate(
 	    { 'top': 10 },
 	    {
@@ -22,7 +22,9 @@ function card_offered(context,id) {
    	title: 'Card offered...', 
    	text: 'Clic below to cancel', 
    	buttons: [
-			{ text: "Cancel", onClick: card_offer_cancel }
+			{ text: "Cancel", onClick: function(){
+				card_offer_cancel(id);
+			} }
 		]
 	});
 	setTimeout(function () { myApp.closeModal(); },5000)
@@ -30,13 +32,15 @@ function card_offered(context,id) {
    card_offer_completed(context);
 }
 
-function card_offer_cancel() {
-	socket.emit('card offer cancel', {"cardid":mycard.id});
+function card_offer_cancel(id) {
+	socket.emit('card offer cancel', {"cardid":id});
 }
 
 function card_offer_complete(id) {
-	var p = geoLocation();
-	if (p) socket.emit('card offer', {"cardid":mycard.id, "id":id ,"lat":p.latitude, "lng":p.longitude, "alt":p.altitude});
+	var p = geoLocation(function(p){
+		console.log({"cardid":mycard.id, "id":id ,"lat":p.latitude, "lng":p.longitude, "alt":p.altitude})
+		socket.emit('card offer', {"cardid":mycard.id, "id":id ,"lat":p.latitude, "lng":p.longitude, "alt":p.altitude});
+	});
 }
 
 function card_offer_completed(context) {
