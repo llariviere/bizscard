@@ -93,6 +93,7 @@ function card_image2dataUrl(imgUri, callback) {
 }
 
 function card_ocr_process(data) {
+	console.log('card_ocr_process()')
 	// Using cropping hints from vision, we crop, rotate and show the scanned card image...
 	var points = data.vertices;
 	var x0 = points[0].x - 10;
@@ -134,6 +135,7 @@ function card_ocr_process(data) {
 	var ocrLines = data.description.split("\n");
 	for (var ii=0; ii<ocrLines.length; ii++) {
 		var ocrLine = ocrLines[ii].replace(/^[ ]+|[ ]+$/g,'');
+		console.log('#add_card_list'+' '+ii+' '+ocrLine)
 		if (ocrLine.length) add_card_li('#add_card_list',ii, ocrLine);
 	}
 	add_card_init('#add_card_list');
