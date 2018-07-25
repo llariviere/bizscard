@@ -117,6 +117,18 @@ var cards_templates = [
 	</div>'
 ];
 
+var li_tpl = '<li> \
+            <div class="item-content"> \
+              <div class="item-inner"> \
+                <div class="item-title label">{{label}}</div> \
+                <div class="item-input"> \
+                  {{input}} \
+                </div> \
+              </div> \
+            </div> \
+          </li>';
+var input_tpl = '<input type="text" name="{{name}}" placeholder="{{placeholder}}" value="{{value}}"/>';
+
 var templates_name = ["Standard","Classical","Centered"];
 
 $$.each(cards_templates, function(i,e){
@@ -283,33 +295,28 @@ function card_form_open(context) {
 	  });
 	  // We handle all "system" field...
 	  if (fieldid<22) {
-	  	 console.log('fieldid='+fieldid);
 	  	 if (fieldid==1 && !context['payed_date']) { // payed_date
-	  	 	//$$(".fa-edit.thecard").prop("disabled",true);
-	  	 	console.log('fieldid='+fieldid+' = '+v);
 	  	 	context['payed_date'] = v;
 	  	 }
 	  }
 	  else if (f.base || v!='') {
        n = f['en'].charAt(0).toUpperCase() + f['en'].substr(1)
+       
        // if (context.birthdate) context["birthdate"] = context.birthdate.substr(0,10);
-       h = '<li> \
-            <div class="item-content"> \
-              <div class="item-inner"> \
-                <div class="item-title label">'+n+'</div> \
-                <div class="item-input"> \
-                  <input type="text" name="'+fieldid+'" placeholder="Your '+n.toLowerCase()+'" value="'+v+'"/> \
-                </div> \
-              </div> \
-            </div> \
-          </li>';
+       
+       if (fieldid==33) {
+       	h = li_tpl.replace(/{{input}}/, v+'<input type="hidden" name="'+fieldid+'" value="'+v+'"/>').replace(/{{label}}/, n+'<i class="fa fa-lock" style="float:right"></i>');
+       }
+       else {
+       	h = input_tpl.replace(/{{name}}/, fieldid).replace(/{{placeholder}}/, 'Your '+n.toLowerCase()).replace(/{{value}}/, v);
+       	h = li_tpl.replace(/{{input}}/, h).replace(/{{label}}/, n);
+       }
+       
        (f.base ? h1 += h : h2 += h);
      }
 	});
 	
 	context["template_text"] = templates_name[context.template];
-	
-	console.log(context);	
 	
 	var html = cardForm(context);
 	
@@ -320,6 +327,21 @@ function card_form_open(context) {
 	$$(".card-form-ul-"+cardid).html(h1+h2);
 	
 	//card_form_star(context.reputation);
+	
+	var h = $$("#thecard").width() / 3.5 * 2.0;
+	var t = $$("#thecard").offset().top;
+	$$("#thecard").data("top", t);
+	$$("#thecard").css({"height": h, "bottom":t+h});
+	
+	var draggie = new Draggabilly( '#thecard', { axis:"y" });
+	draggie.on( 'dragEnd', function( event, pointer ) {
+		if (this.position.y < (t-h)) {
+			card_offered('thecard',cardid);
+		} else {
+			card_offer_completed('thecard');
+		}
+	});
+	draggie.on( 'staticClick', function(){ card_offer('thecard',cardid); });
 	
 }
 
@@ -1119,6 +1141,9 @@ function card_open_picker(container,ii,i,add_new) {
   			myApp.prompt('What is the field\'s name?', 'Custom Field <i class="fa fa-cube"></i>', function (value) {
   				if (value.replace(/\s/g,'')=='') return false;
   				card_custom_field_validate(ii, value);
+		   },
+		   function(){
+		   	$$(container+" li").eq($$(container+" li").length-1).remove();
 		   });
 
 		   /*
@@ -1231,12 +1256,12 @@ function geoPermission() {
 	}
 }
 
-function geoLocation() {
+function geoLocation(func) {
 		
 	if (!navigator.geolocation){
 		myApp.modal({
 	   	title: 'GeoLocation is not permitted on your device', 
-	   	text: 'You have to activate GeoLocation in your app parameters for Bizswiper card exchange to work.', 
+	   	text: 'You have to activate GeoLocation in your app parameters for Bizswiper card exchange to work.1', 
 	   	buttons: [
 				{ text: "Ok", onClick: function () {} }
 			]
@@ -1245,14 +1270,14 @@ function geoLocation() {
 	}
 
 	function success(o) {
-		return o.coords;
+		func(o.coords);
 	};
 
 	function error(err) {
 		myApp.hidePreloader();
 		myApp.modal({
 	   	title: 'GeoLocation is not permitted on your device', 
-	   	text: 'You have to activate GeoLocation in your app parameters for Bizswiper card exchange to work.', 
+	   	text: err+'You have to activate GeoLocation in your app parameters for Bizswiper card exchange to work.', 
 	   	buttons: [
 				{ text: "Ok", onClick: function () {} }
 			]
