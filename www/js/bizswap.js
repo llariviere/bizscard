@@ -847,49 +847,23 @@ socket.on('card add', function(data){
 		cards_fields.push(data.cards_fields[i]);
 	}
 	pars['cardid'] = mycard.id;
-	pars["accepted"] = 1;
-	pars["id"] = data.card.id;	
-	cards.current.push(pars);
+	pars["accepted"] = data.card.accepted;
+	pars["id"] = data.card.id;
+	if (data.card.accepted==null) {
+		myApp.alert("Card added to your waiting list!")
+		cards.waiting.push(data.card);
+		$$(".badge.waiting-list-nbr").html(cards.waiting.length);
+	} 
+	else {
+		myApp.alert("Card added to your current list!")
+		cards.current.push(data.card);
+		$$(".badge.current-list-nbr").html(cards.current.length);
+	}
 	
-	myApp.alert("New card added to your current list!");
-	$$(".badge.current-list-nbr").html(cards.current.length);
 	mainView.router.load({pageName: 'index'});
 });
 
-socket.on('cards list', function(data){
-	
-	myApp.hidePreloader();
-
-	if (!data) return false; 
-	
-	$$("#pulser").hide();
- 		
-	if (data.length > 1) {
-		var text = '<div class="list-block" id="cards_found"><table style="width:100%;">';
-		var fnds = [];
- 			
-		var titre = (data.length > 2 ? "We found those offers<br>(clic to accept)" : "We found this offer<br>(clic to accept)");
- 			
-		$$.each(data, function(i,card){
-			var fullname = (card.firstname && card.lastname ? card.firstname+' '+card.lastname : card.email);
-			var linked = (card.accepted ? "fa-id-card-o" : (card.added ? "fa-id-card" : "fa-check-square-o"));
- 				
-			if (card.card!=mycard.id) fnds.push('<tr style="border-bottom:solid 1px #bbb;" onClick="card_auth('+card.card+',\'offer auth\');myApp.closeModal()">\
-<td align="left">'+fullname+'</td>\
-<td align="right"><i class="fa '+linked+'"></i></td>\
-</tr>');
-		});
- 			
-		text += fnds.join('<tr><td colspan="3"><hr></td></tr>') + '</table></div>';
- 			
-		myApp.modal({title: titre, text: text, buttons: [
-			{ text: "Cancel", onClick: function(){}}
-		]});
-	}
-
-});
 socket.on('card details', function(data){
-	card_recorder(data); return;
 	// si la carte n'est pas deja dans mes listes (added!=null)...
 	for (var i=0; i<data.cards_fields.length; i++) {
 		cards_fields.push(data.cards_fields[i]);
