@@ -10,6 +10,10 @@
 	scrollTopOnStatusbarClick: true
 });
 
+var B = {
+	about:'Bizswiper v0.3<br>2018-10'
+};
+
 var welcomescreen_slides = [
   {
     id: 'slide0', 
@@ -69,6 +73,7 @@ var welcomescreen = myApp.welcomescreen(welcomescreen_slides, welcomescreen_opti
 
 
 var $$ = Dom7;
+
 var mycard = {};
 var fields = {};
 var cards_fields = {};
@@ -76,10 +81,12 @@ var cards = {
 	current:[],
 	waiting:[]
 };
+var fields_list = [];
+
 var cards_templates = [
-	'<div style="top:4px;left:0px;font-weight:bold;font-size:16px;">{{complete name}}</div>\
+	'<div style="top:4px;left:0px;font-weight:bold;font-size:16px;">{{complete name}}{{firstname}} {{lastname}}</div>\
 	<div style="top:28px;left:0px;">{{title}}</div>\
-	<div style="top:46px;left:0px;">{{company name}}</div>\
+	<div style="top:46px;left:0px;">{{company name}}{{company}}</div>\
 	<div style="top:75px;left:120px;">{{address}}</div>\
 	<div style="top:90px;left:120px;">{{city}}, {{state_prov}} {{country}} {{postal code}}</div>\
 	<div style="top:105px;left:120px;">{{website}}</div>\
@@ -90,9 +97,9 @@ var cards_templates = [
 		<i class="fa fa-user fa-4x" style="margin-top:20px;"></i>\
 	</div>',
 	
-	'<div style="top:4px;left:120px;font-weight:bold;font-size:16px;">{{complete name}}</div>\
+	'<div style="top:4px;left:120px;font-weight:bold;font-size:16px;">{{complete name}}{{firstname}} {{lastname}}</div>\
 	<div style="top:28px;left:120px;">{{title}}</div>\
-	<div style="top:46px;left:120px;">{{company name}}</div>\
+	<div style="top:46px;left:120px;">{{company name}}{{company}}</div>\
 	<div style="top:75px;left:120px;">{{address}}</div>\
 	<div style="top:90px;left:120px;">{{city}}, {{state_prov}} {{country}} {{postal code}}</div>\
 	<div style="top:105px;left:120px;">{{website}}</div>\
@@ -103,9 +110,9 @@ var cards_templates = [
 		<i class="fa fa-user fa-4x" style="margin-top:20px;"></i>\
 	</div>',
 	
-	'<div style="top:84px;width:50%;text-align:right;font-weight:bold;font-size:16px;">{{complete name}} |</div>\
+	'<div style="top:84px;width:50%;text-align:right;font-weight:bold;font-size:16px;">{{complete name}}{{firstname}} {{lastname}} |</div>\
 	<div style="top:88px;left:50%;width:50%;text-align:left;">&nbsp;{{title}}</div>\
-	<div style="top:104px;width:100%;text-align:center;">{{company name}}</div>\
+	<div style="top:104px;width:100%;text-align:center;">{{company name}}{{company}}</div>\
 	<div style="top:120px;width:100%;text-align:center;">{{address}}, {{city}}</div>\
 	<div style="top:136px;width:100%;text-align:center;">{{state_prov}} {{country}} {{postal code}}</div>\
 	<div style="top:152px;width:50%;text-align:right;">{{website}} |</div>\
@@ -269,6 +276,10 @@ $$(".card_template").on("click", function() {
 	$$("#template").val($$(this).attr("id"));
 });
 
+function card_about() {
+	myApp.alert(B.about);
+}
+ 
 function card_form_star(star) {
 	star = parseFloat(star*1);
 	$$('li.reputation').find('input').val(star);
@@ -278,6 +289,8 @@ function card_form_star(star) {
 		$$(e).addClass("fa-star"+cls);
 	});
 }
+
+var draggie2 = '';
 
 function card_form_open(context) {
 	
@@ -328,20 +341,26 @@ function card_form_open(context) {
 	
 	//card_form_star(context.reputation);
 	
-	var h = $$("#thecard").width() / 3.5 * 2.0;
-	var t = $$("#thecard").offset().top;
-	$$("#thecard").data("top", t);
-	$$("#thecard").css({"height": h, "bottom":t+h});
+	if (cardid != mycard.id) {	
 	
-	var draggie = new Draggabilly( '#thecard', { axis:"y" });
-	draggie.on( 'dragEnd', function( event, pointer ) {
-		if (this.position.y < (t-h)) {
-			card_offered('thecard',cardid);
-		} else {
-			card_offer_completed('thecard');
+		var h = $$("#thecard").width() / 3.5 * 2.0;
+		var t = $$("#thecard").offset().top;
+		$$("#thecard").data("top", t);
+		$$("#thecard").css({"height": h, "bottom":t+h});
+		
+		if (!draggie2) {
+			draggie2 = new Draggabilly( '#thecard', { axis:"y" });
+			draggie2.on( 'dragEnd', function( event, pointer ) {
+				if (this.position.y < (t-h)) {
+					card_offered('thecard',cardid);
+				} else {
+					card_offer_completed('thecard');
+				}
+			});
+			draggie2.on( 'staticClick', function(){ card_offer('thecard',cardid); });
 		}
-	});
-	draggie.on( 'staticClick', function(){ card_offer('thecard',cardid); });
+
+	}
 	
 }
 
@@ -454,8 +473,10 @@ function card_record(container) {
 	if ($$(container).data('id')) pars['id'] = $$(container).data('id');
 	
 	$$.each($$(container+" li"), function(i,li) {
+		var label = $$(li).find(".label").text();
 		var champ = $$(li).find("input").attr("name").toLowerCase();
 		var valeur = $$(li).find("input").val().replace('-change-','').trim();
+		var oblige = ($$(li).find("input").hasClass('base')); //  || $$(li).find("input").hasClass('category')
 		
 		// Skip incomplete fields name...
 		if (!champ) return true;
@@ -464,8 +485,18 @@ function card_record(container) {
 		if (['24','26','34','43','53','54'].indexOf(champ)>=0) valeur = valeur.replace(/[^0-9]/g, '');
 		pars[champ] = valeur;
 		
-		// Delete field without value...
-		if (valeur=='') $$(li).remove();
+		// Delete non-mandatory field without value...
+		if (valeur=='') {
+			if (oblige) {
+				myApp.alert("Field '"+label+"' is mandatory!<br>Please enter a value.");
+				$$(li).find("input").focus();
+				pars = false;
+				return false;
+			} else {
+				$$(li).remove();
+				return true;
+			}
+		}
 		
 		// If card exist, we update fields list...
 		if (pars.id) {
@@ -486,6 +517,8 @@ function card_record(container) {
 			}
 		}
 	});
+	
+	if (!pars) return false;
 	
 	// Validate that email field is present and valid...
 	if (pars['33']==undefined || !validateEmail(pars['33'])) {
@@ -512,7 +545,7 @@ function card_record(container) {
 }
 
 function card_recorder(data) {
-	var list_field = ['companyname','completename','email','id','poinst_img']
+	var list_field = ['company','companyname','firstname','lastname','email','id','poinst_img']
 	var pars = {};
 	$$.each($$("#add_card_list > li"), function(i,li) {
 		var name = $$(li).find(".label").text().toLowerCase().replace(/\s/g,'');
@@ -531,10 +564,12 @@ function card_recorder(data) {
 }
 
 function card_populate(id,data) { 
+
+	console.log(data)
 	
 	var cardid = data.id;
 	var html = cards_templates[(data.template ? data.template : 0)];
-	$$.each(['complete name','title','company name','address','city','state_prov','postal code','country','website','email','cellphone','fax','logo'], function(i,e){
+	$$.each(['lastname','firstname','complete name','title','company','company name','address','city','state_prov','postal code','country','website','email','cellphone','fax','logo'], function(i,e){
 		var v = '';
  		$$.each(fields, function (ii,f) {
 			if(e==f.en) {
@@ -947,10 +982,77 @@ socket.on('custom field', function(data){
 	myApp.closeModal(".choseModal");
 });
 
-function add_card_li(container,ii,v) {
+function add_card_load(container) {
+
+	var html = '<li class="list-item ii_1">\
+	            <div class="item-content">\
+	              <div class="item-inner"> \
+	                <div class="item-title label" data-i="35" data-id="1">Email</div>\
+	                <div class="item-input">\
+	                  <input type="email" name="33" value="" placeholder="your email" class="base" />\
+	                </div>\
+	              </div>\
+	            </div>\
+	          <li class="list-item ii_2">\
+	            <div class="item-content">\
+	              <div class="item-inner"> \
+	                <div class="item-title label" data-i="35" data-id="2">Firstname</div>\
+	                <div class="item-input">\
+	                  <input type="text" name="35" value="" placeholder="your firstname" class="base" />\
+	                </div>\
+	              </div>\
+	            </div>\
+	          </li>\
+	          <li class="list-item ii_3">\
+	            <div class="item-content">\
+	              <div class="item-inner"> \
+	                <div class="item-title label" data-i="38" data-id="3">Lastname</div>\
+	                <div class="item-input">\
+	                  <input type="text" name="38" value="" placeholder="your lastname" class="base" />\
+	                </div>\
+	              </div>\
+	            </div>\
+	          </li>\
+	          <li class="list-item ii_4">\
+	            <div class="item-content">\
+	              <div class="item-inner"> \
+	                <div class="item-title label" data-i="26" data-id="4">Cellphone</div>\
+	                <div class="item-input">\
+	                  <input type="tel" name="26" value="" placeholder="your callphone" class="base" />\
+	                </div>\
+	              </div>\
+	            </div>\
+	          </li>\
+	          <li class="list-item ii_5">\
+	            <div class="item-content">\
+	              <div class="item-inner"> \
+	                <div class="item-title label" data-i="29" data-id="5">Company</div>\
+	                <div class="item-input">\
+	                  <input type="text" name="29" value="" placeholder="your company name" class="base" />\
+	                </div>\
+	              </div>\
+	            </div>\
+	          </li>\
+	          <li class="list-item ii_6">\
+	            <div class="item-content">\
+	              <div class="item-inner"> \
+	                <div class="item-title label" data-i="49" data-id="6">Category</div>\
+	                <div class="item-input">\
+	                  <input type="text" name="49" value="" placeholder="your company category" class="category" />\
+	                </div>\
+	              </div>\
+	            </div>\
+	          </li>';
+	
+	$$(container).html(html);
+
+}
+
+function add_card_li_match(container,ii,v) {
 	
 	if (typeof v === "undefined") return false;
 	if (v.toString().replace(/^[^\d\w]$/,'')=='') return false;
+	
 	
 	var Name = /^[a-zéè\-]{2,}\s[a-zéè\-]{2,}$/i;
 	var Company = /\s(lt[eéè]e)|\s(inc)|\s(enr)/i;
@@ -960,34 +1062,62 @@ function add_card_li(container,ii,v) {
 	var Cel = /(cel)/i;
 	var Tel = /(.+\d{3}.{1,2}\d{3}.?\d{4})/i;
 	var Add = /^(\d{1,2}[,\d]\d+[\s,].+)/i;
+	var li = '';
 	
-	var i = '';
+	var i = '', cls = '';
 	if (v.match(Company)) {
-		if ($$(container).find("input[name='29']").length==0) i = 29;
+		if (!$$(container).find("input[name='29']").val()) {
+			$$(container+" input[name='29']").val(v);
+			cls = 'off';
+		}
 	}
 	else if (v.match(Name)) {
-		if ($$(container).find("input[name='30']").length==0) i = 30;
+		if (!$$(container).find("input[name='35']").val()) {
+			var names = v.split(' ');
+			$$(container+" input[name='35']").val(names[0]);
+			$$(container+" input[name='38']").val(names[1]);
+			cls = 'off';
+		}
 	}
 	else if (v.match(Email)) {
-		if ($$(container).find("input[name='33']").length==0) i = 33;
+		if (!$$(container).find("input[name='33']").val()) {
+			$$(container+" input[name='33']").val(v);
+			cls = 'off';
+		}
 	}
+	else if (v.match(Cel)) {
+		if (!$$(container).find("input[name='26']").val()) {
+			var telno = v.replace(/[^\d]/g,'');
+			$$(container+" input[name='26']").val(telno);
+			cls = 'off';
+		}
+	}
+	/*
 	else if (v.match(Website)) {
 		if ($$(container).find("input[name='41']").length==0) i = 41;
+		cls = 'off';
 	}
 	else if (v.match(Fax)) {
 		if ($$(container).find("input[name='34']").length==0) i = 34;
-	}
-	else if (v.match(Cel)) {
-		if ($$(container).find("input[name='26']").length==0) i = 26;
+		cls = 'off';
 	}
 	else if (v.match(Tel)) {
 		if ($$(container).find("input[name='24']").length==0) i = 24;
+		cls = 'off';
 	}
 	else if (v.match(Add)) {
 		if ($$(container).find("input[name='22']").length==0) i = 22;
+		cls = 'off';
 	}
+	*/
 	
-	var l = '-change-', n = '', p = '';
+	var ocr_words = v.replace(/\b([\u00C0-\u00FF\w\.\-\@]+)\b/g, '<span class="word '+cls+'">$1</span>');
+	$$("#card_ocr_words").append('<div>'+ocr_words+'</div>');
+	
+}
+function add_card_li(container,ii,v) {
+	
+	var l = '-change-', n = '', p = '', i = '';
 	
 	$$.each(fields, function(ii,kv) {
 		if (i==kv.id) {
@@ -1003,31 +1133,59 @@ function add_card_li(container,ii,v) {
 	
 	var li = '<li class="list-item ii_'+ii+'">\
 	            <div class="item-content">\
-	              '+(container=='#add_card_list' ? '<div class="item-media color-red"><i class="fa fa-times-circle"></i></div>' : '')+'\
 	              <div class="item-inner"> \
 	                <div class="item-title label" data-i="'+i+'" data-id="'+ii+'">'+l+'</div>\
 	                <div class="item-input">\
-	                  <input type="text" name="'+i+'" value="'+v+'" placeholder="'+p+'"/>\
+	                  <input type="text" name="'+i+'" value="'+v+'" placeholder="'+p+'" class="new"/>\
 	                </div>\
 	              </div>\
 	            </div>\
 	          </li>';
+	
 	          
 	$$(container).append(li);
+	
+	$$(container).find(".item-input input.new").on("click", function(){
+		if ($$(this).val()) return false;
+		B['input_name'] = $$(this).attr("name");
+		myApp.pickerModal(".picker-ocr-words");
+	});
 	
 }
 
 function add_card_init(container) {
-	$$(container).find(".color-red").on("click", function () {
-		$$(this).parents("li").remove();
+	
+	$$(container).find(".item-input input.base").on("click", function(){
+		if ($$(this).val()) return false;
+		B['input_name'] = $$(this).attr("name");
+		myApp.pickerModal(".picker-ocr-words");
 	});
-	$$(container).find(".item-title.label").on("click", function(){
-		card_open_picker(container, $$(this).attr("data-id"), $$(this).attr("data-i"));
+	
+	$$(container).find(".item-input input.category").on("click", function(){
+		B['input_name'] = $$(this).attr("name");
+		category_open()
+	});
+	
+	var html = 'OR<div class="list-block" style="margin-top:5px;"><input id="card_ocr_input" type="text" name="" value="" placeholder="Custom text..."/></div>';
+	$$("#card_ocr_words").append(html);
+	$$("#card_ocr_words").find(".word").on("click", function(event) {
+		$$(event.target).toggleClass("on");
+	});
+	$$("#card_ocr_input").on("change", function(){
+		$$("#card_ocr_words").find(".word").removeClass("on");
+	});
+	$$("#card_ocr_ok").on("click", function(){
+			var txt = [];
+			$$("#card_ocr_words .word.on").each(function(){ txt.push($$(this).text()); $$(this).addClass("off") });
+			var txts = txt.join(" ") + ' ' + $$("#card_ocr_input").val();
+			$$("#card_ocr_words").find(".word").removeClass("on");
+			$$("#card_ocr_input").val('');
+			if (txts.trim()!='') $$(container+" input[name='"+B.input_name+"']").val(txts);
 	});
 }
 
 function card_field_add(container) {
-	var ii = $$(container+" > li").length;
+	var ii = $$(container+" > li").length + 1;
 	card_open_picker(container,ii,0,true);
 }
 
@@ -1109,7 +1267,6 @@ function card_open_picker(container,ii,i,add_new) {
   		
 	  	if (add_new) {
 		 	add_card_li(container, ii,'-change-')
-		 	add_card_init(container);  			
 	  	}
   		if (i==999) {
   			myApp.prompt('What is the field\'s name?', 'Custom Field <i class="fa fa-cube"></i>', function (value) {
