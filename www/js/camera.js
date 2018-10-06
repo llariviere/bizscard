@@ -116,7 +116,6 @@ function card_ocr_process(data) {
 	
 	for (var ii=0; ii<ocrLines.length; ii++) {
 		var ocrLine = ocrLines[ii].replace(/^[ ]+|[ ]+$/g,'');
-		console.log('#add_card_list'+' '+ii+' '+ocrLine)
 		if (ocrLine.length) add_card_li_match('#add_card_list',ii, ocrLine);
 	}
 	add_card_init('#add_card_list');
@@ -127,5 +126,5 @@ socket.on('card ocr', card_ocr_process);
 
 var card_data = {
 	vertices:[{x:0,y:0},{x:0,y:0},{x:0,y:0},{x:0,y:0}],
-	description:'Louis Larivière \nAnalyste sénior	 \nCell: (514) 714-2011 \nllariviere@dubo.qc.ca \nwww.dubo.qc.ca \n5780, rue Ontario Est \nMontréal (Québec) HIN 0A2 \nTél.:(514)255-7711 \nDirect:(514) 255-8855, poste221 \n1 800 361-4503 \nFax:(514) 255-9949'
+	description:'Louis Larivière \nAnalyste sénior\nCell: (514) 714-2011 \nllariviere@dubo.qc.ca \nwww.dubo.qc.ca\nDubo Électrique Ltée.\nMatériaux électriques et électroniques\n5780, rue Ontario Est \nMontréal (Québec) HIN 0A2 \nTél.:(514)255-7711 \nDirect:(514) 255-8855, poste221 \n1 800 361-4503 \nFax:(514) 255-9949'
 };
