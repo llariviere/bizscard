@@ -64,6 +64,7 @@ var welcomescreen_slides = [
 var welcomescreen_options = {
   'bgcolor': 'rgb(65, 141, 175)',
   'fontcolor': '#fff',
+  
   'closeButton': false,
   'open': false
 }
@@ -188,7 +189,7 @@ $$(document).on("click", ".card-item .item-content", function(){
 	
 	var context = $$(this).parent().dataset();
 	
-	context["titre"] = context.completename;
+	context["titre"] = context.firstname + ' ' + context.lastname;
 	
 	card_form_open(context);
 	
@@ -292,35 +293,7 @@ function card_form_star(star) {
 
 var draggie2 = '';
 
-function card_form_open(context) {
-	
-	var cardid = context.id;
-	var v = '', n = '', fieldid = '', h = '', h2 = '';
-	var h1 = '<input type="hidden" name="id" value="'+cardid+'"/>';
- 	$$.each(fields, function (ii,f) {
- 	  v = '';
-	  $$.each(cards_fields, function(iii,cf) {
-	  	 if (cf.card_id==cardid && cf.field_id==f.id) {
-	  	 	v = cf.value + '';
-	  	 	fieldid = cf.field_id;
-	  	 	return false;
-	  	 }
-	  });
-	  // We handle all "system" field...
-	  if (fieldid<22) {
-	  	 if (fieldid==1 && !context['payed_date']) { // payed_date
-	  	 	context['payed_date'] = v;
-	  	 }
-	  }
-	  else if (f.base || v!='') {
-       n = f['en'].charAt(0).toUpperCase() + f['en'].substr(1)
-       
-       // if (context.birthdate) context["birthdate"] = context.birthdate.substr(0,10);
-       
-       if (fieldid==33) {
-       	h = li_tpl.replace(/{{input}}/, v+'<input type="hidden" name="'+fieldid+'" value="'+v+'"/>').replace(/{{label}}/, n+'<i class="fa fa-lock" style="float:right"></i>');
-       }
-       else {
+function card_form_open(context) {       else {
        	h = input_tpl.replace(/{{name}}/, fieldid).replace(/{{placeholder}}/, 'Your '+n.toLowerCase()).replace(/{{value}}/, v);
        	h = li_tpl.replace(/{{input}}/, h).replace(/{{label}}/, n);
        }
@@ -868,7 +841,7 @@ socket.on('card record', function (data) {
 });
 
 socket.on('card add', function(data){
-	var list_field = ['companyname','completename','email','id','poinst_img']
+	var list_field = ['company','firstname','lastname','email','id','poinst_img']
 	var pars = {};
 	for (var i=0; i<data.cards_fields.length; i++) {
 		var name = '';
@@ -1111,8 +1084,12 @@ function add_card_li_match(container,ii,v) {
 	}
 	*/
 	
-	var ocr_words = v.replace(/\b([\u00C0-\u00FF\w\.\-\@]+)\b/g, '<span class="word '+cls+'">$1</span>');
-	$$("#card_ocr_words").append('<div>'+ocr_words+'</div>');
+	//var ocr_words = v.replace(/\b([\u00C0-\u00FFa-zA-Z0-9\.\-\@]+)\b/g, '<span class="word '+cls+'">$1</span>');
+	var ocr_words = v.trim().split(' ');
+	for (var i=0; i<ocr_words.length; i++) {
+		ocr_words[i] = '<span class="word '+cls+'">'+ocr_words[i].trim()+'</span>';
+	}
+	$$("#card_ocr_words").append('<div>'+ocr_words.join('')+'</div>');
 	
 }
 function add_card_li(container,ii,v) {
@@ -1288,6 +1265,8 @@ function card_open_picker(container,ii,i,add_new) {
 			li.find(".label").text(n);
 			li.find("input").attr("name",i);
 			myApp.closeModal(".choseModal");
+			B['input_name'] = i;
+			myApp.pickerModal(".picker-ocr-words");
 		}
 		
   });
