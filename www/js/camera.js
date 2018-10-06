@@ -107,36 +107,17 @@ function card_ocr_process(data) {
 	var context = canvas.getContext('2d');
 	var cardImage = $$("#card-entry").find("img");
 	cardImage.attr("src",scanImg.dataUrl);
-	/*
-	var image = new Image();
-	image.onload = function () {
-		context.drawImage(image, x0, y0, x1, y1, 0, 0, x1, y1);
-		
-		if (x1 < y1) {
-			var offset = ((y1-y1)-(x1-x0))/2;
-			//myApp.alert(x1+' '+y1+' '+offset);
-			context.translate(canvas.width/2,canvas.height/2);
-			context.rotate(270*Math.PI/180);
-			
-			/*
-			cardImage.css({
-				'transform':'rotate(270deg)',
-				'transform':'translate('+offset+'px, '+offset+'px)'
-			});
-			
-		} 
-		
-		cardImage.attr("src",canvas.toDataURL('image/jpeg'));
-	}
-	image.src = scanImg.dataUrl;
-	*/
 	
 	// Using text detection result from vision, we add a formatted list of fields...
 	var ocrLines = data.description.split("\n");
+	
+	add_card_load("#add_card_list");
+	$$("#card_ocr_words").html("");
+	
 	for (var ii=0; ii<ocrLines.length; ii++) {
 		var ocrLine = ocrLines[ii].replace(/^[ ]+|[ ]+$/g,'');
 		console.log('#add_card_list'+' '+ii+' '+ocrLine)
-		if (ocrLine.length) add_card_li('#add_card_list',ii, ocrLine);
+		if (ocrLine.length) add_card_li_match('#add_card_list',ii, ocrLine);
 	}
 	add_card_init('#add_card_list');
 	myApp.hidePreloader();
