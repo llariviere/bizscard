@@ -293,7 +293,35 @@ function card_form_star(star) {
 
 var draggie2 = '';
 
-function card_form_open(context) {       else {
+function card_form_open(context) {
+	
+	var cardid = context.id;
+	var v = '', n = '', fieldid = '', h = '', h2 = '';
+	var h1 = '<input type="hidden" name="id" value="'+cardid+'"/>';
+ 	$$.each(fields, function (ii,f) {
+ 	  v = '';
+	  $$.each(cards_fields, function(iii,cf) {
+	  	 if (cf.card_id==cardid && cf.field_id==f.id) {
+	  	 	v = cf.value + '';
+	  	 	fieldid = cf.field_id;
+	  	 	return false;
+	  	 }
+	  });
+	  // We handle all "system" field...
+	  if (fieldid<22) {
+	  	 if (fieldid==1 && !context['payed_date']) { // payed_date
+	  	 	context['payed_date'] = v;
+	  	 }
+	  }
+	  else if (f.base || v!='') {
+       n = f['en'].charAt(0).toUpperCase() + f['en'].substr(1)
+       
+       // if (context.birthdate) context["birthdate"] = context.birthdate.substr(0,10);
+       
+       if (fieldid==33) {
+       	h = li_tpl.replace(/{{input}}/, v+'<input type="hidden" name="'+fieldid+'" value="'+v+'"/>').replace(/{{label}}/, n+'<i class="fa fa-lock" style="float:right"></i>');
+       }
+       else {
        	h = input_tpl.replace(/{{name}}/, fieldid).replace(/{{placeholder}}/, 'Your '+n.toLowerCase()).replace(/{{value}}/, v);
        	h = li_tpl.replace(/{{input}}/, h).replace(/{{label}}/, n);
        }
