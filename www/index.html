@@ -1,376 +1,742 @@
-<?php
-phpinfo(); die();
-?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <!--
-    Modified from the Debian original for Ubuntu
-    Last updated: 2014-03-19
-    See: https://launchpad.net/bugs/1288690
-  -->
+<!DOCTYPE html>
+<html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>Apache2 Ubuntu Default Page: It works</title>
-    <style type="text/css" media="screen">
-  * {
-    margin: 0px 0px 0px 0px;
-    padding: 0px 0px 0px 0px;
-  }
-
-  body, html {
-    padding: 3px 3px 3px 3px;
-
-    background-color: #D8DBE2;
-
-    font-family: Verdana, sans-serif;
-    font-size: 11pt;
-    text-align: center;
-  }
-
-  div.main_page {
-    position: relative;
-    display: table;
-
-    width: 800px;
-
-    margin-bottom: 3px;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 0px 0px 0px 0px;
-
-    border-width: 2px;
-    border-color: #212738;
-    border-style: solid;
-
-    background-color: #FFFFFF;
-
-    text-align: center;
-  }
-
-  div.page_header {
-    height: 99px;
-    width: 100%;
-
-    background-color: #F5F6F7;
-  }
-
-  div.page_header span {
-    margin: 15px 0px 0px 50px;
-
-    font-size: 180%;
-    font-weight: bold;
-  }
-
-  div.page_header img {
-    margin: 3px 0px 0px 40px;
-
-    border: 0px 0px 0px;
-  }
-
-  div.table_of_contents {
-    clear: left;
-
-    min-width: 200px;
-
-    margin: 3px 3px 3px 3px;
-
-    background-color: #FFFFFF;
-
-    text-align: left;
-  }
-
-  div.table_of_contents_item {
-    clear: left;
-
-    width: 100%;
-
-    margin: 4px 0px 0px 0px;
-
-    background-color: #FFFFFF;
-
-    color: #000000;
-    text-align: left;
-  }
-
-  div.table_of_contents_item a {
-    margin: 6px 0px 0px 6px;
-  }
-
-  div.content_section {
-    margin: 3px 3px 3px 3px;
-
-    background-color: #FFFFFF;
-
-    text-align: left;
-  }
-
-  div.content_section_text {
-    padding: 4px 8px 4px 8px;
-
-    color: #000000;
-    font-size: 100%;
-  }
-
-  div.content_section_text pre {
-    margin: 8px 0px 8px 0px;
-    padding: 8px 8px 8px 8px;
-
-    border-width: 1px;
-    border-style: dotted;
-    border-color: #000000;
-
-    background-color: #F5F6F7;
-
-    font-style: italic;
-  }
-
-  div.content_section_text p {
-    margin-bottom: 6px;
-  }
-
-  div.content_section_text ul, div.content_section_text li {
-    padding: 4px 8px 4px 16px;
-  }
-
-  div.section_header {
-    padding: 3px 6px 3px 6px;
-
-    background-color: #8E9CB2;
-
-    color: #FFFFFF;
-    font-weight: bold;
-    font-size: 112%;
-    text-align: center;
-  }
-
-  div.section_header_red {
-    background-color: #CD214F;
-  }
-
-  div.section_header_grey {
-    background-color: #9F9386;
-  }
-
-  .floating_element {
-    position: relative;
-    float: left;
-  }
-
-  div.table_of_contents_item a,
-  div.content_section_text a {
-    text-decoration: none;
-    font-weight: bold;
-  }
-
-  div.table_of_contents_item a:link,
-  div.table_of_contents_item a:visited,
-  div.table_of_contents_item a:active {
-    color: #000000;
-  }
-
-  div.table_of_contents_item a:hover {
-    background-color: #000000;
-
-    color: #FFFFFF;
-  }
-
-  div.content_section_text a:link,
-  div.content_section_text a:visited,
-   div.content_section_text a:active {
-    background-color: #DCDFE6;
-
-    color: #000000;
-  }
-
-  div.content_section_text a:hover {
-    background-color: #000000;
-
-    color: #DCDFE6;
-  }
-
-  div.validator {
-  }
-    </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>Bizswiper</title>
+    
+    <link rel="stylesheet" href="css/framework7.ios.min.css">
+    <link rel="stylesheet" href="css/framework7.ios.colors.min.css">
+	 <link rel="stylesheet" href="css/font-awesome.min.css">
+	
+    <link rel="stylesheet" href="css/welcomescreen.css">
+    <link rel="stylesheet" href="css/bizswap.css?v=20180402.2235">
+    <link rel="shortcut icon" type="image/png" href="img/favicon.png"/>
+    <link rel="manifest" href="js/manifest.json">
   </head>
-  <body>
-    <div class="main_page">
-      <div class="page_header floating_element">
-        <img src="/icons/ubuntu-logo.png" alt="Ubuntu Logo" class="floating_element"/>
-        <span class="floating_element">
-          Apache2 Ubuntu Default Page
-        </span>
+  
+  <body  class="theme-gray framework7-root">
+  
+    <div class="statusbar-overlay"></div>
+    
+    <div class="panel-overlay"></div>
+    
+    <div class="panel panel-left panel-reveal">
+              
+		<div class="list-block layout-dark color-white">
+		  <ul>
+		    <li>
+			  <a href="#" class="item-link current-list-open">
+		      <div class="item-content close-panel">
+		         <div class="item-inner">
+		            <div class="item-title">Current card list</div>
+		            <div class="item-after">
+		            	<span class="badge bg-green current-list-nbr">0</span>
+		            </div>
+		          </div>
+		      </div>
+		      </a>
+		    </li>
+		    <li>
+		    	<a href="#" class="item-link waiting-list-open">
+		      <div class="item-content close-panel">
+		         <div class="item-inner">
+		            <div class="item-title">Waiting card list</div>
+		            <div class="item-after">
+		            	<span class="badge bg-red waiting-list-nbr">0</span>
+		            </div>
+		          </div>
+		      </div>
+		      </a>
+		    </li>
+		    <li>
+		    	<a href="#" onclick="card_form_open(mycard);" class="item-link my-card-open">
+		      <div class="item-content close-panel">
+		         <div class="item-inner">
+		            <div class="item-title">My profile</div>
+		            <div class="item-after"> </div>
+		          </div>
+		      </div>
+		      </a>
+		    </li>
+		    <li>
+		    	<a href="#" onclick="card_reload();" class="item-link my-preferences-open">
+		      <div class="item-content close-panel">
+		         <div class="item-inner">
+		            <div class="item-title">Reload my data</div>
+		            <div class="item-after"> </div>
+		          </div>
+		      </div>
+		      </a>
+		    </li>
+		    <li>
+			  <a href="#" onclick="card_about();" class="item-link">
+		      <div class="item-content close-panel">
+		         <div class="item-inner">
+		            <div class="item-title">About</div>
+		          </div>
+		      </div>
+		      </a>
+		    </li>
+		    <li>
+		    	<a href="#" class="item-link log-off">
+		      <div class="item-content close-panel">
+		         <div class="item-inner">
+		            <div class="item-title">Log off</div>
+		            <div class="item-after"> </div>
+		          </div>
+		      </div>
+				</a>
+		    </li>
+		  </ul>
+		</div>     
+
+    </div>
+
+      
+    
+    <div class="views">
+    
+      <div class="view view-main">
+      
+        <div class="navbar">
+        
+          <div class="navbar-inner" data-page="index">
+            <div class="left">
+              <a href="#" class="link icon-only open-panel"> <i class="fa fa-bars fa-lg"></i></a>
+            </div>
+            <div class="center sliding"><h3>Bizswiper</h3></div>
+          </div>
+          
+	      <div class="navbar-inner cached" data-page="card-cropper">
+            <div class="left">
+              <a href="#" class="link icon-only back"> <i class="icon icon-back"></i></a>
+            </div>
+	        <div class="center sliding">Crop card contour</div>
+            <div class="right">
+              <a href="#card-entry" class="link icon-only"> <i class="fa fa-edit fa-lg"></i></a>
+            </div>
+	      </div>
+          
+	      <div class="navbar-inner cached" data-page="card-entry">
+            <div class="left">
+              <a href="#" class="link icon-only back"> <i class="icon icon-back"></i></a>
+            </div>
+	        <div class="center sliding">Fill in card fields</div>
+	      </div>
+          
+          <div class="navbar-inner cached" data-page="current-list">
+            <div class="left">
+              <a href="#" class="link icon-only back"> <i class="icon icon-back"></i></a>
+            </div>
+            <div class="center sliding">Current card list</div>
+          </div>
+          
+          <div class="navbar-inner cached" data-page="waiting-list">
+            <div class="left">
+              <a href="#" class="link icon-only back"> <i class="icon icon-back"></i></a>
+            </div>
+            <div class="center sliding">Waiting card list</div>
+          </div>
+          
+          <div class="navbar-inner cached" data-page="card-form">
+            <div class="left">
+              <a href="#" class="link icon-only back"> <i class="icon icon-back"></i></a>
+            </div>
+            <div class="center sliding">Card form</div>
+            <div class="right">
+              <a href="#" class="link icon-only"> <i class="fa fa-edit fa-lg"></i></a>
+            </div>
+          </div>
+          
+          <div class="navbar-inner cached" data-page="fields">
+            <div class="center sliding">Choose a field name</div>
+            <div class="right">
+              <a href="#" class="link" id="fields_page_close">Close</a>
+            </div>
+          </div>
+          
+        </div>
+        
+        
+        <div class="toolbar tabbar">
+		    <div class="toolbar-inner">
+		        <a href="#" class="tab-link home-open">
+		            <i class="fa fa-home fa-lg"></i>
+		        </a>
+		        <a href="#" class="tab-link current-list-open">
+		            <i class="fa fa-id-card-o fa-lg"></i>
+		        </a>
+		        <a href="#" class="tab-link waiting-list-open">
+		            <i class="fa fa-id-card fa-lg" style="position: relative;">
+		            	<span class="badge waiting-list-nbr bg-red" style="position: absolute;right:-15px;top:-10px;">0</span>
+		            </i>		            
+		        </a>
+		        <a href="#" class="tab-link card-camera-open">
+		            <i class="fa fa-user-plus fa-lg"></i>
+		        </a>
+		    </div>
+		  </div>
+		  
+        
+        <div class="pages navbar-through toolbar-through">
+        
+          <div data-page="index" class="page">
+          
+            <div class="page-content">
+            
+              <div class="content-block-title no-thumb">Your ranking</div>
+              
+              <div class="content-block no-thumb">
+                <div class="content-block-inner inset">
+                
+                
+						 <div class="pieID pie"></div>
+						 <div class="pieID pie_text">Bronze<br>60%</div>
+						 <ul class="pieID legend">
+						   <li>
+						     <em>Actual</em>
+						     <span class="point actual"></span>
+						   </li>
+						   <li class="missing">
+						     <em>Missing</em>
+						     <span class="point missing"></span>
+						   </li>
+						   <li class="target">
+						     <em>Target</em>
+						     <span class="target"></span>
+						   </li>
+						   <li class="next_target">
+						     <em></em>
+						     <span class="next_target"></span>
+						   </li>
+						 </ul>
+                	                	
+                </div>
+              </div>
+              
+           
+           <div class="draggable2"></div>
+              
+              <div class="content-block-title no-thumb">Your card</div>
+              
+	           <div id="mycard" class="draggable">
+	             <div class="content"></div>
+	             <div class="points"><img src="img/badge_none.png" alt="points"></div>
+	             <div class="thumb"><img src="img/thumb.png" alt="thumb"></div>
+	           </div>
+          	 
+            </div>
+                	
+          </div>        
+        
+          
+        <div class="page cached no-tabbar" id="card-entry" data-page="card-entry">
+		      		        
+	        <div class="page-content">
+	        
+	        	<img src="" style="width:100%;max-width:400px;"/>
+	        	
+				<div class="">
+					<div class="list-block"> 
+									
+			        <ul id="add_card_list"></ul>
+			        
+					</div>
+				</div>
+				
+		      <div class="content-block">
+		        <div class="row"><!--  onclick="card_set_field(1,0);" -->
+		          <div class="col-33"><a href="#index" class="back button button-big button-fill bg-red"><i class="fa fa-times-circle"></i> Cancel</a></div>
+		          <div class="col-33"><a href="#" onclick="card_field_add('#add_card_list');" class="button button-big button-fill bg-blue"><i class="fa fa-plus-square"></i> Field</a></div>
+		          <div class="col-33"><a href="#" onclick="card_record('#add_card_list')" class="button button-big button-fill bg-green"><i class="fa fa-save"></i> Record</a></div>
+		        </div>
+		      </div>
+	        </div>
+		        
+        </div>
+                  
+			<div data-page="fields" id="fields_page" class="page cached no-tabbar">
+				<div class="page-content">
+					<div class="list-block">
+						<ul id="fields_page_ul"></ul>
+					</div>
+				</div>
+			</div>
+			
       </div>
-<!--      <div class="table_of_contents floating_element">
-        <div class="section_header section_header_grey">
-          TABLE OF CONTENTS
-        </div>
-        <div class="table_of_contents_item floating_element">
-          <a href="#about">About</a>
-        </div>
-        <div class="table_of_contents_item floating_element">
-          <a href="#changes">Changes</a>
-        </div>
-        <div class="table_of_contents_item floating_element">
-          <a href="#scope">Scope</a>
-        </div>
-        <div class="table_of_contents_item floating_element">
-          <a href="#files">Config files</a>
-        </div>
-      </div>
--->
-      <div class="content_section floating_element">
-
-
-        <div class="section_header section_header_red">
-          <div id="about"></div>
-          It works!
-        </div>
-        <div class="content_section_text">
-          <p>
-                This is the default welcome page used to test the correct 
-                operation of the Apache2 server after installation on Ubuntu systems.
-                It is based on the equivalent page on Debian, from which the Ubuntu Apache
-                packaging is derived.
-                If you can read this page, it means that the Apache HTTP server installed at
-                this site is working properly. You should <b>replace this file</b> (located at
-                <tt>/var/www/html/index.html</tt>) before continuing to operate your HTTP server.
-          </p>
-
-
-          <p>
-                If you are a normal user of this web site and don't know what this page is
-                about, this probably means that the site is currently unavailable due to
-                maintenance.
-                If the problem persists, please contact the site's administrator.
-          </p>
-
-        </div>
-        <div class="section_header">
-          <div id="changes"></div>
-                Configuration Overview
-        </div>
-        <div class="content_section_text">
-          <p>
-                Ubuntu's Apache2 default configuration is different from the
-                upstream default configuration, and split into several files optimized for
-                interaction with Ubuntu tools. The configuration system is
-                <b>fully documented in
-                /usr/share/doc/apache2/README.Debian.gz</b>. Refer to this for the full
-                documentation. Documentation for the web server itself can be
-                found by accessing the <a href="/manual">manual</a> if the <tt>apache2-doc</tt>
-                package was installed on this server.
-
-          </p>
-          <p>
-                The configuration layout for an Apache2 web server installation on Ubuntu systems is as follows:
-          </p>
-          <pre>
-/etc/apache2/
-|-- apache2.conf
-|       `--  ports.conf
-|-- mods-enabled
-|       |-- *.load
-|       `-- *.conf
-|-- conf-enabled
-|       `-- *.conf
-|-- sites-enabled
-|       `-- *.conf
-          </pre>
-          <ul>
-                        <li>
-                           <tt>apache2.conf</tt> is the main configuration
-                           file. It puts the pieces together by including all remaining configuration
-                           files when starting up the web server.
-                        </li>
-
-                        <li>
-                           <tt>ports.conf</tt> is always included from the
-                           main configuration file. It is used to determine the listening ports for
-                           incoming connections, and this file can be customized anytime.
-                        </li>
-
-                        <li>
-                           Configuration files in the <tt>mods-enabled/</tt>,
-                           <tt>conf-enabled/</tt> and <tt>sites-enabled/</tt> directories contain
-                           particular configuration snippets which manage modules, global configuration
-                           fragments, or virtual host configurations, respectively.
-                        </li>
-
-                        <li>
-                           They are activated by symlinking available
-                           configuration files from their respective
-                           *-available/ counterparts. These should be managed
-                           by using our helpers
-                           <tt>
-                                <a href="http://manpages.debian.org/cgi-bin/man.cgi?query=a2enmod">a2enmod</a>,
-                                <a href="http://manpages.debian.org/cgi-bin/man.cgi?query=a2dismod">a2dismod</a>,
-                           </tt>
-                           <tt>
-                                <a href="http://manpages.debian.org/cgi-bin/man.cgi?query=a2ensite">a2ensite</a>,
-                                <a href="http://manpages.debian.org/cgi-bin/man.cgi?query=a2dissite">a2dissite</a>,
-                            </tt>
-                                and
-                           <tt>
-                                <a href="http://manpages.debian.org/cgi-bin/man.cgi?query=a2enconf">a2enconf</a>,
-                                <a href="http://manpages.debian.org/cgi-bin/man.cgi?query=a2disconf">a2disconf</a>
-                           </tt>. See their respective man pages for detailed information.
-                        </li>
-
-                        <li>
-                           The binary is called apache2. Due to the use of
-                           environment variables, in the default configuration, apache2 needs to be
-                           started/stopped with <tt>/etc/init.d/apache2</tt> or <tt>apache2ctl</tt>.
-                           <b>Calling <tt>/usr/bin/apache2</tt> directly will not work</b> with the
-                           default configuration.
-                        </li>
-          </ul>
-        </div>
-
-        <div class="section_header">
-            <div id="docroot"></div>
-                Document Roots
-        </div>
-
-        <div class="content_section_text">
-            <p>
-                By default, Ubuntu does not allow access through the web browser to
-                <em>any</em> file apart of those located in <tt>/var/www</tt>,
-                <a href="http://httpd.apache.org/docs/2.4/mod/mod_userdir.html">public_html</a>
-                directories (when enabled) and <tt>/usr/share</tt> (for web
-                applications). If your site is using a web document root
-                located elsewhere (such as in <tt>/srv</tt>) you may need to whitelist your
-                document root directory in <tt>/etc/apache2/apache2.conf</tt>.
-            </p>
-            <p>
-                The default Ubuntu document root is <tt>/var/www/html</tt>. You
-                can make your own virtual hosts under /var/www. This is different
-                to previous releases which provides better security out of the box.
-            </p>
-        </div>
-
-        <div class="section_header">
-          <div id="bugs"></div>
-                Reporting Problems
-        </div>
-        <div class="content_section_text">
-          <p>
-                Please use the <tt>ubuntu-bug</tt> tool to report bugs in the
-                Apache2 package with Ubuntu. However, check <a
-                href="https://bugs.launchpad.net/ubuntu/+source/apache2">existing
-                bug reports</a> before reporting a new bug.
-          </p>
-          <p>
-                Please report bugs specific to modules (such as PHP and others)
-                to respective packages, not to the web server itself.
-          </p>
-        </div>
+      
+    </div>
+   
+  </div>
+    
 
 
 
 
+  <div class="picker-modal picker-ocr-words" style="height:100%;">
+    <div class="toolbar">
+      <div class="toolbar-inner">
+        <div class="left"><a href="#" class="close-picker">Cancel</a></div>
+        <div class="center">Pick words</div>
+        <div class="right"><a href="#" class="close-picker" id="card_ocr_ok">Ok</a></div>
       </div>
     </div>
-    <div class="validator">
+    <div class="picker-modal-inner">
+      <div class="content-block" style="text-align: center;width:100%;" id="card_ocr_words"></div>
     </div>
+  </div>
+  
+  <div class="picker-modal picker-qrcode">
+    <div class="toolbar">
+      <div class="toolbar-inner">
+        <div class="left"></div>
+        <div class="right"><a href="#" class="close-picker">Close</a></div>
+      </div>
+    </div>
+    <div class="picker-modal-inner">
+      <div class="content-block" style="text-align: center;width:100%;">
+        <img id="qr_img" src="" align="middle" style="width:150px;" />
+      </div>
+    </div>
+  </div>
+  
+  <div class="popup popup-category">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="left"></div>
+        <div class="center"></div>
+        <div class="right"><a href="#" class="close-popup">Okiok</a></div>
+      </div>
+    </div>
+   <div class="content-block">
+  		<div class="list-block accordion-list">
+			<div class="accordion-item category-level1 accordion-item-expanded">
+				<div class="accordion-item-toggle">
+					<a href="#" class="item-content item-link">
+						<div class="item-inner">
+				         <div class="item-title">Level 1</div>
+			        	</div>
+		        </a>
+				</div>
+				<div class="accordion-item-content">
+					<ul></ul>
+				</div>
+			</div>
+			<div class="accordion-item category-level2">
+				<div class="accordion-item-toggle">
+					<a href="#" class="item-content item-link">
+						<div class="item-inner">
+				         <div class="item-title">Level 2</div>
+			        	</div>
+		        </a>
+				</div>
+				<div class="accordion-item-content">
+					<ul>
+						<li><label class="label-radio item-content"><div class="item-inner"><div class="item-title">Please select in previous level</div></div></label></li>
+					</ul>
+				</div>
+			</div>
+			<div class="accordion-item category-level3">
+				<div class="accordion-item-toggle">
+					<a href="#" class="item-content item-link">
+						<div class="item-inner">
+				         <div class="item-title">Level 3</div>
+			        	</div>
+		        </a>
+				</div>
+				<div class="accordion-item-content">
+					<ul>
+						<li><label class="label-radio item-content"><div class="item-inner"><div class="item-title">Please select in previous level</div></div></label></li>
+					</ul>
+				</div>
+			</div>
+			<div class="accordion-item category-level4">
+				<div class="accordion-item-toggle">
+					<a href="#" class="item-content item-link">
+						<div class="item-inner">
+				         <div class="item-title">Level 4</div>
+			        	</div>
+		        </a>
+				</div>
+				<div class="accordion-item-content">
+					<ul>
+						<li><label class="label-radio item-content"><div class="item-inner"><div class="item-title">Please select in previous level</div></div></label></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+   </div>
+  </div>
+  
+  <div class="popup popup-templates">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="left"></div>
+        <div class="center"></div>
+        <div class="right"><a href="#" class="close-popup">Ok</a></div>
+      </div>
+    </div>
+   <div class="content-block" style="padding:2px 2px;"></div>
+  </div>
+    
+<script id="current-list" type="text/template7">
+
+	<div class="navbar">
+		<div class="navbar-inner" data-page="current-list">
+			<div class="left">
+		        <a href="#" class="link icon-only back">
+		            <i class="icon icon-back"></i>
+		        </a>
+		    </div>
+			<div class="center "><h3>Card list</h3></div>
+		</div>
+	</div>
+
+	<div class="page" data-page="current-list">
+	
+    <form class="searchbar">
+        <div class="searchbar-input">
+            <input type="search" placeholder="Search">
+            <a href="#" class="searchbar-clear"></a>
+        </div>
+        <a href="#" class="searchbar-cancel">Cancel</a>
+    </form>
+    
+    <div class="searchbar-overlay"></div>
+    
+	<div class="page-content">
+	
+	<div class="content-block searchbar-not-found">
+   	Nothing found
+	</div>
+        
+	<div class="list-block list-block-search searchbar-found">
+	  <ul>
+	    {{#each current}}
+	    <li class="swipeout card-item  item{{id}}" 
+	    	data-id="{{id}}" 
+	    	data-email="{{email}}"
+	    	data-firstname="{{firstname}}"
+	    	data-lastname="{{lastname}}"
+	    	data-cellphone="{{cellphone}}"
+	    	data-company="{{company}}"
+	    	data-category="{{category}}"
+	    	data-completename="{{completename}}"
+	    	data-birthdate="{{birthdate}}"
+	    	data-gender="{{gender}}"
+	    	data-comment="{{comment}}" 
+	    	data-language="{{language}}" 
+	    	data-logo="{{logo}}" 
+	    	data-template="{{template}}" 
+	    	data-points="{{points}}" 
+	    	data-reputation="{{reputation}}" 
+	    	data-points_img="{{points_img}}" 
+	    	data-payed_date="{{payed_date}}" 
+	    	data-current=true >
+	      <div class="swipeout-content item-content">
+	         <div class="item-inner">
+	            <div class="item-title">{{firstname}} {{lastname}}</div>
+	            <div class="item-after">{{company}}</div>
+	          </div>
+	      </div>
+	      <div class="swipeout-actions-left">
+	        <a href="#" onclick="card_auth('{{id}}','delete')" class="bg-red">Delete</a>
+	      </div>
+	      <div class="swipeout-actions-right">
+	        <a href="#" onclick="" class="bg-green"><i class="fa fa-phone fa-lg"></i></a>
+	        <a href="#" onclick="" class="bg-blue"><i class="fa fa-comment fa-lg"></i></a>
+	      </div>
+	    </li>
+	    {{else}}
+	    <li>
+	      <div class="item-content">
+	         <div class="item-inner">
+	            <div class="item-title">No card yet</div>
+	            <div class="item-after"></div>
+	          </div>
+	      </div>
+	    </li>
+	    {{/each}}
+	  </ul>
+	</div>       
+	</div>
+	  
+	</div>
+</script>  
+    
+<script id="waiting-list" type="text/template7">
+
+	<div class="navbar">
+		<div class="navbar-inner" data-page="waiting-list">
+			<div class="left">
+		        <a href="#" class="link icon-only back">
+		            <i class="icon icon-back"></i>
+		        </a>
+		    </div>
+			<div class="center "><h3>Waiting list</h3></div>
+		</div>
+	</div>
+
+
+	<div class="page" data-page="waiting-list">
+	<div class="page-content">
+	              
+	<div class="list-block">
+	  <ul>
+	    {{#each waiting}}
+	    <li class="swipeout card-item item{{id}}" 
+	    	data-id="{{id}}" 
+	    	data-email="{{email}}"
+	    	data-firstname="{{firstname}}"
+	    	data-lastname="{{lastname}}"
+	    	data-cellphone="{{cellphone}}"
+	    	data-company="{{company}}"
+	    	data-category="{{category}}"
+	    	data-category_text="{{category_text}}"
+	    	data-birthdate="{{birthdate}}"
+	    	data-email="{{email}}"
+	    	data-gender="{{gender}}"
+	    	data-comment="{{comment}}" 
+	    	data-language="{{language}}"
+	    	data-logo="{{logo}}" 
+	    	data-template="{{template}}" 
+	    	data-points="{{points}}" 
+	    	data-reputation="{{reputation}}" 
+	    	data-points_img="{{points_img}}" 
+	    	data-payed_date="{{payed_date}}" 
+	    	data-current="" >
+	      <div class="swipeout-content item-content">
+	         <div class="item-inner">
+	            <div class="item-title">{{firstname}} {{lastname}}</div>
+	            <div class="item-after">{{company}}</div>
+	          </div>
+	      </div>
+	      <div class="swipeout-actions-left">
+	        <a href="#" onclick="card_auth('{{id}}','refuse')" class="bg-red">Refuse</a>
+	      </div>
+	      <div class="swipeout-actions-right">
+	        <a href="#" onclick="card_auth('{{id}}','accept')" class="bg-green">Accept</a>
+	      </div>
+	    </li>
+	    {{else}}
+	    <li>
+	      <div class="item-content">
+	         <div class="item-inner">
+	            <div class="item-title">No card yet</div>
+	            <div class="item-after"></div>
+	          </div>
+	      </div>
+	    </li>
+	    {{/each}}
+	  </ul>
+	</div>       
+	</div>
+	  
+	</div>
+</script>  
+    
+<script id="card-form" type="text/template7">
+
+  <div class="navbar">
+	<div class="navbar-inner" data-page="card-{{id}}">
+		<div class="left">
+         <a href="#" class="link icon-only back"><i class="icon icon-back"></i></a>
+      </div>
+		<div class="center "><h3>{{titre}}</h3></div>
+      <div class="right">
+        <a href="#" class="link icon-only"> <i class="fa fa-edit fa-lg thecard"></i></a>
+      </div>
+	</div>
+  </div>
+
+  <div class="pages">
+    
+	  <div class="page" data-page="card-{{id}}">
+	  
+	  <div class="page-content">	  
+	  
+	  	<form class="thecard_form " data-id="{{id}}">
+      <div class="list-block">
+
+        <ul class="thecard card-form-ul-{{id}} disabled" id="card-form-ul-{{id}}"></ul>
+        
+        <ul class="card-form-ul-acc hidden">
+		    <!--li>
+            <div class="item-content" onClick="category_open()">
+              <div class="item-inner"> 
+                <div class="item-title label">Category</div>
+                <div class="item-input">
+                  <span id="category_text">{{category_text}}</span>
+                </div>
+                <div class="item-after"><input type="hidden" name="category" id="category" value="{{category}}"/></div>
+              </div>
+            </div>
+		    </li>     
+		    
+          <li>
+            <div class="item-content">
+              <div class="item-inner"> 
+                <div class="item-title label">Gender</div>
+                <div class="item-input">
+                	<p class="buttons-row">
+                	  <input type="hidden"  name="gender" value="{{this.gender}}"/>
+						  <a href="#" data-id="m" class="button radio_btn {{#js_compare "this.gender == 'm'"}}active{{/js_compare}}">Male</a>
+						  <a href="#" data-id="f" class="button radio_btn {{#js_compare "this.gender == 'f'"}}active{{/js_compare}}">Female</a>
+						</p>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="item-content">
+              <div class="item-inner"> 
+                <div class="item-title label">Language</div>
+                <div class="item-input">
+                	<p class="buttons-row">
+                	  <input type="hidden"  name="language" value="{{this.language}}"/>
+						  <a href="#" data-id="en" class="button radio_btn {{#js_compare "this.language == 'en'"}}active{{/js_compare}}">English</a>
+						  <a href="#" data-id="fr" class="button radio_btn {{#js_compare "this.language == 'fr'"}}active{{/js_compare}}">Fran&ccedil;ais</a>
+						</p>
+                </div>
+              </div>
+            </div>
+          </li>
+
+		    <li>
+            <div class="item-content" onClick="template_open($$('#template').val())">
+              <div class="item-inner"> 
+                <div class="item-title label">Templates</div>
+                <div class="item-input">
+                  <span id="template_text">{{template_text}}</span>
+                </div>
+                <div class="item-after"><input type="hidden" name="template" id="template" value="{{template}}"/></div>
+              </div>
+            </div>
+		    </li>
+		    
+          <li class="align-top">
+            <div class="item-content">
+              <div class="item-inner"> 
+                <div class="item-title label">Private<br>comment</div>
+                <div class="item-input">
+                  <textarea name="comment">{{comment}}</textarea>
+                </div>
+              </div>
+            </div>
+          </li-->
+          {{#if own}}
+          <li class="align-top">
+            <div class="item-content">
+              <div class="item-inner"> 
+                <div class="item-title label">Points</div>
+                <div class="item-input">
+                  <!--input type="text" disabled value="{{points}}"/-->
+                  <input type="text" name="points" value="{{points}}"/>
+                </div>
+              </div>
+            </div>
+          </li>
+          {{/if}}
+        </ul>
+      </div>
+      
+      {{#if own}}
+      
+      <div class="content-block card-form-buttons hidden">
+        <div class="row">
+          <div class="col-33"><a href="#" onclick="card_auth('{{id}}','delete');" class="button button-big button-fill bg-red"><i class="fa fa-times-circle"></i> Delete</a></div>
+          <div class="col-33"><a href="#" onclick="card_field_add('#card-form-ul-{{id}}');" class="card_form_add_field button button-big button-fill bg-blue"><i class="fa fa-plus-square"></i> Field</a></div>
+          <div class="col-33"><a href="#" onclick="card_record('.thecard_form')" class="button button-big button-fill bg-green"><i class="fa fa-save"></i> Record</a></div>
+        </div>
+      </div>
+      
+      {{else}}
+      
+	      {{#if current}} 
+	      
+	      	{{#unless payed_date}}
+	      	
+      <div class="content-block card-form-buttons hidden">
+        <div class="row">
+          <div class="col-33"><a href="#" onclick="card_auth('{{id}}','delete')" class="button button-big button-fill bg-red"><i class="fa fa-times-circle"></i> Delete</a></div>
+          <div class="col-33"><a href="#" onclick="card_field_add('#card-form-ul-{{id}}');" class="card_form_add_field button button-big button-fill bg-blue"><i class="fa fa-plus-square"></i> Field</a></div>
+          <div class="col-33"><a href="#" onclick="card_record('.thecard_form')" class="button button-big button-fill bg-green"><i class="fa fa-save"></i> Record</a></div>
+        </div>
+      </div>
+	      	
+	      	{{/unless}}
+	      	
+	      {{else}}
+	      
+      <div class="content-block card-form-buttons hidden">
+        <div class="row">
+          <div class="col-50"><a href="#" onclick="card_auth('{{id}}','refuse')" class="button button-big button-fill bg-red">Refuse</a></div>
+          <div class="col-50"><a href="#" onclick="card_auth('{{id}}','accept')" class="button button-big button-fill bg-green">Accept</a></div>
+        </div>
+      </div>
+      
+	      {{/if}}
+      
+      {{/if}}
+      
+      {{#unless payed_date}}
+      
+      <div class="content-block card-form-buttons hidden">
+        <div class="row">
+          <div class="col-100">
+          	<a href="#" class="button button-big button-fill bg-blue"> {{#if own}}Get the complete version{{else}}Pay for {{#js_compare "this.gender == 'f'"}}her{{else}}him{{/js_compare}}{{/if}} </a>
+          </div>
+        </div>
+      </div>
+      
+      {{/unless}}
+      
+      </form>
+	  
+     <div id="thecard" class="">
+       <div class="content"></div>
+       <div class="points"><img src="img/badge_none.png" alt="points"></div>
+     </div>
+     
+     <div class="thecard-placeholder"></div>
+	     
+   </div>
+    
+    
+  {{#if current}}
+  {{#if own}}
+  {{else}}
+  <div class="speed-dial">
+    <a href="#" class="floating-button color-red">
+      <i class="fa fa-share-alt fa-2x"></i>
+      <i class="fa fa-close fa-2x"></i>
+    </a>
+    <div class="speed-dial-buttons">
+      <a href="#"><i class="fa fa-envelope fa-lg"></i></a>
+      <a href="#"><i class="fa fa-comment fa-lg"></i></a>
+      <a href="#" onclick="qrcode_open()"><i class="fa fa-qrcode fa-lg"></i></a>
+      <a href="#" onclick="card_offer()"><i class="fa fa-upload fa-lg"></i></a>
+    </div>
+  </div>
+  {{/if}}	
+  {{/if}}	
+  </div>
+  </div>
+    </script>
+    
+    
+    <script type="text/javascript" src="js/framework7.min.js"></script>
+    <script type="text/javascript" src="js/welcomescreen.js"></script>
+    <script type="text/javascript" src="js/drag.min.js"></script>
+    <script type="text/javascript" src="js/category.js"></script>
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/socket.io.js"></script>
+    <script type="text/javascript" src="js/bizswap.js"></script>
+    <script type="text/javascript" src="js/exchange.js"></script>
+    <script type="text/javascript" src="js/camera.js"></script>
+    <script type="text/javascript" src="js/key.js"></script>
   </body>
 </html>
