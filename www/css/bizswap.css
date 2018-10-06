@@ -343,3 +343,27 @@ ul.hidden,
 div.hidden {
 	display: none;
 }
+
+.list-block .item-input {
+	border-left: dashed 1px #ddd;
+	padding-left: 5px;
+}
+
+#card_ocr_words div {
+	line-height: 1.4em;
+	font-size: 1.4em;
+	text-align: left;
+	padding: 5px 0;
+}
+#card_ocr_words span, #card_ocr_input {
+	border: solid #333333 1px;
+	border-radius: 3px;
+	background-color: #eeeeee;
+	padding: 5px;
+}
+#card_ocr_words span.off {
+	background-color: #ffffaa;
+}
+#card_ocr_words span.on {
+	background-color: #aaffaa;
+}
