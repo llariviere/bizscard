@@ -355,6 +355,17 @@ div.hidden {
 	text-align: left;
 	padding: 5px 0;
 }
+
+#card_ocr_words div.picked_words {
+	
+}
+
+#card_ocr_words div.picked_words .word {
+	white-space: nowrap;
+	display: inline-block;
+	margin-bottom: 3px;
+}
+
 #card_ocr_words span, #card_ocr_input {
 	border: solid #333333 1px;
 	border-radius: 3px;
@@ -362,8 +373,10 @@ div.hidden {
 	padding: 5px;
 }
 #card_ocr_words span.off {
-	background-color: #ffffaa;
+	background-color: #cccccc;
+	color: #222222;
 }
 #card_ocr_words span.on {
-	background-color: #aaffaa;
+	background-color: #555555;
+	color: #dddddd;
 }
