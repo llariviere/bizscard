@@ -11,7 +11,7 @@
 });
 
 var B = {
-	about:'Bizswiper v0.3<br>2018-10'
+	about:'Bizswiper v0.3.2<br>2018-10'
 };
 
 var welcomescreen_slides = [
@@ -1246,9 +1246,10 @@ function card_field_add(container) {
 }
 
 function card_open_picker(container,ii,i,add_new) {
-	var l = '', n = '', html = '';
+	var l = '', n = '', html = ['','','','','',''];
+	var families = ['Families','Address fields','Personal infos','Phone numbers','Business infos','Other fields'];
 	var li_tpl = '<li>' +
-			      '<label class="label-radio item-content">' +
+			      '<label class="label-checkbox item-content">' +
 			        '<input type="checkbox" name="{{ii}}" value="{{i}}" data-name="{{l}}" class="other" {{checked}}>' +
 			        '<div class="item-media">' +
 			          '<i class="icon icon-form-checkbox"></i>' +
@@ -1276,16 +1277,18 @@ function card_open_picker(container,ii,i,add_new) {
 	*/
 	$$.each(fields, function(k,v) {
 		if ($$(container).find("input[name='"+v.id+"']").length==0) {
-			n = v["en"];
+			n = v.en;
 			l = n.substr(0,1).toUpperCase() + n.substr(1).toLowerCase();
-			html += li_tpl.replace(/{{ii}}/,ii).replace(/{{i}}/,v.id).replace(/{{l}}/g,l);
+			html[v.family] += li_tpl.replace(/{{ii}}/,ii).replace(/{{i}}/,v.id).replace(/{{l}}/g,l);
 		}
 		if (v.id==i) {
-			n = v["en"];
+			n = v.en;
 			l = n.substr(0,1).toUpperCase() + n.substr(1).toLowerCase();
-			html += li_tpl.replace(/{{ii}}/,ii).replace(/{{i}}/,v.id).replace(/{{l}}/g,l).replace(/{{checked}}/,'checked="checked"');
+			html[v.family] += li_tpl.replace(/{{ii}}/,ii).replace(/{{i}}/,v.id).replace(/{{l}}/g,l).replace(/{{checked}}/,'checked="checked"');
 		}
-	});	
+	});
+	
+	html[5] += li_tpl.replace(/{{ii}}/,ii).replace(/{{i}}/,"999").replace(/{{l}}/g,"Custom field");
 	
 	myApp.pickerModal(
     '<div class="picker-modal choseModal" style="height:100%">' +
@@ -1297,21 +1300,79 @@ function card_open_picker(container,ii,i,add_new) {
         '</div>' +
       '</div>' +
       '<div class="picker-modal-inner" style="overflow:scroll;">' +
-        '<div class="list-block" style="overflow:scroll;">' +
-			  '<ul style="overflow:scroll;">' +
-			    html +
-			  	 '<li>' +
-			      '<label class="label-radio item-content">' +
-			        '<input type="radio" name="'+ii+'" value="999" data-name="Custom field">' +
-			        '<div class="item-media">' +
-			          '<i class="icon icon-form-checkbox"></i>' +
-			        '</div>' +
-			        '<div class="item-inner">' +
-			          '<div class="item-title">Custom Field <i class="fa fa-cube"></i></div>' +
-			        '</div>' +
-			      '</label>' +
-			    '</li>' +
-			  '</ul>' +
+			'<div class="list-block accordion-list">' +
+			    '<ul>' +
+			        '<li class="accordion-item">' +
+			            '<a href="" class="item-link item-content">' +
+			                '<div class="item-inner">' +
+			                    '<div class="item-title">' +
+			                    		families[1] +
+			                    '</div>' +
+			                '</div>' +
+			            '</a> ' +
+			            '<div class="accordion-item-content">' +
+			            	'<ul>' +
+			            		html[1] +
+			            	'</ul>' +
+			            '</div>' +
+			        '</li>' +
+			        '<li class="accordion-item">' +
+			            '<a href="" class="item-link item-content">' +
+			                '<div class="item-inner">' +
+			                    '<div class="item-title">' +
+			                    		families[2] +
+			                    '</div>' +
+			                '</div>' +
+			            '</a> ' +
+			            '<div class="accordion-item-content">' +
+			            	'<ul>' +
+			            		html[2] +
+			            	'</ul>' +
+			            '</div>' +
+			        '</li>' +
+			        '<li class="accordion-item">' +
+			            '<a href="" class="item-link item-content">' +
+			                '<div class="item-inner">' +
+			                    '<div class="item-title">' +
+			                    		families[3] +
+			                    '</div>' +
+			                '</div>' +
+			            '</a> ' +
+			            '<div class="accordion-item-content">' +
+			            	'<ul>' +
+			            		html[3] +
+			            	'</ul>' +
+			            '</div>' +
+			        '</li>' +
+			        '<li class="accordion-item">' +
+			            '<a href="" class="item-link item-content">' +
+			                '<div class="item-inner">' +
+			                    '<div class="item-title">' +
+			                    		families[4] +
+			                    '</div>' +
+			                '</div>' +
+			            '</a> ' +
+			            '<div class="accordion-item-content">' +
+			            	'<ul>' +
+			            		html[4] +
+			            	'</ul>' +
+			            '</div>' +
+			        '</li>' +
+			        '<li class="accordion-item">' +
+			            '<a href="" class="item-link item-content">' +
+			                '<div class="item-inner">' +
+			                    '<div class="item-title">' +
+			                    		families[5] +
+			                    '</div>' +
+			                '</div>' +
+			            '</a> ' +
+			            '<div class="accordion-item-content">' +
+			            	'<ul>' +
+			            		html[5] +
+			            	'</ul>' +
+			            '</div>' +
+			        '</li>' +
+			    '</ul>' +
 			'</div>' +
       '</div>' +
     '</div>'
