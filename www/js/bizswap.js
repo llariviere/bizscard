@@ -398,73 +398,74 @@ function template_open(no) {
 	myApp.popup(".popup-templates");
 }
 
-function category_open() {
+function category_load(code_name,level) {
+	
+	B.category_code_name = code_name;
+	var cname = code_name.split(": ");
+	var code = cname[0];
+	var name = cname[1];
+	
+	var l = ['level','a','b','c','d','e'];
+	var li_tpl = '<li> \
+      <label class="label-radio item-content"> \
+        <input type="radio" name="{{scian}}" value="{{value}}" {{checked}} > \
+        <div class="item-inner"> \
+          <div class="item-title">{{name}}</div> \
+        </div> \
+      </label> \
+    </li>';
+    
+   var li_placeholder = '<li> \
+							<label class="label-radio item-content"> \
+								<div class="item-inner"> \
+									<div class="item-title">Please select in previous level</div> \
+								</div> \
+							</label> \
+						</li>';
+	
+	var html = '';
+	var codes = scian[l[level]];
+	
+	if (!codes) return false;
+	
+	for (var i=0; i<codes.length; i++) {
+		if (codes[i].code.substr(0,code.length)==code || level==1) {
+			var li = li_tpl.replace(/{{scian}}/,'scian'+level).replace(/{{value}}/,codes[i].code).replace(/{{name}}/,codes[i].en);
+			html += li.replace(/{{checked}}/, (code.substr(0,(level+1))==codes[i].code ? 'checked="checked"' : ''));
+		}
+	}
+	
+	$$("#scian"+level).html(html);
+	
 	myApp.popup(".popup-category");
-	var code = '', code_text = '';
-	var li = '<li><label class="label-radio item-content"><input type="radio" name="scian_level1" value="{{k}}"><div class="item-inner"><div class="item-title">{{v}}</div></div></label></li>';
-	var HTML = $$(".scian-level1 ul").html();
+	myApp.accordionOpen(".category-level"+level)
 	
-	if (!HTML) {
-		scian.a.map(function(obj) {
-	   HTML += li.replace(/\{\{k\}\}/,obj.code).replace(/\{\{v\}\}/,obj.fr);
-	});
-	$$(".scian-level1 ul").html(HTML);
+	$$("#scian"+level+" li").on("click", function(){
+		var code = $$(this).find("input").val();
+		var name = $$(this).find(".item-title").text();
+		B.category_code_name = code+': '+name;
+		if (level<6) category_load(B.category_code_name, (level+1));
+	}, true);
+	
+	for (var i=2; i<6; i++) { if (level<i) $$("#scian"+i).html(li_placeholder); }
 }
+
+function category_open(container,code_name) {
 	
-	$$(".scian-level1 ul > li").click(function() {
-		code = $$(this).find("input").val();
-		code_text = $$(this).find("div.item-title").text();
-		$$("#scian").val(code);
-		$$("#scian_text").text(code_text);
-		myApp.accordionClose(".scian-level1");
-		HTML = '';
-		scian.b.map(function(obj) {
-			if (obj.code.substr(0,2)==$$("#scian").val().substr(0,2)) {
-				HTML += li.replace(/\{\{k\}\}/,obj.code).replace(/\{\{v\}\}/,obj.fr).replace(/level1/,'level2');
-			}
-		});
-		$$(".scian-level2 ul").html(HTML);
-		myApp.accordionOpen(".scian-level2") 
-		
-		$$(".scian-level2 ul > li").click(function(){
-			code = $$(this).find("input").val();
-			code_text = $$(this).find("div.item-title").text();
-			$$("#scian").val(code);
-			$$("#scian_text").text(code_text);
-			myApp.accordionClose(".scian-level2");
-			HTML = '';
-			scian.c.map(function(obj) {
-				if (obj.code.substr(0,3)==$$("#scian").val().substr(0,3)) {
-					HTML += li.replace(/\{\{k\}\}/,obj.code).replace(/\{\{v\}\}/,obj.fr).replace(/level1/,'level3');
-				}
-			});
-			$$(".scian-level3 ul").html(HTML);
-			myApp.accordionOpen(".scian-level3") 
-		
-			$$(".scian-level3 ul > li").click(function(){
-				code = $$(this).find("input").val();
-				code_text = $$(this).find("div.item-title").text();
-				$$("#scian").val(code);
-				$$("#scian_text").text(code_text);
-				myApp.accordionClose(".scian-level3");
-				HTML = '';
-				scian.d.map(function(obj) {
-					if (obj.code.substr(0,4)==$$("#scian").val().substr(0,4)) {
-						HTML += li.replace(/\{\{k\}\}/,obj.code).replace(/\{\{v\}\}/,obj.fr).replace(/level1/,'level4');
-					}
-				});
-				$$(".scian-level4 ul").html(HTML);
-				myApp.accordionOpen(".scian-level4");
-		
-				$$(".scian-level4 ul > li").click(function(){
-					code = $$(this).find("input").val();
-					code_text = $$(this).find("div.item-title").text();
-					$$("#scian").val(code);
-					$$("#scian_text").text(code_text);
-					myApp.closeModal(".popup-scian");
-				});
-			});
-		});
+	B["category_code_name"] = "";
+	
+	var cname = code_name.split(": ");
+	var code = cname[0];
+	var name = cname[1];
+	
+	category_load(code_name,1);	
+	if (code.length>2) category_load(code_name,2);
+	if (code.length>3) category_load(code_name,3);
+	if (code.length>4) category_load(code_name,4);
+	if (code.length>5) category_load(code_name,5);
+	
+	$$("#popup-category-ok").on("click", function(){
+		$$(container).find(".item-input input.category").val(B["category_code_name"]);
 	});
 }
 
@@ -1205,10 +1206,7 @@ function add_card_init(container) {
 	});
 	
 	$$(container).find(".item-input input.category").on("click", function(){
-		B['input_text'] = $$(this).val();
-		$$("#card_ocr_input").val(B['input_text']);
-		B['input_name'] = $$(this).attr("name");
-		category_open()
+		category_open(container, $$(this).val())
 	});
 	
 	var html = '<div class="list-block" style="margin-bottom:0px;line-height:35px;"><input id="card_ocr_input" type="text" name="" value="'+B['input_text']+'" placeholder="Pick words or enter text..."/>Words from your card:</div>';
@@ -1259,22 +1257,7 @@ function card_open_picker(container,ii,i,add_new) {
 			        '</div>' +
 			      '</label>' +
 			    '</li>';
-	/*
-	var not_used = '';
-	if (!add_new && 0) {
-		not_used = '<li>' +
-			      '<label class="label-radio item-content">' +
-			        '<input type="radio" name="'+ii+'" value="" data-name="-change-">' +
-			        '<div class="item-media">' +
-			          '<i class="icon icon-form-checkbox"></i>' +
-			        '</div>' +
-			        '<div class="item-inner">' +
-			          '<div class="item-title">Not used</div>' +
-			        '</div>' +
-			      '</label>' +
-			    '</li>';
-	}
-	*/
+			    
 	$$.each(fields, function(k,v) {
 		if ($$(container).find("input[name='"+v.id+"']").length==0) {
 			n = v.en;
