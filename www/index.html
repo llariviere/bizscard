@@ -306,9 +306,9 @@
   <div class="popup popup-category">
     <div class="navbar">
       <div class="navbar-inner">
-        <div class="left"></div>
+        <div class="left"><a href="#" class="close-popup">Cancel</a></div>
         <div class="center"></div>
-        <div class="right"><a href="#" class="close-popup">Okiok</a></div>
+        <div class="right"><a href="#" class="close-popup" id="popup-category-ok">Ok</a></div>
       </div>
     </div>
    <div class="content-block">
@@ -317,24 +317,24 @@
 				<div class="accordion-item-toggle">
 					<a href="#" class="item-content item-link">
 						<div class="item-inner">
-				         <div class="item-title">Level 1</div>
+				         <div class="item-title">Sector</div>
 			        	</div>
 		        </a>
 				</div>
 				<div class="accordion-item-content">
-					<ul></ul>
+					<ul id="scian1"></ul>
 				</div>
 			</div>
 			<div class="accordion-item category-level2">
 				<div class="accordion-item-toggle">
 					<a href="#" class="item-content item-link">
 						<div class="item-inner">
-				         <div class="item-title">Level 2</div>
+				         <div class="item-title">Subsector</div>
 			        	</div>
 		        </a>
 				</div>
 				<div class="accordion-item-content">
-					<ul>
+					<ul id="scian2">
 						<li><label class="label-radio item-content"><div class="item-inner"><div class="item-title">Please select in previous level</div></div></label></li>
 					</ul>
 				</div>
@@ -343,13 +343,19 @@
 				<div class="accordion-item-toggle">
 					<a href="#" class="item-content item-link">
 						<div class="item-inner">
-				         <div class="item-title">Level 3</div>
+				         <div class="item-title">Industry group</div>
 			        	</div>
 		        </a>
 				</div>
 				<div class="accordion-item-content">
-					<ul>
-						<li><label class="label-radio item-content"><div class="item-inner"><div class="item-title">Please select in previous level</div></div></label></li>
+					<ul id="scian3">
+						<li>
+							<label class="label-radio item-content">
+								<div class="item-inner">
+									<div class="item-title">Please select in previous level</div>
+								</div>
+							</label>
+						</li>
 					</ul>
 				</div>
 			</div>
@@ -357,12 +363,26 @@
 				<div class="accordion-item-toggle">
 					<a href="#" class="item-content item-link">
 						<div class="item-inner">
-				         <div class="item-title">Level 4</div>
+				         <div class="item-title">Industry</div>
 			        	</div>
 		        </a>
 				</div>
 				<div class="accordion-item-content">
-					<ul>
+					<ul id="scian4">
+						<li><label class="label-radio item-content"><div class="item-inner"><div class="item-title">Please select in previous level</div></div></label></li>
+					</ul>
+				</div>
+			</div>
+			<div class="accordion-item category-level5">
+				<div class="accordion-item-toggle">
+					<a href="#" class="item-content item-link">
+						<div class="item-inner">
+				         <div class="item-title">Canadian industry</div>
+			        	</div>
+		        </a>
+				</div>
+				<div class="accordion-item-content">
+					<ul id="scian5">
 						<li><label class="label-radio item-content"><div class="item-inner"><div class="item-title">Please select in previous level</div></div></label></li>
 					</ul>
 				</div>
