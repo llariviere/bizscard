@@ -11,7 +11,7 @@
 });
 
 var B = {
-	about:'Bizswiper v0.3.2<br>2018-10'
+	about:'Bizswiper v0.3.3<br>2018-10'
 };
 
 var welcomescreen_slides = [
