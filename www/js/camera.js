@@ -69,7 +69,7 @@ function card_image_process(imgUri) {
           scanImg[B.card_side]['width'] = width;
           scanImg[B.card_side]['height'] = height;
           var pars = {
-	          photo:scanImg[B.card_side].dataUrl.replace(/^data:image\/(png|jpg|jpeg);base64,/, ''),
+	          photo: scanImg[B.card_side].dataUrl.replace(/^data:image\/(png|jpg|jpeg);base64,/, ''),
 	          cardid: mycard.id
           }
           socket.emit('card ocr', pars);
@@ -103,11 +103,11 @@ function card_ocr_process(data) {
 	var y1 = points[2].y - y0 + 20;
 	
 	var canvas = document.createElement('canvas');
-   canvas.width = x1;
-   canvas.height = y1;
+	canvas.width = x1;
+	canvas.height = y1;
 	var context = canvas.getContext('2d');
-	var cardImage = $$("#card-entry").find("img."+(B.card_side));
-	cardImage.src = scanImg[B.card_side].dataUrl;
+	var cardImage = $$("#card-entry").find("img."+B.card_side);
+	cardImage.attr("src",scanImg[B.card_side].dataUrl);
 	
 	// Using text detection result from vision, we add a formatted list of fields...
 	var ocrLines = data.description.split("\n");
