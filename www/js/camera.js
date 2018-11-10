@@ -2,7 +2,7 @@
 * camera, image and ocr functions...
 */
 
-var scanImg = {};
+var scanImg = { 'recto':'', 'verso':''};
 
 function camera_options(srcType) {
     var options = {
@@ -23,7 +23,8 @@ function camera_open(selection) {
 	
 	if (typeof Camera === "undefined") {
 		myApp.alert('Camera not availlable');
-		card_ocr_process(card_data)
+		card_ocr_process((B.card_side == 'verso' ? card_back_data : card_data));
+		$$("#card-entry img."+B.card_side).attr("src","img/bcard.jpg");
 		return false;
 	}
     var srcType = Camera.PictureSourceType.CAMERA;
@@ -64,16 +65,16 @@ function card_image_process(imgUri) {
           canvas.width = width;
           canvas.height = height;
           canvas.getContext('2d').drawImage(image, 0, 0, width, height);
-          scanImg.dataUrl = canvas.toDataURL('image/jpeg');
-          scanImg.width = width;
-          scanImg.height = height;
+          scanImg[B.card_side].dataUrl = canvas.toDataURL('image/jpeg');
+          scanImg[B.card_side].width = width;
+          scanImg[B.card_side].height = height;
           var pars = {
-	          photo:scanImg.dataUrl.replace(/^data:image\/(png|jpg|jpeg);base64,/, ''),
+	          photo:scanImg[B.card_side].dataUrl.replace(/^data:image\/(png|jpg|jpeg);base64,/, ''),
 	          cardid: mycard.id
           }
           socket.emit('card ocr', pars);
       }
-      image.src = scanImg.dataUrl;
+      image.src = scanImg[B.card_side].dataUrl;
 	}); 
 }
 
@@ -82,7 +83,7 @@ function card_image2dataUrl(imgUri, callback) {
   xhr.onload = function() {
     var reader = new FileReader();
     reader.onloadend = function() {
-    	scanImg.dataUrl = reader.result;
+    	scanImg[B.card_side].dataUrl = reader.result;
       callback();
     }
     reader.readAsDataURL(xhr.response);
@@ -93,7 +94,7 @@ function card_image2dataUrl(imgUri, callback) {
 }
 
 function card_ocr_process(data) {
-	console.log('card_ocr_process()')
+	
 	// Using cropping hints from vision, we crop, rotate and show the scanned card image...
 	var points = data.vertices;
 	var x0 = points[0].x - 10;
@@ -105,14 +106,16 @@ function card_ocr_process(data) {
    canvas.width = x1;
    canvas.height = y1;
 	var context = canvas.getContext('2d');
-	var cardImage = $$("#card-entry").find("img");
-	cardImage.attr("src",scanImg.dataUrl);
+	var cardImage = $$("#card-entry").find("img."+(B.card_side));
+	cardImage.attr("src",scanImg[B.card_side].dataUrl);
+	cardImage.show();
+	
 	
 	// Using text detection result from vision, we add a formatted list of fields...
 	var ocrLines = data.description.split("\n");
 	
-	add_card_load("#add_card_list");
-	$$("#card_ocr_words").html("");
+	if (B.card_side=='recto') { add_card_load("#add_card_list"); }
+	else { $$(".card-back-camera-open").hide(); }
 	
 	for (var ii=0; ii<ocrLines.length; ii++) {
 		var ocrLine = ocrLines[ii].replace(/^[ ]+|[ ]+$/g,'');
@@ -127,4 +130,9 @@ socket.on('card ocr', card_ocr_process);
 var card_data = {
 	vertices:[{x:0,y:0},{x:0,y:0},{x:0,y:0},{x:0,y:0}],
 	description:'Louis Larivière \nAnalyste sénior\nCell: (514) 714-2011 \nllariviere@dubo.qc.ca \nwww.dubo.qc.ca\nDubo Électrique Ltée.\nMatériaux électriques et électroniques\n5780, rue Ontario Est \nMontréal (Québec) HIN 0A2 \nTél.:(514)255-7711 \nDirect:(514) 255-8855, poste221 \n1 800 361-4503 \nFax:(514) 255-9949'
+};
+
+var card_back_data = {
+	vertices:[{x:0,y:0},{x:0,y:0},{x:0,y:0},{x:0,y:0}],
+	description:'Verso de la carte\nAutres infos\nPlusieurs mots de plus'
 };
