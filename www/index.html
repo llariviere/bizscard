@@ -111,40 +111,33 @@
           </div>
           
 	      <div class="navbar-inner cached" data-page="card-cropper">
-            <div class="left">
-              <a href="#" class="link icon-only back"> <i class="icon icon-back"></i></a>
-            </div>
-	        <div class="center sliding">Crop card contour</div>
+            <div class="left"></div>
+	        	<div class="center sliding">Crop card contour</div>
             <div class="right">
               <a href="#card-entry" class="link icon-only"> <i class="fa fa-edit fa-lg"></i></a>
             </div>
 	      </div>
           
 	      <div class="navbar-inner cached" data-page="card-entry">
-            <div class="left">
-              <a href="#" class="link icon-only back"> <i class="icon icon-back"></i></a>
+            <div class="left"></div>
+	        	<div class="center sliding">Fill in card fields</div>
+            <div class="right">
+              <a href="#" class="link card-back-camera-open"> Verso</a>
             </div>
-	        <div class="center sliding">Fill in card fields</div>
 	      </div>
           
           <div class="navbar-inner cached" data-page="current-list">
-            <div class="left">
-              <a href="#" class="link icon-only back"> <i class="icon icon-back"></i></a>
-            </div>
+            <div class="left"></div>
             <div class="center sliding">Current card list</div>
           </div>
           
           <div class="navbar-inner cached" data-page="waiting-list">
-            <div class="left">
-              <a href="#" class="link icon-only back"> <i class="icon icon-back"></i></a>
-            </div>
+            <div class="left"></div>
             <div class="center sliding">Waiting card list</div>
           </div>
           
           <div class="navbar-inner cached" data-page="card-form">
-            <div class="left">
-              <a href="#" class="link icon-only back"> <i class="icon icon-back"></i></a>
-            </div>
+            <div class="left"></div>
             <div class="center sliding">Card form</div>
             <div class="right">
               <a href="#" class="link icon-only"> <i class="fa fa-edit fa-lg"></i></a>
@@ -192,7 +185,6 @@
               <div class="content-block no-thumb">
                 <div class="content-block-inner inset">
                 
-                
 						 <div class="pieID pie"></div>
 						 <div class="pieID pie_text">Bronze<br>60%</div>
 						 <ul class="pieID legend">
@@ -216,18 +208,30 @@
                 	                	
                 </div>
               </div>
-              
            
-           <div class="draggable2"></div>
+					<!--div class="draggable2"></div-->
               
-              <div class="content-block-title no-thumb">Your card</div>
+					<div class="content-block-title no-thumb">Your card</div>
               
-	           <div id="mycard" class="draggable">
-	             <div class="content"></div>
-	             <div class="points"><img src="img/badge_none.png" alt="points"></div>
-	             <div class="thumb"><img src="img/thumb.png" alt="thumb"></div>
-	           </div>
-          	 
+					<div id="mycard" class="draggable">
+						<div class="content"></div>
+						<div class="points"><img src="img/badge_none.png" alt="points"></div>
+						<div class="thumb"><img src="img/thumb.png" alt="thumb"></div>
+					</div>
+
+				  <div class="speed-dial">
+				    <a href="#" class="floating-button color-red">
+				      <i class="fa fa-share-alt fa-2x"></i>
+				      <i class="fa fa-close fa-2x"></i>
+				    </a>
+				    <div class="speed-dial-buttons">
+				      <a href="#"><i class="fa fa-envelope fa-lg"></i></a>
+				      <a href="#"><i class="fa fa-comment fa-lg"></i></a>
+				      <a href="#" onclick="qrcode_open()"><i class="fa fa-qrcode fa-lg"></i></a>
+				      <a href="#" onclick="card_offer()"><i class="fa fa-upload fa-lg"></i></a>
+				    </div>
+				  </div>
+				  
             </div>
                 	
           </div>        
@@ -237,7 +241,13 @@
 		      		        
 	        <div class="page-content">
 	        
-	        	<img src="" style="width:100%;max-width:400px;"/>
+				<div class="swiper-container">
+					<div class="swiper-pagination"></div>
+					<div class="swiper-wrapper">
+						<div class="swiper-slide"><img class="recto" src=""/></div>
+						<div class="swiper-slide"><img class="verso" src=""/></div>
+					</div>
+				</div>
 	        	
 				<div class="">
 					<div class="list-block"> 
@@ -317,76 +327,29 @@
 				<div class="accordion-item-toggle">
 					<a href="#" class="item-content item-link">
 						<div class="item-inner">
-				         <div class="item-title">Sector</div>
+				         <div class="item-title">Sectors</div>
 			        	</div>
 		        </a>
 				</div>
 				<div class="accordion-item-content">
-					<ul id="scian1"></ul>
+					<ul id="groups"></ul>
 				</div>
 			</div>
 			<div class="accordion-item category-level2">
 				<div class="accordion-item-toggle">
 					<a href="#" class="item-content item-link">
 						<div class="item-inner">
-				         <div class="item-title">Subsector</div>
+				         <div class="item-title">Industries</div>
 			        	</div>
 		        </a>
 				</div>
 				<div class="accordion-item-content">
-					<ul id="scian2">
+					<ul id="industries">
 						<li><label class="label-radio item-content"><div class="item-inner"><div class="item-title">Please select in previous level</div></div></label></li>
 					</ul>
 				</div>
 			</div>
-			<div class="accordion-item category-level3">
-				<div class="accordion-item-toggle">
-					<a href="#" class="item-content item-link">
-						<div class="item-inner">
-				         <div class="item-title">Industry group</div>
-			        	</div>
-		        </a>
-				</div>
-				<div class="accordion-item-content">
-					<ul id="scian3">
-						<li>
-							<label class="label-radio item-content">
-								<div class="item-inner">
-									<div class="item-title">Please select in previous level</div>
-								</div>
-							</label>
-						</li>
-					</ul>
-				</div>
-			</div>
-			<div class="accordion-item category-level4">
-				<div class="accordion-item-toggle">
-					<a href="#" class="item-content item-link">
-						<div class="item-inner">
-				         <div class="item-title">Industry</div>
-			        	</div>
-		        </a>
-				</div>
-				<div class="accordion-item-content">
-					<ul id="scian4">
-						<li><label class="label-radio item-content"><div class="item-inner"><div class="item-title">Please select in previous level</div></div></label></li>
-					</ul>
-				</div>
-			</div>
-			<div class="accordion-item category-level5">
-				<div class="accordion-item-toggle">
-					<a href="#" class="item-content item-link">
-						<div class="item-inner">
-				         <div class="item-title">Canadian industry</div>
-			        	</div>
-		        </a>
-				</div>
-				<div class="accordion-item-content">
-					<ul id="scian5">
-						<li><label class="label-radio item-content"><div class="item-inner"><div class="item-title">Please select in previous level</div></div></label></li>
-					</ul>
-				</div>
-			</div>
+			
 		</div>
    </div>
   </div>
@@ -406,11 +369,7 @@
 
 	<div class="navbar">
 		<div class="navbar-inner" data-page="current-list">
-			<div class="left">
-		        <a href="#" class="link icon-only back">
-		            <i class="icon icon-back"></i>
-		        </a>
-		    </div>
+			<div class="left"></div>
 			<div class="center "><h3>Card list</h3></div>
 		</div>
 	</div>
@@ -491,11 +450,7 @@
 
 	<div class="navbar">
 		<div class="navbar-inner" data-page="waiting-list">
-			<div class="left">
-		        <a href="#" class="link icon-only back">
-		            <i class="icon icon-back"></i>
-		        </a>
-		    </div>
+			<div class="left"></div>
 			<div class="center "><h3>Waiting list</h3></div>
 		</div>
 	</div>
@@ -557,14 +512,16 @@
 	  
 	</div>
 </script>  
+
+<!-- card-{{id}} -->
     
 <script id="card-form" type="text/template7">
 
   <div class="navbar">
-	<div class="navbar-inner" data-page="card-{{id}}">
+	<div class="navbar-inner" data-page="thecard">
 		<div class="left">
-         <a href="#" class="link icon-only back"><i class="icon icon-back"></i></a>
-      </div>
+			<a href="#index" class="back"><i class="icon icon-back"></i></a>
+		</div>
 		<div class="center "><h3>{{titre}}</h3></div>
       <div class="right">
         <a href="#" class="link icon-only"> <i class="fa fa-edit fa-lg thecard"></i></a>
@@ -574,7 +531,7 @@
 
   <div class="pages">
     
-	  <div class="page" data-page="card-{{id}}">
+	  <div class="page" data-page="thecard">
 	  
 	  <div class="page-content">	  
 	  
@@ -647,6 +604,7 @@
               </div>
             </div>
           </li-->
+          
           {{#if own}}
           <li class="align-top">
             <div class="item-content">
@@ -715,13 +673,13 @@
       {{/unless}}
       
       </form>
-	  
-     <div id="thecard" class="">
+	  					
+     <div id="thecard" class="draggable thecard{{id}}" data-id="{{id}}">
        <div class="content"></div>
        <div class="points"><img src="img/badge_none.png" alt="points"></div>
      </div>
      
-     <div class="thecard-placeholder"></div>
+     <!--div class="thecard-placeholder"></div-->
 	     
    </div>
     
@@ -737,8 +695,8 @@
     <div class="speed-dial-buttons">
       <a href="#"><i class="fa fa-envelope fa-lg"></i></a>
       <a href="#"><i class="fa fa-comment fa-lg"></i></a>
-      <a href="#" onclick="qrcode_open()"><i class="fa fa-qrcode fa-lg"></i></a>
-      <a href="#" onclick="card_offer()"><i class="fa fa-upload fa-lg"></i></a>
+      <a href="#" onclick="qrcode_open('{{id}}')"><i class="fa fa-qrcode fa-lg"></i></a>
+      <a href="#" onclick="card_offer('{{id}}')"><i class="fa fa-upload fa-lg"></i></a>
     </div>
   </div>
   {{/if}}	
