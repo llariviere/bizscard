@@ -7,11 +7,18 @@
 	modalTitle: 'Bizswiper',
 	modalButtonCancel: 'Cancel...',
 	modalPreloaderTitle: 'One moment please...',
-	scrollTopOnStatusbarClick: true
+	scrollTopOnStatusbarClick: true,
+	uniqueHistory: true,
+	routerRemoveWithTimeout: true,
+	swipeBackPage: false
 });
 
+ var mySwiper = myApp.swiper('.swiper-container', {
+   pagination:'.swiper-pagination'
+ });
+
 var B = {
-	about:'Bizswiper v0.3.3<br>2018-10'
+	about:'Bizswiper v0.3.2<br>2018-10'
 };
 
 var welcomescreen_slides = [
@@ -233,8 +240,16 @@ $$(".waiting-list-open").on("click", function(){
 });
 
 $$(".card-camera-open").on("click", function(){
+	B['card_side'] = 'recto';
 	$$("#add_card_list").html('');
+	$$("#card_ocr_words").html('');
+	$$(".card-back-camera-open").show();
 	mainView.router.load({pageName: 'card-entry'});
+	camera_open(false);
+});
+
+$$(".card-back-camera-open").on("click", function(){
+	B['card_side'] = 'verso';
 	camera_open(false);
 });
 
@@ -291,10 +306,11 @@ function card_form_star(star) {
 	});
 }
 
-var draggie2 = '';
+
+
 
 function card_form_open(context) {
-	
+	var draggie2 = '';
 	var cardid = context.id;
 	var v = '', n = '', fieldid = '', h = '', h2 = '';
 	var h1 = '<input type="hidden" name="id" value="'+cardid+'"/>';
@@ -331,6 +347,7 @@ function card_form_open(context) {
 	});
 	
 	context["template_text"] = templates_name[context.template];
+	$$("#thecard"+cardid).remove();
 	
 	var html = cardForm(context);
 	
@@ -342,12 +359,15 @@ function card_form_open(context) {
 	
 	//card_form_star(context.reputation);
 	
+	$$(".pages").find('.page.cached').remove();
+	
+	
 	if (cardid != mycard.id) {	
 	
-		var h = $$("#thecard").width() / 3.5 * 2.0;
-		var t = $$("#thecard").offset().top;
-		$$("#thecard").data("top", t);
-		$$("#thecard").css({"height": h, "bottom":t+h});
+		var h = $$('#thecard').width() / 3.5 * 2.0;
+		var t = $$('#thecard').offset().top;
+		$$('#thecard').data("top", t);
+		$$('#thecard').css({"height": h, "bottom":t+h});
 		
 		if (!draggie2) {
 			draggie2 = new Draggabilly( '#thecard', { axis:"y" });
@@ -398,7 +418,7 @@ function template_open(no) {
 	myApp.popup(".popup-templates");
 }
 
-function category_load(code_name,level) {
+function category_load(code_name) {
 	
 	B.category_code_name = code_name;
 	var cname = code_name.split(": ");
@@ -414,7 +434,7 @@ function category_load(code_name,level) {
         </div> \
       </label> \
     </li>';
-    
+   /*
    var li_placeholder = '<li> \
 							<label class="label-radio item-content"> \
 								<div class="item-inner"> \
@@ -422,9 +442,10 @@ function category_load(code_name,level) {
 								</div> \
 							</label> \
 						</li>';
-	
+	*/
 	var html = '';
-	var codes = scian[l[level]];
+	
+	var codes = categories[level];
 	
 	if (!codes) return false;
 	
@@ -435,7 +456,7 @@ function category_load(code_name,level) {
 		}
 	}
 	
-	$$("#scian"+level).html(html);
+	$$("#"+level).html(html);
 	
 	myApp.popup(".popup-category");
 	myApp.accordionOpen(".category-level"+level)
@@ -457,12 +478,50 @@ function category_open(container,code_name) {
 	var cname = code_name.split(": ");
 	var code = cname[0];
 	var name = cname[1];
+	var l = ['level','a','b','c','d','e'];
+	var li_tpl = '<li data-groups="{{groups}}"> \
+      <label class="label-radio item-content"> \
+        <input type="radio" name="{{level}}" value="{{value}}" {{checked}} > \
+        <div class="item-inner"> \
+          <div class="item-title">{{name}}</div> \
+        </div> \
+      </label> \
+    </li>';
 	
-	category_load(code_name,1);	
-	if (code.length>2) category_load(code_name,2);
-	if (code.length>3) category_load(code_name,3);
-	if (code.length>4) category_load(code_name,4);
-	if (code.length>5) category_load(code_name,5);
+	var codes = categories.groups, html = '';
+	for (var i=0; i<codes.length; i++) {
+		html += li_tpl.replace(/{{level}}/, 'groups').replace(/{{value}}/, codes[i].code).replace(/{{name}}/, codes[i].en);
+	}
+	$$("#groups").html(html);
+	
+	var codes = categories.industries, html1 = '', html2 = '';
+	for (var i=0; i<codes.length; i++) {
+		if (code==codes[i].code) {
+			html1 += li_tpl.replace(/{{level}}/,'industries').replace(/{{value}}/, codes[i].code).replace(/{{name}}/, codes[i].en).replace(/{{groups}}/, codes[i].groups).replace(/{{checked}}/, 'checked="checked"');
+		} else {
+			html2 += li_tpl.replace(/{{level}}/,'industries').replace(/{{value}}/, codes[i].code).replace(/{{name}}/, codes[i].en).replace(/{{groups}}/, codes[i].groups);
+		}
+		
+	}
+	$$("#industries").html(html1+html2);
+	
+	$$("#groups li").on("click", function(){
+		var group = $$(this).find("input").val();
+		$$("#industries li").hide();
+		$$("#industries li").prop("checked", false);
+		$$("#industries li").each(function(){
+			if ($$(this).data('groups').indexOf(group)>-1) $$(this).show();
+		});
+		myApp.accordionOpen(".category-level2");
+	}, true);
+	
+	$$("#industries li").on("click", function(){
+		B["category_code_name"] = $$(this).find("input").val() + ': ' + $$(this).find(".item-title").text();
+	}, true);
+	
+	myApp.popup(".popup-category");
+	myApp.accordionOpen(".category-level"+(code_name ? 2 : 1));
+	
 	
 	$$("#popup-category-ok").on("click", function(){
 		$$(container).find(".item-input input.category").val(B["category_code_name"]);
@@ -528,20 +587,22 @@ function card_record(container) {
 		return false;
 	}
 	
-	// Always identify the user...
+	// Always identify the owner...
 	pars['owner'] = mycard.id;
 	
 	// For scan entry we record the original image...
 	if (container=='#add_card_list' && scanImg.dataUrl!=undefined) pars['44'] = scanImg.dataUrl;
 	
 	// Send to sender...
-	console.log(pars); //return;
 	socket.emit('card record', pars);
 	
-	card_populate("thecard", pars);
-	
-	if ($$("#thecard_form input[name='id']").val()==mycard.id) {
-		card_populate("mycard", pars);
+	// For existing card update we refresh the card template...
+	if (container!='#add_card_list') {
+		card_populate("thecard", pars);
+		
+		if ($$("#thecard_form input[name='id']").val()==mycard.id) {
+			card_populate("mycard", pars);
+		}
 	}
 	
 }
@@ -842,10 +903,10 @@ socket.on('card record', function (data) {
 						}}
 					]
 				});
-			} else {
+			} else if (data.payed) {
 				myApp.modal({
-					title: 'Existing email?', 
-					text: '<b>This email address is already used on a card!</b><br>Do you want to add it?', 
+					title: 'Existing card?', 
+					text: '<b>This email address is already used on a payed card!</b><br>Do you want to add it?', 
 					buttons: [
 						{ text: "No thanks", onClick: function(){
 							myApp.alert("You should change the email address...");
@@ -1111,7 +1172,6 @@ function add_card_li_match(container,ii,v) {
 	}
 	*/
 	
-	//var ocr_words = v.replace(/\b([\u00C0-\u00FFa-zA-Z0-9\.\-\@]+)\b/g, '<span class="word '+cls+'">$1</span>');
 	var ocr_words = v.trim().split(' ');
 	for (var i=0; i<ocr_words.length; i++) {
 		cls = '';
@@ -1210,7 +1270,7 @@ function add_card_init(container) {
 	});
 	
 	var html = '<div class="list-block" style="margin-bottom:0px;line-height:35px;"><input id="card_ocr_input" type="text" name="" value="'+B['input_text']+'" placeholder="Pick words or enter text..."/>Words from your card:</div>';
-	$$("#card_ocr_words").prepend(html);
+	
 	$$("#card_ocr_words").find(".word").on("click", function(event) {
 		if ($$(event.target).hasClass("on")) {
 			$$("#card_ocr_input").val($$("#card_ocr_input").val().replace($$(this).text(),'').replace('  ',' ').trim());
@@ -1220,22 +1280,26 @@ function add_card_init(container) {
 		$$(event.target).toggleClass("on");
 	});
 	
-	$$("#card_ocr_input").on("change", function(){
-		//$$("#card_ocr_words").find(".word").removeClass("on");
-		add_card_word_detect();
-	});
-	
-	$$("#card_ocr_ok").on("click", function(){
-			/*
-			var txt = [];
-			$$("#card_ocr_words .word.on").each(function(){ txt.push($$(this).text()); $$(this).addClass("off") });
-			var txts = txt.join(" ") + ' ' + $$("#card_ocr_input").val();
-			$$("#card_ocr_words").find(".word").removeClass("on");
-			$$("#card_ocr_input").val('');
-			if (txts.trim()!='') 
-			*/
-			$$(container+" input[name='"+B.input_name+"']").val($$("#card_ocr_input").val());
-	});
+	if (B.card_side=='recto') {
+		$$("#card_ocr_words").prepend(html);
+		
+		$$("#card_ocr_input").on("change", function(){
+			//$$("#card_ocr_words").find(".word").removeClass("on");
+			add_card_word_detect();
+		});
+		
+		$$("#card_ocr_ok").on("click", function(){
+				/*
+				var txt = [];
+				$$("#card_ocr_words .word.on").each(function(){ txt.push($$(this).text()); $$(this).addClass("off") });
+				var txts = txt.join(" ") + ' ' + $$("#card_ocr_input").val();
+				$$("#card_ocr_words").find(".word").removeClass("on");
+				$$("#card_ocr_input").val('');
+				if (txts.trim()!='') 
+				*/
+				$$(container+" input[name='"+B.input_name+"']").val($$("#card_ocr_input").val());
+		});
+	} 	
 }
 
 function card_field_add(container) {
