@@ -1255,21 +1255,22 @@ function add_card_init(container) {
 	
 	B['container'] = container;
 	B['input_text'] = '';
-	$$(container).off("click");
-	$$(container).on("click", ".item-input input.base, .item-input input.new", function(){
+	$$(container).find(".item-input input.base, .item-input input.new").off("click");
+	$$(container).find(".item-input input.base, .item-input input.new").on("click", function(){
 		$$("#card_ocr_title").text($$(this).data("label"));
 		B['input_text'] = $$(this).val();
 		$$("#card_ocr_input").val(B['input_text']);
 		B['input_name'] = $$(this).attr("name");
 		myApp.pickerModal(".picker-ocr-words");
 		add_card_word_detect(container);
-	});	
-	$$(container).on("click", ".item-input input.category", function(){
+	});
+	$$(container).find(".item-input input.category").off("click")
+	$$(container).find(".item-input input.category").on("click", function(){
 		category_open(container, $$(this).val())
 	});
 	
-	$$("#card_ocr_words").off("click");
-	$$("#card_ocr_words").on("click", ".word", function(event) {
+	$$("#card_ocr_words").find(".word").off("click");
+	$$("#card_ocr_words").find(".word").on("click", function(event) {
 		if ($$(event.target).hasClass("on")) {
 			$$("#card_ocr_input").val($$("#card_ocr_input").val().replace($$(this).text(),'').replace('  ',' ').trim());
 		} else {
