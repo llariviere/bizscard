@@ -1255,7 +1255,7 @@ function add_card_init(container) {
 	
 	B['container'] = container;
 	B['input_text'] = '';
-	
+	$$(container).off("click");
 	$$(container).on("click", ".item-input input.base, .item-input input.new", function(){
 		$$("#card_ocr_title").text($$(this).data("label"));
 		B['input_text'] = $$(this).val();
@@ -1263,15 +1263,13 @@ function add_card_init(container) {
 		B['input_name'] = $$(this).attr("name");
 		myApp.pickerModal(".picker-ocr-words");
 		add_card_word_detect(container);
-	});
-	
-	$$(container).find(".item-input input.category").on("click", function(){
+	});	
+	$$(container).on("click", ".item-input input.category", function(){
 		category_open(container, $$(this).val())
 	});
 	
-	var html = '<div class="list-block" style="margin-bottom:0px;line-height:35px;"><input id="card_ocr_input" type="text" name="" value="'+B['input_text']+'" placeholder="Pick words or enter text..."/>Words from your card:</div>';
-	
-	$$("#card_ocr_words").find(".word").on("click", function(event) {
+	$$("#card_ocr_words").off("click");
+	$$("#card_ocr_words").on("click", ".word", function(event) {
 		if ($$(event.target).hasClass("on")) {
 			$$("#card_ocr_input").val($$("#card_ocr_input").val().replace($$(this).text(),'').replace('  ',' ').trim());
 		} else {
@@ -1281,6 +1279,9 @@ function add_card_init(container) {
 	});
 	
 	if (B.card_side=='recto') {
+		
+		var html = '<div class="list-block" style="margin-bottom:0px;line-height:35px;"><input id="card_ocr_input" type="text" name="" value="'+B['input_text']+'" placeholder="Pick words or enter text..."/>Words from your card:</div>';
+		
 		$$("#card_ocr_words").prepend(html);
 		
 		$$("#card_ocr_input").on("change", function(){
