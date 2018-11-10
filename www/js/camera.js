@@ -2,7 +2,7 @@
 * camera, image and ocr functions...
 */
 
-var scanImg = { 'recto':'', 'verso':''};
+var scanImg = { 'recto':{}, 'verso':{} };
 
 function camera_options(srcType) {
     var options = {
@@ -65,9 +65,9 @@ function card_image_process(imgUri) {
           canvas.width = width;
           canvas.height = height;
           canvas.getContext('2d').drawImage(image, 0, 0, width, height);
-          scanImg[B.card_side].dataUrl = canvas.toDataURL('image/jpeg');
-          scanImg[B.card_side].width = width;
-          scanImg[B.card_side].height = height;
+          scanImg[B.card_side]['dataUrl'] = canvas.toDataURL('image/jpeg');
+          scanImg[B.card_side]['width'] = width;
+          scanImg[B.card_side]['height'] = height;
           var pars = {
 	          photo:scanImg[B.card_side].dataUrl.replace(/^data:image\/(png|jpg|jpeg);base64,/, ''),
 	          cardid: mycard.id
@@ -107,9 +107,7 @@ function card_ocr_process(data) {
    canvas.height = y1;
 	var context = canvas.getContext('2d');
 	var cardImage = $$("#card-entry").find("img."+(B.card_side));
-	cardImage.attr("src",scanImg[B.card_side].dataUrl);
-	cardImage.show();
-	
+	cardImage.src = scanImg[B.card_side].dataUrl;
 	
 	// Using text detection result from vision, we add a formatted list of fields...
 	var ocrLines = data.description.split("\n");
