@@ -380,3 +380,23 @@ div.hidden {
 	background-color: #555555;
 	color: #dddddd;
 }
+
+.swiper-slide {
+  background: #fff;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+}
+.swiper-slide img {
+  text-align:center;
+  display:block;
+}
+.swiper-container {
+  min-height: 120px;
+  margin: 35px 0;
+}
+
+img.recto, img.verso {
+	width: 100%;
+	max-width: 400px;
+	
+}
