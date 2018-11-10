@@ -591,7 +591,7 @@ function card_record(container) {
 	pars['owner'] = mycard.id;
 	
 	// For scan entry we record the original image...
-	if (container=='#add_card_list' && scanImg[B.card_side].dataUrl!=undefined) pars[(B.card_side=='recto' ? '44' : '45'] = scanImg[B.card_side].dataUrl;
+	if (container=='#add_card_list' && scanImg[B.card_side].dataUrl!=undefined) pars[(B.card_side=='recto' ? '44' : '45')] = scanImg[B.card_side].dataUrl;
 	
 	// Send to sender...
 	socket.emit('card record', pars);
