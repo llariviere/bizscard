@@ -111,15 +111,17 @@ function card_ocr_process(data) {
 	
 	// Using text detection result from vision, we add a formatted list of fields...
 	var ocrLines = data.description.split("\n");
+	B.container="#add_card_list";
 	
-	if (B.card_side=='recto') { add_card_load("#add_card_list"); }
+	if (B.card_side=='recto') { add_card_load(); }
 	else { $$(".card-back-camera-open").hide(); }
 	
 	for (var ii=0; ii<ocrLines.length; ii++) {
 		var ocrLine = ocrLines[ii].replace(/^[ ]+|[ ]+$/g,'');
-		if (ocrLine.length) add_card_li_match('#add_card_list',ii, ocrLine);
+		if (ocrLine.length) add_card_li_match(ii, ocrLine);
 	}
-	add_card_init('#add_card_list');
+	
+	add_card_init();
 	myApp.hidePreloader();
 }
 
