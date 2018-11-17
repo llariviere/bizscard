@@ -18,7 +18,9 @@
  });
 
 var B = {
-	about:'Bizswiper v0.3.2<br>2018-10'
+	about:'Bizswiper v0.3.2<br>2018-10',
+	container:'',
+	input_text:''
 };
 
 var welcomescreen_slides = [
@@ -240,11 +242,11 @@ $$(".waiting-list-open").on("click", function(){
 });
 
 $$(".card-camera-open").on("click", function(){
+	$$(".card-back-camera-open").show();
+	mainView.router.load({pageName: 'card-entry'});
 	B['card_side'] = 'recto';
 	$$("#add_card_list").html('');
 	$$("#card_ocr_words").html('');
-	$$(".card-back-camera-open").show();
-	mainView.router.load({pageName: 'card-entry'});
 	camera_open(false);
 });
 
@@ -471,7 +473,7 @@ function category_load(code_name) {
 	for (var i=2; i<6; i++) { if (level<i) $$("#scian"+i).html(li_placeholder); }
 }
 
-function category_open(container,code_name) {
+function category_open(code_name) {
 	
 	B["category_code_name"] = "";
 	
@@ -524,9 +526,10 @@ function category_open(container,code_name) {
 	
 	
 	$$("#popup-category-ok").on("click", function(){
-		$$(container).find(".item-input input.category").val(B["category_code_name"]);
+		$$(B.container).find(".item-input input.category").val(B["category_code_name"]);
 	});
 }
+
 
 function card_record(container) {	
 	var pars = {};
@@ -604,8 +607,8 @@ function card_record(container) {
 			card_populate("mycard", pars);
 		}
 	}
-	
 }
+
 
 function card_recorder(data) {
 	var list_field = ['company','companyname','firstname','lastname','email','id','poinst_img']
@@ -1043,7 +1046,7 @@ socket.on('custom field', function(data){
 	myApp.closeModal(".choseModal");
 });
 
-function add_card_load(container) {
+function add_card_load() {
 
 	var html = '<li class="list-item ii_1">\
 	            <div class="item-content">\
@@ -1105,11 +1108,11 @@ function add_card_load(container) {
 	            </div>\
 	          </li>';
 	
-	$$(container).html(html);
+	$$(B.container).html(html);
 
 }
 
-function add_card_li_match(container,ii,v) {
+function add_card_li_match(ii,v) {
 	
 	if (typeof v === "undefined") return false;
 	if (v.toString().replace(/^[^\d\w]$/,'')=='') return false;
@@ -1127,47 +1130,47 @@ function add_card_li_match(container,ii,v) {
 	
 	var i = '', cls = '';
 	if (v.match(Company)) {
-		if (!$$(container).find("input[name='29']").val()) {
-			$$(container+" input[name='29']").val(v);
+		if (!$$(B.container).find("input[name='29']").val()) {
+			$$(B.container+" input[name='29']").val(v);
 			cls = 'off';
 		}
 	}
 	else if (v.match(Name)) {
-		if (!$$(container).find("input[name='35']").val()) {
+		if (!$$(B.container).find("input[name='35']").val()) {
 			var names = v.split(' ');
-			$$(container+" input[name='35']").val(names[0]);
-			$$(container+" input[name='38']").val(names[1]);
+			$$(B.container+" input[name='35']").val(names[0]);
+			$$(B.container+" input[name='38']").val(names[1]);
 			cls = 'off';
 		}
 	}
 	else if (v.match(Email)) {
-		if (!$$(container).find("input[name='33']").val()) {
-			$$(container+" input[name='33']").val(v);
+		if (!$$(B.container).find("input[name='33']").val()) {
+			$$(B.container+" input[name='33']").val(v);
 			cls = 'off';
 		}
 	}
 	else if (v.match(Cel)) {
-		if (!$$(container).find("input[name='26']").val()) {
+		if (!$$(B.container).find("input[name='26']").val()) {
 			var telno = v;//.replace(/[^\d]/g,'');
-			$$(container+" input[name='26']").val(telno);
+			$$(B.container+" input[name='26']").val(telno);
 			cls = 'off';
 		}
 	}
 	/*
 	else if (v.match(Website)) {
-		if ($$(container).find("input[name='41']").length==0) i = 41;
+		if ($$(B.container).find("input[name='41']").length==0) i = 41;
 		cls = 'off';
 	}
 	else if (v.match(Fax)) {
-		if ($$(container).find("input[name='34']").length==0) i = 34;
+		if ($$(B.container).find("input[name='34']").length==0) i = 34;
 		cls = 'off';
 	}
 	else if (v.match(Tel)) {
-		if ($$(container).find("input[name='24']").length==0) i = 24;
+		if ($$(B.container).find("input[name='24']").length==0) i = 24;
 		cls = 'off';
 	}
 	else if (v.match(Add)) {
-		if ($$(container).find("input[name='22']").length==0) i = 22;
+		if ($$(B.container).find("input[name='22']").length==0) i = 22;
 		cls = 'off';
 	}
 	*/
@@ -1180,7 +1183,7 @@ function add_card_li_match(container,ii,v) {
 	$$("#card_ocr_words").append('<div>'+ocr_words.join('')+'</div>');
 	
 }
-function add_card_li(container,ii,v) {
+function add_card_li(ii,v) {
 	
 	var l = '-change-', n = '', p = '', i = '';
 	
@@ -1208,9 +1211,9 @@ function add_card_li(container,ii,v) {
 	          </li>';
 	
 	          
-	$$(container).append(li);
+	$$(B.container).append(li);
 	
-	$$(container).find(".item-input input.new").on("click", function(){
+	$$(B.container).find(".item-input input.new").on("click", function(){
 		if ($$(this).val()) return false;
 		B['input_name'] = $$(this).attr("name");
 		myApp.pickerModal(".picker-ocr-words");
@@ -1218,29 +1221,31 @@ function add_card_li(container,ii,v) {
 	
 }
 
-function add_card_word_detect(container) {
+function add_card_word_detect() {
+	
 	B['words_in_container'] = [];
-	B['words_in_input_text'] = B['input_text'].split(" ");
+	B['words_in_input_text'] = B.input_text.split(" ");
 	B['card_ocr_picked_words'] = [];
-	$$(container).find(".item-input input").each(function(){
+	$$(B.container).find(".item-input input").each(function(){
 		var txt = $$(this).val();
 		var words = txt.split(" ");
 		$$.each(words, function(i, word){
-			B['words_in_container'].push(word);
+			B.words_in_container.push(word);
 		});
 		
 	});
-	$$("#card_ocr_words").find(".word").removeClass("on").removeClass("off");
+	$$("#card_ocr_words").find(".word").removeClass("on");
+	$$("#card_ocr_words").find(".word").removeClass("off");
 	$$("#card_ocr_words").find(".word").each(function(){
 		var rem = false;
-		if (B['words_in_input_text'].indexOf($$(this).text()) > -1) {
+		if (B.words_in_input_text.indexOf($$(this).text()) > -1) {
 			rem = "on";
 		}
-		else if (B['words_in_container'].indexOf($$(this).text()) > -1) {
+		else if (B.words_in_container.indexOf($$(this).text()) > -1) {
 			rem = "off";
 		}
 		if (rem) {
-			B['card_ocr_picked_words'].push($$(this).addClass(rem))
+			B.card_ocr_picked_words.push($$(this).addClass(rem))
 			$$(this).remove();
 		}
 	});
@@ -1248,68 +1253,59 @@ function add_card_word_detect(container) {
 		if ($$(this).html()=='') $$(this).remove();
 	});
 	$$("#card_ocr_words").append('<div class="picked_words"></div>');
-	$$.each(B['card_ocr_picked_words'], function(i,word){ $$("#card_ocr_words > div.picked_words").append(word); });
+	$$.each(B.card_ocr_picked_words, function(i,word){ $$("#card_ocr_words > div.picked_words").append(word); });
+	
 };
 
-function add_card_init(container) {
+function add_card_init() {
 	
-	B['container'] = container;
-	B['input_text'] = '';
-	$$(container).find(".item-input input.base, .item-input input.new").off("click");
-	$$(container).find(".item-input input.base, .item-input input.new").on("click", function(){
+	$$(B.container).find(".item-input input.base").off("click");
+	$$(B.container).find(".item-input input.base").on("click", function(){
 		$$("#card_ocr_title").text($$(this).data("label"));
-		B['input_text'] = $$(this).val();
-		$$("#card_ocr_input").val(B['input_text']);
+		B.input_text = $$(this).val();
+		$$("#card_ocr_input").val(B.input_text);
 		B['input_name'] = $$(this).attr("name");
 		myApp.pickerModal(".picker-ocr-words");
-		add_card_word_detect(container);
+		add_card_word_detect();
 	});
-	$$(container).find(".item-input input.category").off("click")
-	$$(container).find(".item-input input.category").on("click", function(){
-		category_open(container, $$(this).val())
-	});
-	
-	$$("#card_ocr_words").find(".word").off("click");
-	$$("#card_ocr_words").find(".word").on("click", function(event) {
-		if ($$(event.target).hasClass("on")) {
-			$$("#card_ocr_input").val($$("#card_ocr_input").val().replace($$(this).text(),'').replace('  ',' ').trim());
-		} else {
-			$$("#card_ocr_input").val($$("#card_ocr_input").val()+" "+$$(this).text());	
-		}
-		$$(event.target).toggleClass("on");
+	$$(B.container).find(".item-input input.category").off("click")
+	$$(B.container).find(".item-input input.category").on("click", function(){
+		category_open($$(this).val())
 	});
 	
 	if (B.card_side=='recto') {
 		
-		var html = '<div class="list-block" style="margin-bottom:0px;line-height:35px;"><input id="card_ocr_input" type="text" name="" value="'+B['input_text']+'" placeholder="Pick words or enter text..."/>Words from your card:</div>';
+		var html = '<div class="list-block" style="margin-bottom:0px;line-height:35px;"> \
+			<input id="card_ocr_input" type="text" name="" value="'+B.input_text+'" placeholder="Pick words or enter text..."/> \
+				Words from your card: \
+		</div>';
 		
 		$$("#card_ocr_words").prepend(html);
 		
-		$$("#card_ocr_input").on("change", function(){
-			//$$("#card_ocr_words").find(".word").removeClass("on");
-			add_card_word_detect();
-		});
+		$$("#card_ocr_input").on("change", add_card_word_detect);
 		
 		$$("#card_ocr_ok").on("click", function(){
-				/*
-				var txt = [];
-				$$("#card_ocr_words .word.on").each(function(){ txt.push($$(this).text()); $$(this).addClass("off") });
-				var txts = txt.join(" ") + ' ' + $$("#card_ocr_input").val();
-				$$("#card_ocr_words").find(".word").removeClass("on");
-				$$("#card_ocr_input").val('');
-				if (txts.trim()!='') 
-				*/
-				$$(container+" input[name='"+B.input_name+"']").val($$("#card_ocr_input").val());
+				$$(B.container+" input[name='"+B.input_name+"']").val($$("#card_ocr_input").val());
 		});
-	} 	
+	
+		$$("#card_ocr_words").on("click", ".word", function(event) {
+			var new_text = '';
+			if ($$(this).hasClass("on")) {
+				new_text = $$("#card_ocr_input").val().replace($$(this).text(),'').replace('  ',' ').trim();
+			} else {
+				new_text = $$("#card_ocr_input").val()+" "+$$(this).text();	
+			}
+			$$("#card_ocr_input").val(new_text.trim())
+			$$(this).toggleClass("on");
+		});
+	}
+	
 }
 
-function card_field_add(container) {
-	var ii = $$(container+" > li").length + 1;
-	card_open_picker(container,ii,0,true);
-}
-
-function card_open_picker(container,ii,i,add_new) {
+function card_field_add() {
+	var ii = $$(B.container+" > li").length + 1;
+	var i = 0;
+	var add_new = true;
 	var l = '', n = '', html = ['','','','','',''];
 	var families = ['Families','Address fields','Personal infos','Phone numbers','Business infos','Other fields'];
 	var li_tpl = '<li>' +
@@ -1325,7 +1321,7 @@ function card_open_picker(container,ii,i,add_new) {
 			    '</li>';
 			    
 	$$.each(fields, function(k,v) {
-		if ($$(container).find("input[name='"+v.id+"']").length==0) {
+		if ($$(B.container).find("input[name='"+v.id+"']").length==0) {
 			n = v.en;
 			l = n.substr(0,1).toUpperCase() + n.substr(1).toLowerCase();
 			html[v.family] += li_tpl.replace(/{{ii}}/,ii).replace(/{{i}}/,v.id).replace(/{{l}}/g,l);
@@ -1438,7 +1434,7 @@ function card_open_picker(container,ii,i,add_new) {
   			}
 		  			
   			if (add_new) {
-			 	add_card_li(container, ii,'-change-')
+			 	add_card_li(ii,'-change-')
 		  	}
 	  		if (i==999) {
 	  			myApp.prompt('What is the field\'s name?', 'Custom Field <i class="fa fa-cube"></i>', function (value) {
@@ -1446,10 +1442,10 @@ function card_open_picker(container,ii,i,add_new) {
 	  				card_custom_field_validate(ii, value);
 			   },
 			   function(){
-			   	$$(container+" li").eq($$(container+" li").length-1).remove();
+			   	$$(B.container+" li").eq($$(B.container+" li").length-1).remove();
 			   });
 	  		}  else {
-				var li = $$(container).find("li.ii_"+ii);
+				var li = $$(B.container).find("li.ii_"+ii);
 				li.find(".label").attr("data-i",i);
 				li.find(".label").text(n);
 				li.find("input").attr("name",i);
@@ -1458,14 +1454,24 @@ function card_open_picker(container,ii,i,add_new) {
 			ii++; iii++;
   		});
   		
+		$$(B.container).find(".item-input input.new").off("click");
+		$$(B.container).find(".item-input input.new").on("click", function(){
+			$$("#card_ocr_title").text($$(this).data("label"));
+			B.input_text = $$(this).val();
+			$$("#card_ocr_input").val(B.input_text);
+			B['input_name'] = $$(this).attr("name");
+			myApp.pickerModal(".picker-ocr-words");
+			add_card_word_detect();
+		});
+  		
   		myApp.closeModal(".choseModal");
   		
 		$$("#card_ocr_title").text(n0);
-		B['input_text'] = '';
-		$$("#card_ocr_input").val(B['input_text']);
+		B.input_text = '';
+		$$("#card_ocr_input").val(B.input_text);
 		B['input_name'] = i0;
   		myApp.pickerModal(".picker-ocr-words");
-  		
+  		add_card_word_detect();
   });
 }
 
