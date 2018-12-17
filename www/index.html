@@ -137,8 +137,10 @@
           </div>
           
           <div class="navbar-inner cached" data-page="card-form">
-            <div class="left"></div>
-            <div class="center sliding">Card form</div>
+				<div class="left">
+					<a href="#index" class="back"><i class="icon icon-back"></i></a>
+				</div>
+            <div class="center sliding card-info-title">Card form</div>
             <div class="right">
               <a href="#" class="link icon-only"> <i class="fa fa-edit fa-lg"></i></a>
             </div>
@@ -156,8 +158,8 @@
         
         <div class="toolbar tabbar">
 		    <div class="toolbar-inner">
-		        <a href="#" class="tab-link home-open">
-		            <i class="fa fa-home fa-lg"></i>
+		        <a href="#index" class="tab-link index-open">
+		            <i class="fa fa-home fa-2x"></i>
 		        </a>
 		        <a href="#" class="tab-link current-list-open">
 		            <i class="fa fa-id-card-o fa-lg"></i>
@@ -208,8 +210,6 @@
                 	                	
                 </div>
               </div>
-           
-					<!--div class="draggable2"></div-->
               
 					<div class="content-block-title no-thumb">Your card</div>
               
@@ -234,12 +234,97 @@
 				  
             </div>
                 	
-          </div>        
+          </div>
+          
+          
+          <div class="page cached" id="card-form" data-page="card-form">
+          
+            <div class="page-content">
+	        	
+					<div class="">
+						<div class="card-info-top">
+							<div class="card-info-pastille">LL</div>
+						</div>
+						<div class="card-info-txt">
+							<div class="card-info-name">Louis Lariviere</div>
+							<div class="card-info-add">1714 Ch. de la Croix<br>St-adolphe d'Howard, Qc, J0T 2B0</div>
+						</div>
+					</div>
+					
+					<div class="content-block edit hidden">
+						<div class="list-block">
+				        <ul id="card-form-list"></ul>
+						</div>
+					</div>
+					
+			      <div class="content-block edit hidden">
+			        <div class="row">
+			          <div class="col-33">
+			          	<a href="#index" class="back button button-big button-fill bg-red"><i class="fa fa-times-circle"></i> Cancel</a>
+			          </div>
+			          <div class="col-33">
+			          	<a href="#" onclick="B.container='#card-form-list';card_field_add();" class="button button-big button-fill bg-blue">
+			          		<i class="fa fa-plus-square"></i> Field
+			          	</a>
+			          </div>
+			          <div class="col-33">
+			          	<a href="#" onclick="card_record('#card-form-list')" class="button button-big button-fill bg-green">
+			          		<i class="fa fa-save"></i> Record
+			          	</a>
+			          </div>
+			        </div>
+			      </div>
+              
+					<div id="thecard" class="draggable">
+						<div class="content"></div>
+						<div class="points"><img src="img/badge_none.png" alt="points"></div>
+					</div>
+
+				  <div class="speed-dial">
+				    <a href="#" class="floating-button color-red">
+				      <i class="fa fa-share-alt fa-2x"></i>
+				      <i class="fa fa-close fa-2x"></i>
+				    </a>
+				    <div class="speed-dial-buttons">
+				      <a href="#"><i class="fa fa-envelope fa-lg"></i></a>
+				      <a href="#"><i class="fa fa-comment fa-lg"></i></a>
+				      <a href="#" onclick="qrcode_open()"><i class="fa fa-qrcode fa-lg"></i></a>
+				      <a href="#" onclick="card_offer()"><i class="fa fa-upload fa-lg"></i></a>
+				    </div>
+				  </div>
+				  
+            </div>
+                	
+          </div>
         
           
-        <div class="page cached no-tabbar" id="card-entry" data-page="card-entry">
+        <div class="page cached" id="card-entry" data-page="card-entry">
 		      		        
 	        <div class="page-content">
+	        	
+				<div class="content-block">
+					<div class="list-block">
+			        <ul id="add_card_list"></ul>
+					</div>
+				</div>
+				
+		      <div class="content-block">
+		        <div class="row">
+		          <div class="col-33">
+		          	<a href="#index" class="back button button-big button-fill bg-red"><i class="fa fa-times-circle"></i> Cancel</a>
+		          </div>
+		          <div class="col-33">
+		          	<a href="#" onclick="B.container='#add_card_list';card_field_add();" class="button button-big button-fill bg-blue">
+		          		<i class="fa fa-plus-square"></i> Field
+		          	</a>
+		          </div>
+		          <div class="col-33">
+		          	<a href="#" onclick="card_record('#add_card_list')" class="button button-big button-fill bg-green">
+		          		<i class="fa fa-save"></i> Record
+		          	</a>
+		          </div>
+		        </div>
+		      </div>
 	        
 				<div class="swiper-container">
 					<div class="swiper-pagination"></div>
@@ -248,22 +333,7 @@
 						<div class="swiper-slide"><img class="verso" src=""/></div>
 					</div>
 				</div>
-	        	
-				<div class="">
-					<div class="list-block"> 
-									
-			        <ul id="add_card_list"></ul>
-			        
-					</div>
-				</div>
-				
-		      <div class="content-block">
-		        <div class="row"><!--  onclick="card_set_field(1,0);" -->
-		          <div class="col-33"><a href="#index" class="back button button-big button-fill bg-red"><i class="fa fa-times-circle"></i> Cancel</a></div>
-		          <div class="col-33"><a href="#" onclick="B.container='#add_card_list';card_field_add();" class="button button-big button-fill bg-blue"><i class="fa fa-plus-square"></i> Field</a></div>
-		          <div class="col-33"><a href="#" onclick="card_record('#add_card_list')" class="button button-big button-fill bg-green"><i class="fa fa-save"></i> Record</a></div>
-		        </div>
-		      </div>
+		      
 	        </div>
 		        
         </div>
@@ -393,7 +463,7 @@
 	</div>
         
 	<div class="list-block list-block-search searchbar-found">
-	  <ul>
+	  <ul id="current">
 	    {{#each current}}
 	    <li class="swipeout card-item  item{{id}}" 
 	    	data-id="{{id}}" 
@@ -460,7 +530,7 @@
 	<div class="page-content">
 	              
 	<div class="list-block">
-	  <ul>
+	  <ul id="waiting">
 	    {{#each waiting}}
 	    <li class="swipeout card-item item{{id}}" 
 	    	data-id="{{id}}" 
@@ -512,10 +582,8 @@
 	  
 	</div>
 </script>  
-
-<!-- card-{{id}} -->
     
-<script id="card-form" type="text/template7">
+<script id="card-form_" type="text/template7">
 
   <div class="navbar">
 	<div class="navbar-inner" data-page="thecard">
@@ -710,6 +778,7 @@
     <script type="text/javascript" src="js/welcomescreen.js"></script>
     <script type="text/javascript" src="js/drag.min.js"></script>
     <script type="text/javascript" src="js/category.js"></script>
+    <script type="text/javascript" src="js/countries.js"></script>
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/socket.io.js"></script>
     <script type="text/javascript" src="js/bizswap.js"></script>
