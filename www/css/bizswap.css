@@ -341,12 +341,18 @@
 
 ul.hidden,
 div.hidden {
-	display: none;
+	opacity: 0;
+	height: 0;
+	transition: * 1s;
 }
 
 .list-block .item-input {
 	border-left: dashed 1px #ddd;
 	padding-left: 5px;
+}
+
+#card_ocr_words {
+	line-height: 36px;
 }
 
 #card_ocr_words div {
@@ -399,4 +405,33 @@ img.recto, img.verso {
 	width: 100%;
 	max-width: 400px;
 	
+}
+
+.card-info-top {
+	background-color: rgb(65, 141, 175);
+	position: relative;
+	width: 100%;
+	height: 100px;
+}
+.card-info-pastille {
+	width: 80px;
+	height: 80px;
+	border: 1px solid rgb(42, 91, 112);
+	color: rgb(42, 91, 112);
+	background-color: rgb(255,255,255);
+	text-align: center;
+	border-radius: 20px 50% 20px 50%;
+	position: absolute;
+	bottom: -40px;
+	left: 50%;
+	margin-left: -40px;
+	line-height: 80px;
+	font-size: 40px;
+}
+.card-info-txt {
+	padding: 50px 10px 10px 10px; 
+}
+.card-info-name {
+	font-weight: bold;
+	font-size: 20px;
 }
