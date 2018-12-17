@@ -111,9 +111,10 @@ function card_ocr_process(data) {
 	
 	// Using text detection result from vision, we add a formatted list of fields...
 	var ocrLines = data.description.split("\n");
+	
 	B.container="#add_card_list";
 	
-	if (B.card_side=='recto') { add_card_load(); }
+	if (B.card_side=='recto') { card_load(); }
 	else { $$(".card-back-camera-open").hide(); }
 	
 	for (var ii=0; ii<ocrLines.length; ii++) {
@@ -121,7 +122,7 @@ function card_ocr_process(data) {
 		if (ocrLine.length) add_card_li_match(ii, ocrLine);
 	}
 	
-	add_card_init();
+	card_init();
 	myApp.hidePreloader();
 }
 
