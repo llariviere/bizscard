@@ -90,6 +90,25 @@
 		      </div>
 				</a>
 		    </li>
+		    <li>
+		    	<a href="#" class="">
+		      <div class="item-content">
+		         <div class="item-inner">
+		            <div class="item-title"></div>
+		          </div>
+		      </div>
+				</a>
+		    </li>
+		    <li>
+		    	<a href="#" onclick="card_remove(0);" class="item-link">
+		      <div class="item-content close-panel">
+		         <div class="item-inner">
+		            <div class="item-title">Delete my card</div>
+		            <div class="item-after"> </div>
+		          </div>
+		      </div>
+				</a>
+		    </li>
 		  </ul>
 		</div>     
 
@@ -365,7 +384,7 @@
       </div>
     </div>
     <div class="picker-modal-inner">
-      <div class="content-block" style="text-align: center;width:100%;" id="card_ocr_words"></div>
+      <div class="content-block" id="card_ocr_words"></div>
     </div>
   </div>
   
@@ -405,6 +424,7 @@
 					<ul id="groups"></ul>
 				</div>
 			</div>
+			
 			<div class="accordion-item category-level2">
 				<div class="accordion-item-toggle">
 					<a href="#" class="item-content item-link">
@@ -415,7 +435,34 @@
 				</div>
 				<div class="accordion-item-content">
 					<ul id="industries">
-						<li><label class="label-radio item-content"><div class="item-inner"><div class="item-title">Please select in previous level</div></div></label></li>
+						<li>
+							<label class="label-radio item-content">
+								<div class="item-inner">
+									<div class="item-title">Please select in previous level</div>
+								</div>
+							</label>
+						</li>
+					</ul>
+				</div>
+			</div>
+			
+			<div class="accordion-item category-level3">
+				<div class="accordion-item-toggle">
+					<a href="#" class="item-content item-link">
+						<div class="item-inner">
+				         <div class="item-title">Functions</div>
+			        	</div>
+		        </a>
+				</div>
+				<div class="accordion-item-content">
+					<ul id="functions">
+						<li>
+							<label class="label-radio item-content">
+								<div class="item-inner">
+									<div class="item-title">Please select in previous level</div>
+								</div>
+							</label>
+						</li>
 					</ul>
 				</div>
 			</div>
