@@ -352,10 +352,7 @@ div.hidden {
 }
 
 #card_ocr_words {
-	line-height: 36px;
-}
-
-#card_ocr_words div {
+	width: 100%;
 	line-height: 1.4em;
 	font-size: 1.4em;
 	text-align: left;
@@ -366,7 +363,7 @@ div.hidden {
 	
 }
 
-#card_ocr_words div.picked_words .word {
+#card_ocr_words .word {
 	white-space: nowrap;
 	display: inline-block;
 	margin-bottom: 3px;
@@ -388,7 +385,7 @@ div.hidden {
 }
 
 .swiper-slide {
-  background: #fff;
+  /*background: #fff;*/
   box-sizing: border-box;
   border: 1px solid #ccc;
 }
