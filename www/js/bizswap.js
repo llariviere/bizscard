@@ -537,15 +537,18 @@ function category_load(code_name) {
 	for (var i=2; i<6; i++) { if (level<i) $$("#scian"+i).html(li_placeholder); }
 }
 
-function category_open(code_name) {
-	console.log('category_open('+code_name+')');
+function category_open(code_name,func_name) {
+	console.log('category_open('+code_name+','+func_name+')');
 	
 	B["category_code_name"] = "";
 	
 	var cname = code_name.split(": ");
 	var code = cname[0];
 	var name = cname[1];
-	var l = ['level','a','b','c','d','e'];
+	var fname = func_name.split(": ");
+	var func = fname[0];
+	
+	//var l = ['level','a','b','c','d','e'];
 	var li_tpl = '<li data-groups="{{groups}}"> \
       <label class="label-radio item-content"> \
         <input type="radio" name="{{level}}" value="{{value}}" {{checked}} > \
@@ -572,10 +575,24 @@ function category_open(code_name) {
 	}
 	$$("#industries").html(html1+html2);
 	
+	var codes = categories.functions, html3 = '', html4 = '';
+	for (var i=0; i<codes.length; i++) {
+		if (func==codes[i].code) {
+			html3 += li_tpl.replace(/{{level}}/,'functions').replace(/{{value}}/, codes[i].code).replace(/{{name}}/, codes[i].en).replace(/{{groups}}/, codes[i].functions).replace(/{{checked}}/, 'checked="checked"');
+		} else {
+			html4 += li_tpl.replace(/{{level}}/,'functions').replace(/{{value}}/, codes[i].code).replace(/{{name}}/, codes[i].en).replace(/{{groups}}/, codes[i].functions);
+		}
+		
+	}
+	html4 += '<div class="list-block inset" style="margin-bottom:0px;line-height:35px;"> \
+				<input id="func_code_input" type="text" name="" value="'+func_name+'" placeholder="Enter your title..."/> \
+			</div>';
+	$$("#functions").html(html3+html4);
+	
 	$$("#groups li").on("click", function(){
 		var group = $$(this).find("input").val();
 		$$("#industries li").hide();
-		$$("#industries li").prop("checked", false);
+		$$("#industries li").find("input").prop("checked", false);
 		$$("#industries li").each(function(){
 			if ($$(this).data('groups').indexOf(group)>-1) $$(this).show();
 		});
@@ -584,15 +601,25 @@ function category_open(code_name) {
 	
 	$$("#industries li").on("click", function(){
 		B["category_code_name"] = $$(this).find("input").val() + ': ' + $$(this).find(".item-title").text();
+		$$("#functions li").find("input").prop("checked", false);
+		$$("#functions li").show();
+		$$("#func_code_input").val('');
+		myApp.accordionOpen(".category-level3");
 	}, true);
 	
-	myApp.popup(".popup-category");
-	myApp.accordionOpen(".category-level"+(code_name ? 2 : 1));
-	
+	$$("#functions li").on("click", function(){
+		$$("#func_code_input").val($$(this).find("input").val() + ': ' + $$(this).find(".item-title").text());
+		$$("#functions li").hide();
+	}, true);
 	
 	$$("#popup-category-ok").on("click", function(){
-		$$(B.container).find(".item-input input.category").val(B["category_code_name"]);
+		$$(B.container).find(".item-input input.category").val(B.category_code_name);
+		$$(B.container).find(".item-input input.function").val($$("#func_code_input").val());
 	});
+	
+	myApp.popup(".popup-category");
+	myApp.accordionOpen(".category-level"+(func_name ? 3 :(code_name ? 2 : 1)));
+	
 }
 
 
@@ -859,10 +886,35 @@ function card_reload() {
 	socket.emit('card load', mycard["id"]);
 }
 
+function card_remove(cardid) {
+	var data = {"cardid":(cardid ? cardid : mycard.id)};
+	myApp.modal({
+		title: 'Delete card...', 
+		text: '<b>Are you sure?</b>', 
+		buttons: [
+			{ text: "Cancel", onClick: function(){
+				mainView.router.load({pageName: 'index'});
+			} },
+			{ text: "Yes I am", onClick: function(){
+				 socket.emit('card rem', data);
+				 myApp.showPreloader('Delete...');
+			    setTimeout(function () {
+			        myApp.hidePreloader();
+			    }, 10000);
+			}}
+		]
+	});
+}
+
 var socket = io('https://bizswiper.com:3333/');
 var $connected = false;
 var $online = false;
 
+socket.on('card rem', function() {
+	myApp.formDeleteData('login_form');
+	welcomescreen.open();
+	myApp.hidePreloader();
+});
 socket.on('connect_error', function() {
     $connected = false;
     console.log('$connected = '+$connected);
@@ -1212,6 +1264,16 @@ function card_load() {
 	                </div>\
 	              </div>\
 	            </div>\
+	          </li>\
+	          <li class="list-item ii_7">\
+	            <div class="item-content">\
+	              <div class="item-inner"> \
+	                <div class="item-title label" data-i="49" data-id="6">Job title</div>\
+	                <div class="item-input">\
+	                  <input type="text" name="40" value="" placeholder="your job title" class="function" data-label="Function" readonly="true" />\
+	                </div>\
+	              </div>\
+	            </div>\
 	          </li>';
 	
 	$$(B.container).html(html);
@@ -1287,9 +1349,8 @@ function add_card_li_match(ii,v) {
 	var ocr_words = v.trim().split(' ');
 	for (var i=0; i<ocr_words.length; i++) {
 		cls = '';
-		ocr_words[i] = '<span class="word '+cls+'">'+ocr_words[i].trim()+' </span>';
+		ocr_words[i] = '<span class="word '+cls+'">'+ocr_words[i].trim()+'</span>';
 	}
-	// $$("#card_ocr_words").append('<div>'+ocr_words.join('')+'</div>');
 	$$("#card_ocr_words").append(ocr_words.join(''));
 	
 }
@@ -1352,22 +1413,22 @@ function add_card_word_detect() {
 		var rem = false;
 		$$(this).removeClass("on");
 		$$(this).removeClass("off");
-		if (B.words_in_input_text.indexOf($$(this).text()) > -1) {
+		if (words_in_input_text.indexOf($$(this).text()) > -1) {
 			rem = "on";
 		}
 		else if (words_in_container.indexOf($$(this).text()) > -1) {
 			rem = "off";
 		}
 		if (rem) {
-			B.card_ocr_picked_words.push($$(this).addClass(rem))
+			card_ocr_picked_words.push($$(this).addClass(rem))
 			$$(this).remove();
 		}
 	});
 	$$("#card_ocr_words").find("div").each(function(){
-		if ($$(this).html()=='') $$(this).remove();
+		//if ($$(this).html()=='') $$(this).remove();
 	});
 	$$("#card_ocr_words").append('<div class="picked_words"></div>');
-	$$.each(B.card_ocr_picked_words, function(i,word){ $$("#card_ocr_words > div.picked_words").append(word); });
+	$$.each(card_ocr_picked_words, function(i,word){ $$("#card_ocr_words > div.picked_words").append(word); });
 	
 };
 
@@ -1384,16 +1445,16 @@ function card_init() {
 		if (B.card_side) add_card_word_detect();
 	});
 	$$(B.container).find(".item-input input.category").off("click")
-	$$(B.container).find(".item-input input.category").on("click", function(){
-		category_open($$(this).val())
+	$$(B.container).find(".item-input input.category, .item-input input.function").on("click", function(){
+		category_open($$(B.container).find(".item-input input.category").val(), $$(B.container).find(".item-input input.function").val());
 	});
 	
 	if (B.card_side!='verso') {
 		
 		if (B.card_side) {
-			var html = '<div class="list-block" style="margin-bottom:0px;line-height:35px;"> \
+			var html = '<div class="list-block" style="margin:0px;line-height:35px;"> \
 				<input id="card_ocr_input" type="text" name="" value="'+B.input_text+'" placeholder="Pick words or enter text..."/> \
-					Words from your card: \
+					Words from the card: \
 			</div>';
 		} else {
 			var html = '<div class="list-block" style="margin-bottom:0px;line-height:35px;"> \
