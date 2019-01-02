@@ -40,7 +40,7 @@ function card_offer_cancel(id) {
 
 function card_offer_complete(id) {
 	var p = geoLocation(function(p){
-		console.log({"cardid":mycard.id, "id":id ,"lat":p.latitude, "lng":p.longitude, "alt":p.altitude})
+		console.log({"cardid":B.cards.mycard.id, "id":id ,"lat":p.latitude, "lng":p.longitude, "alt":p.altitude})
 		socket.emit('card offer', {"cardid":B.cards.mycard.id, "id":id ,"lat":p.latitude, "lng":p.longitude, "alt":p.altitude});
 	});
 }
