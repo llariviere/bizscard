@@ -52,7 +52,7 @@
 		      </a>
 		    </li>
 		    <li>
-		    	<a href="#" onclick="card_form_open(mycard);" class="item-link my-card-open">
+		    	<a href="#" onclick="B.container='#card-form-list';card_form_open('mycard',false);" class="item-link my-card-open">
 		      <div class="item-content close-panel">
 		         <div class="item-inner">
 		            <div class="item-title">My profile</div>
@@ -100,6 +100,16 @@
 				</a>
 		    </li>
 		    <li>
+		    	<a href="#" onClick="" class="item-link initial-setup">
+		      <div class="item-content close-panel">
+		         <div class="item-inner">
+		            <div class="item-title">Setup</div>
+		            <div class="item-after"> </div>
+		          </div>
+		      </div>
+				</a>
+		    </li>
+		    <li>
 		    	<a href="#" onclick="card_remove(0);" class="item-link">
 		      <div class="item-content close-panel">
 		         <div class="item-inner">
@@ -114,7 +124,32 @@
 
     </div>
 
-      
+    <div class="login-screen modal-in" style="background-color: rgb(65, 141, 175);">
+    	<div class="content-block" style="text-align:center;padding:50px;">
+    		<img src="img/title.png" style="width:100%;max-width:519px;" alt="Bizswiper">
+    	</div>
+    	<form id="login_form" autocomplete="off" onsubmit="card_login($$('#email').val());return false;"> 
+        <div class="list-block" style="font-size:20px;">
+          <ul style="background: transparent;">
+            <li class="item-content">
+              <div class="item-inner">
+                <div class="item-title label" style="text-align:right;width:80px;color:#ffffff;">Email:&nbsp;</div>
+                <div class="item-input">
+                  <input type="email" id="email" style="font-size:20px;color:white;" placeholder="Email" autocomplete="off">
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="list-block" style="">
+          <ul style="background: transparent;">
+            <li>
+              <input type="submit" class="item-link list-button color-white" style="background: transparent;border:0;font-size:20px;width:100%;" value="Enter"/>
+            </li>
+          </ul>
+        </div>
+      </form>
+    </div>
     
     <div class="views">
     
@@ -141,7 +176,7 @@
             <div class="left"></div>
 	        	<div class="center sliding">Fill in card fields</div>
             <div class="right">
-              <a href="#" class="link card-back-camera-open"> Verso</a>
+              <a href="#" class="link card-back-camera-open">Verso <i class="fa fa-camera"></i></a>
             </div>
 	      </div>
           
@@ -161,7 +196,7 @@
 				</div>
             <div class="center sliding card-info-title">Card form</div>
             <div class="right">
-              <a href="#" class="link icon-only"> <i class="fa fa-edit fa-lg"></i></a>
+              <a href="#" class="link icon-only"> <i id="card-form-edit" class="fa fa-edit fa-lg"></i></a>
             </div>
           </div>
           
@@ -170,6 +205,10 @@
             <div class="right">
               <a href="#" class="link" id="fields_page_close">Close</a>
             </div>
+          </div>
+          
+          <div class="navbar-inner cached" data-page="initial-setup">
+            <div class="center sliding">Initial setup</div>
           </div>
           
         </div>
@@ -197,13 +236,14 @@
         
         <div class="pages navbar-through toolbar-through">
         
-          <div data-page="index" class="page">
+          <div class="page" data-page="index">
           
             <div class="page-content">
             
               <div class="content-block-title no-thumb">Your ranking</div>
               
               <div class="content-block no-thumb">
+              
                 <div class="content-block-inner inset">
                 
 						 <div class="pieID pie"></div>
@@ -255,7 +295,6 @@
                 	
           </div>
           
-          
           <div class="page cached" id="card-form" data-page="card-form">
           
             <div class="page-content">
@@ -270,10 +309,8 @@
 						</div>
 					</div>
 					
-					<div class="content-block edit hidden">
-						<div class="list-block">
-				        <ul id="card-form-list"></ul>
-						</div>
+					<div class="list-block edit hidden">
+			        <ul id="card-form-list"></ul>
 					</div>
 					
 			      <div class="content-block edit hidden">
@@ -287,7 +324,7 @@
 			          	</a>
 			          </div>
 			          <div class="col-33">
-			          	<a href="#" onclick="card_record('#card-form-list')" class="button button-big button-fill bg-green">
+			          	<a href="#" onclick="card_record()" class="button button-big button-fill bg-green">
 			          		<i class="fa fa-save"></i> Record
 			          	</a>
 			          </div>
@@ -321,10 +358,8 @@
 		      		        
 	        <div class="page-content">
 	        	
-				<div class="content-block">
-					<div class="list-block">
-			        <ul id="add_card_list"></ul>
-					</div>
+				<div class="list-block">
+		        <ul id="add_card_list"></ul>
 				</div>
 				
 		      <div class="content-block">
@@ -346,11 +381,11 @@
 		      </div>
 	        
 				<div class="swiper-container">
-					<div class="swiper-pagination"></div>
 					<div class="swiper-wrapper">
 						<div class="swiper-slide"><img class="recto" src=""/></div>
 						<div class="swiper-slide"><img class="verso" src=""/></div>
 					</div>
+					<div class="swiper-pagination"></div>
 				</div>
 		      
 	        </div>
@@ -363,6 +398,74 @@
 						<ul id="fields_page_ul"></ul>
 					</div>
 				</div>
+			</div>
+			
+			<div data-page="initial-setup" id="setup_page" class="page cached no-tabbar">
+	        
+				<div class="swiper-container-setup swiper-init" style="height:100%">
+					<div class="swiper-wrapper">
+						<div class="swiper-slide swiper-no-swiping">
+							<div class="card-info-top">
+								<div class="card-info-pastille a">1</div>
+							</div>
+							<div class="card-info-txt" id="setup-1">
+								<div class="card-info-name">Your Firstname</div>
+								<div class="card-info-input"><input type="text" name="35" value=""/></div>
+								<div class="card-info-name">Your Lastname</div>
+								<div class="card-info-input"><input type="text" name="38" value=""/></div>
+								<div class="card-info-name">Your Title</div>
+								<div class="card-info-input"><input type="text" name="40" value=""/></div>
+								<div class="card-info-button hidden" onClick="B.swiper.slideNext()">
+									<a href="#" class="button button-big button-fill color-blue">
+										Next step <i class="fa fa-step-forward"></i>
+									</a>
+								</div>
+							</div>
+						</div>
+						<div class="swiper-slide swiper-no-swiping">
+							<div class="card-info-top">
+								<div class="card-info-pastille b">2</div>
+							</div>
+							<div class="card-info-txt" id="setup-2">
+								<div class="card-info-name">Cell phone</div>
+								<div class="card-info-input"><input type="tel" name="26" class="tel" value="" placeholder="999 999 9999"/></div>
+								<div class="card-info-button reveal hidden" onClick="card_sms_validate();">
+									<a href="#" class="button button-big button-fill color-blue">
+										Send SMS to validate <i class="fa fa-comment"></i>
+									</a>
+								</div>
+								<div class="card-info-name reveal hidden" style="text-align:center;">OR</div>
+								<div class="card-info-button reveal hidden" onClick="B.swiper.slideNext()">
+									<a href="#" class="button button-big button-fill color-blue">
+										Next step <i class="fa fa-step-forward"></i>
+									</a>
+								</div>
+							</div>
+						</div>
+						<div class="swiper-slide swiper-no-swiping">
+							<div class="card-info-top">
+								<div class="card-info-pastille c">3</div>
+							</div>
+							<div class="card-info-txt" id="setup-3">
+								<div class="card-info-name">Your Company Name</div>
+								<div class="card-info-input"><input type="text" name="29" class="" value=""/></div>
+								<div class="card-info-name">Your Company Category</div>
+								<div class="card-info-input"><input type="text" name="49" class="catg" value=""/></div>
+								<div class="card-info-name">Your Job Function</div>
+								<div class="card-info-input"><input type="text" name="23" class="func" value=""/></div>
+								<div class="card-info-button">
+									<a href="#" class="button button-big button-fill color-blue">
+										Finnish <i class="fa fa-flag-checkered"></i>
+									</a>
+								</div>
+							</div>
+						</div>
+						<div class="swiper-pagination"></div>
+						
+					</div>
+					
+				</div>
+				
 			</div>
 			
       </div>
@@ -403,16 +506,16 @@
   </div>
   
   <div class="popup popup-category">
-    <div class="navbar">
-      <div class="navbar-inner">
-        <div class="left"><a href="#" class="close-popup">Cancel</a></div>
-        <div class="center"></div>
-        <div class="right"><a href="#" class="close-popup" id="popup-category-ok">Ok</a></div>
+      <div class="navbar">
+	      <div class="navbar-inner">
+	        <div class="left"><a href="#" class="close-popup">Cancel</a></div>
+	        <div class="center"></div>
+	        <div class="right"><a href="#" class="close-popup" id="popup-category-ok">Ok</a></div>
+	      </div>
       </div>
-    </div>
-   <div class="content-block">
   		<div class="list-block accordion-list">
-			<div class="accordion-item category-level1 accordion-item-expanded">
+  		
+			<div class="accordion-item category-level1">
 				<div class="accordion-item-toggle">
 					<a href="#" class="item-content item-link">
 						<div class="item-inner">
@@ -467,8 +570,29 @@
 				</div>
 			</div>
 			
+			
+			<div class="accordion-item category-level4">
+				<div class="accordion-item-toggle">
+					<a href="#" class="item-content item-link">
+						<div class="item-inner">
+				         <div class="item-title">Countries</div>
+			        	</div>
+		        </a>
+				</div>
+				<div class="accordion-item-content">
+					<ul id="countries">
+						<li>
+							<label class="label-radio item-content">
+								<div class="item-inner">
+									<div class="item-title">Please select in previous level</div>
+								</div>
+							</label>
+						</li>
+					</ul>
+				</div>
+			</div>
+			
 		</div>
-   </div>
   </div>
   
   <div class="popup popup-templates">
@@ -493,71 +617,53 @@
 
 	<div class="page" data-page="current-list">
 	
-    <form class="searchbar">
-        <div class="searchbar-input">
-            <input type="search" placeholder="Search">
-            <a href="#" class="searchbar-clear"></a>
-        </div>
-        <a href="#" class="searchbar-cancel">Cancel</a>
-    </form>
+	<form class="searchbar searchbar-init" data-search-list=".list-block-search" data-search-in=".item-title" data-found=".searchbar-found" data-not-found=".searchbar-not-found">
+		<div class="searchbar-input">
+			<input type="search" placeholder="Search">
+			<a href="#" class="searchbar-clear"></a>
+		</div>
+		<a href="#" class="searchbar-cancel">Cancel</a>
+	</form>
     
-    <div class="searchbar-overlay"></div>
+   <div class="searchbar-overlay"></div>
     
 	<div class="page-content">
 	
-	<div class="content-block searchbar-not-found">
-   	Nothing found
-	</div>
+		<div class="content-block searchbar-not-found">
+	   	Nothing found
+		</div>
         
-	<div class="list-block list-block-search searchbar-found">
-	  <ul id="current">
-	    {{#each current}}
-	    <li class="swipeout card-item  item{{id}}" 
-	    	data-id="{{id}}" 
-	    	data-email="{{email}}"
-	    	data-firstname="{{firstname}}"
-	    	data-lastname="{{lastname}}"
-	    	data-cellphone="{{cellphone}}"
-	    	data-company="{{company}}"
-	    	data-category="{{category}}"
-	    	data-completename="{{completename}}"
-	    	data-birthdate="{{birthdate}}"
-	    	data-gender="{{gender}}"
-	    	data-comment="{{comment}}" 
-	    	data-language="{{language}}" 
-	    	data-logo="{{logo}}" 
-	    	data-template="{{template}}" 
-	    	data-points="{{points}}" 
-	    	data-reputation="{{reputation}}" 
-	    	data-points_img="{{points_img}}" 
-	    	data-payed_date="{{payed_date}}" 
-	    	data-current=true >
-	      <div class="swipeout-content item-content">
-	         <div class="item-inner">
-	            <div class="item-title">{{firstname}} {{lastname}}</div>
-	            <div class="item-after">{{company}}</div>
-	          </div>
-	      </div>
-	      <div class="swipeout-actions-left">
-	        <a href="#" onclick="card_auth('{{id}}','delete')" class="bg-red">Delete</a>
-	      </div>
-	      <div class="swipeout-actions-right">
-	        <a href="#" onclick="" class="bg-green"><i class="fa fa-phone fa-lg"></i></a>
-	        <a href="#" onclick="" class="bg-blue"><i class="fa fa-comment fa-lg"></i></a>
-	      </div>
-	    </li>
-	    {{else}}
-	    <li>
-	      <div class="item-content">
-	         <div class="item-inner">
-	            <div class="item-title">No card yet</div>
-	            <div class="item-after"></div>
-	          </div>
-	      </div>
-	    </li>
-	    {{/each}}
-	  </ul>
-	</div>       
+		<div class="list-block list-block-search searchbar-found">
+		  <ul id="current">
+		    {{#each current}}
+		    <li class="swipeout card-item" >
+		      <div class="swipeout-content item-content">
+		         <div class="item-inner">
+		            <div class="item-title">{{firstname}} {{lastname}}</div>
+		            <div class="item-after">{{company}}</div>
+		          </div>
+		      </div>
+		      <div class="swipeout-actions-left">
+		        <a href="#" onclick="card_auth('{{id}}','delete')" class="bg-red">Delete</a>
+		      </div>
+		      <div class="swipeout-actions-right">
+		        <a href="#" onclick="" class="bg-green"><i class="fa fa-phone fa-lg"></i></a>
+		        <a href="#" onclick="" class="bg-blue"><i class="fa fa-comment fa-lg"></i></a>
+		      </div>
+		    </li>
+		    {{else}}
+		    <li>
+		      <div class="item-content">
+		         <div class="item-inner">
+		            <div class="item-title">No card yet</div>
+		            <div class="item-after"></div>
+		          </div>
+		      </div>
+		    </li>
+		    {{/each}}
+		  </ul>
+		</div>
+		
 	</div>
 	  
 	</div>
@@ -630,202 +736,10 @@
 	</div>
 </script>  
     
-<script id="card-form_" type="text/template7">
-
-  <div class="navbar">
-	<div class="navbar-inner" data-page="thecard">
-		<div class="left">
-			<a href="#index" class="back"><i class="icon icon-back"></i></a>
-		</div>
-		<div class="center "><h3>{{titre}}</h3></div>
-      <div class="right">
-        <a href="#" class="link icon-only"> <i class="fa fa-edit fa-lg thecard"></i></a>
-      </div>
-	</div>
-  </div>
-
-  <div class="pages">
-    
-	  <div class="page" data-page="thecard">
-	  
-	  <div class="page-content">	  
-	  
-	  	<form class="thecard_form " data-id="{{id}}">
-      <div class="list-block">
-
-        <ul class="thecard card-form-ul-{{id}} disabled" id="card-form-ul-{{id}}"></ul>
-        
-        <ul class="card-form-ul-acc hidden">
-		    <!--li>
-            <div class="item-content" onClick="category_open()">
-              <div class="item-inner"> 
-                <div class="item-title label">Category</div>
-                <div class="item-input">
-                  <span id="category_text">{{category_text}}</span>
-                </div>
-                <div class="item-after"><input type="hidden" name="category" id="category" value="{{category}}"/></div>
-              </div>
-            </div>
-		    </li>     
-		    
-          <li>
-            <div class="item-content">
-              <div class="item-inner"> 
-                <div class="item-title label">Gender</div>
-                <div class="item-input">
-                	<p class="buttons-row">
-                	  <input type="hidden"  name="gender" value="{{this.gender}}"/>
-						  <a href="#" data-id="m" class="button radio_btn {{#js_compare "this.gender == 'm'"}}active{{/js_compare}}">Male</a>
-						  <a href="#" data-id="f" class="button radio_btn {{#js_compare "this.gender == 'f'"}}active{{/js_compare}}">Female</a>
-						</p>
-                </div>
-              </div>
-            </div>
-          </li>
-          <li>
-            <div class="item-content">
-              <div class="item-inner"> 
-                <div class="item-title label">Language</div>
-                <div class="item-input">
-                	<p class="buttons-row">
-                	  <input type="hidden"  name="language" value="{{this.language}}"/>
-						  <a href="#" data-id="en" class="button radio_btn {{#js_compare "this.language == 'en'"}}active{{/js_compare}}">English</a>
-						  <a href="#" data-id="fr" class="button radio_btn {{#js_compare "this.language == 'fr'"}}active{{/js_compare}}">Fran&ccedil;ais</a>
-						</p>
-                </div>
-              </div>
-            </div>
-          </li>
-
-		    <li>
-            <div class="item-content" onClick="template_open($$('#template').val())">
-              <div class="item-inner"> 
-                <div class="item-title label">Templates</div>
-                <div class="item-input">
-                  <span id="template_text">{{template_text}}</span>
-                </div>
-                <div class="item-after"><input type="hidden" name="template" id="template" value="{{template}}"/></div>
-              </div>
-            </div>
-		    </li>
-		    
-          <li class="align-top">
-            <div class="item-content">
-              <div class="item-inner"> 
-                <div class="item-title label">Private<br>comment</div>
-                <div class="item-input">
-                  <textarea name="comment">{{comment}}</textarea>
-                </div>
-              </div>
-            </div>
-          </li-->
-          
-          {{#if own}}
-          <li class="align-top">
-            <div class="item-content">
-              <div class="item-inner"> 
-                <div class="item-title label">Points</div>
-                <div class="item-input">
-                  <!--input type="text" disabled value="{{points}}"/-->
-                  <input type="text" name="points" value="{{points}}"/>
-                </div>
-              </div>
-            </div>
-          </li>
-          {{/if}}
-        </ul>
-      </div>
-      
-      {{#if own}}
-      
-      <div class="content-block card-form-buttons hidden">
-        <div class="row">
-          <div class="col-33"><a href="#" onclick="card_auth('{{id}}','delete');" class="button button-big button-fill bg-red"><i class="fa fa-times-circle"></i> Delete</a></div>
-          <div class="col-33"><a href="#" onclick="card_field_add('#card-form-ul-{{id}}');" class="card_form_add_field button button-big button-fill bg-blue"><i class="fa fa-plus-square"></i> Field</a></div>
-          <div class="col-33"><a href="#" onclick="card_record('.thecard_form')" class="button button-big button-fill bg-green"><i class="fa fa-save"></i> Record</a></div>
-        </div>
-      </div>
-      
-      {{else}}
-      
-	      {{#if current}} 
-	      
-	      	{{#unless payed_date}}
-	      	
-      <div class="content-block card-form-buttons hidden">
-        <div class="row">
-          <div class="col-33"><a href="#" onclick="card_auth('{{id}}','delete')" class="button button-big button-fill bg-red"><i class="fa fa-times-circle"></i> Delete</a></div>
-          <div class="col-33"><a href="#" onclick="card_field_add('#card-form-ul-{{id}}');" class="card_form_add_field button button-big button-fill bg-blue"><i class="fa fa-plus-square"></i> Field</a></div>
-          <div class="col-33"><a href="#" onclick="card_record('.thecard_form')" class="button button-big button-fill bg-green"><i class="fa fa-save"></i> Record</a></div>
-        </div>
-      </div>
-	      	
-	      	{{/unless}}
-	      	
-	      {{else}}
-	      
-      <div class="content-block card-form-buttons hidden">
-        <div class="row">
-          <div class="col-50"><a href="#" onclick="card_auth('{{id}}','refuse')" class="button button-big button-fill bg-red">Refuse</a></div>
-          <div class="col-50"><a href="#" onclick="card_auth('{{id}}','accept')" class="button button-big button-fill bg-green">Accept</a></div>
-        </div>
-      </div>
-      
-	      {{/if}}
-      
-      {{/if}}
-      
-      {{#unless payed_date}}
-      
-      <div class="content-block card-form-buttons hidden">
-        <div class="row">
-          <div class="col-100">
-          	<a href="#" class="button button-big button-fill bg-blue"> {{#if own}}Get the complete version{{else}}Pay for {{#js_compare "this.gender == 'f'"}}her{{else}}him{{/js_compare}}{{/if}} </a>
-          </div>
-        </div>
-      </div>
-      
-      {{/unless}}
-      
-      </form>
-	  					
-     <div id="thecard" class="draggable thecard{{id}}" data-id="{{id}}">
-       <div class="content"></div>
-       <div class="points"><img src="img/badge_none.png" alt="points"></div>
-     </div>
-     
-     <!--div class="thecard-placeholder"></div-->
-	     
-   </div>
-    
-    
-  {{#if current}}
-  {{#if own}}
-  {{else}}
-  <div class="speed-dial">
-    <a href="#" class="floating-button color-red">
-      <i class="fa fa-share-alt fa-2x"></i>
-      <i class="fa fa-close fa-2x"></i>
-    </a>
-    <div class="speed-dial-buttons">
-      <a href="#"><i class="fa fa-envelope fa-lg"></i></a>
-      <a href="#"><i class="fa fa-comment fa-lg"></i></a>
-      <a href="#" onclick="qrcode_open('{{id}}')"><i class="fa fa-qrcode fa-lg"></i></a>
-      <a href="#" onclick="card_offer('{{id}}')"><i class="fa fa-upload fa-lg"></i></a>
-    </div>
-  </div>
-  {{/if}}	
-  {{/if}}	
-  </div>
-  </div>
-    </script>
-    
-    
     <script type="text/javascript" src="js/framework7.min.js"></script>
-    <script type="text/javascript" src="js/welcomescreen.js"></script>
+    <script type="text/javascript" src="js/template.js"></script>
     <script type="text/javascript" src="js/drag.min.js"></script>
     <script type="text/javascript" src="js/category.js"></script>
-    <script type="text/javascript" src="js/countries.js"></script>
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/socket.io.js"></script>
     <script type="text/javascript" src="js/bizswap.js"></script>
