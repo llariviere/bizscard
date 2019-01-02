@@ -13,139 +13,36 @@
 	swipeBackPage: false
 });
 
- var mySwiper = myApp.swiper('.swiper-container', {
-   pagination:'.swiper-pagination'
- });
-
-var B = {
-	about:'Bizswiper v0.3.2<br>2018-10',
-	container:'',
-	input_text:'',
-	card_side:'',
-	ocr_match: true
-};
-
-var welcomescreen_slides = [
-  {
-    id: 'slide0', 
-    title: 'Bizswiper',
-    picture: '<form id="login_form" autocomplete="off"> \
-              <div class="list-block" style="font-size:20px;">\
-                <ul style="background: transparent;">\
-                  <li class="item-content">\
-                    <div class="item-inner">\
-                      <div class="item-title label" style="text-align:right;">Email:&nbsp;</div>\
-                      <div class="item-input">\
-                        <input type="email" id="email" style="color:white" placeholder="Email" autocomplete="off">\
-                      </div>\
-                    </div>\
-                  </li>\
-                </ul>\
-              </div>\
-              <div class="list-block" style="font-size:20px;">\
-                <ul style="background: transparent;">\
-                  <li>\
-                    <a href="#" onclick="card_login($$(\'#email\').val(),0,0)" class="item-link list-button color-white">Enter</a>\
-                  </li>\
-                </ul>\
-              </div>\
-            </form>',
-    text: ''
-  },
-  {
-    id: 'slide1',
-    //title: 'Slide 1', // optional
-    picture: '<div class="tutorialicon">✲</div>',
-    text: ''
-  },
-  {
-    id: 'slide2',
-    //title: 'Slide 2', // optional
-    picture: '<div class="tutorialicon">♫</div>',
-    text: ''
-  },
-  {
-    id: 'slide3',
-    //title: 'NO TITLE', 
-    picture: '<div class="tutorialicon">☆</div>',
-    text: 'Thanks for reading! Enjoy this app.'
-  }
-];
-
-var welcomescreen_options = {
-  'bgcolor': 'rgb(65, 141, 175)',
-  'fontcolor': '#fff',  
-  'closeButton': false,
-  'open': false
-}
-
-var welcomescreen = myApp.welcomescreen(welcomescreen_slides, welcomescreen_options);
-
-
+var mySwiper = myApp.swiper('.swiper-container', {
+   pagination:'.swiper-pagination',
+   allowSlideNext: false
+});
 
 var $$ = Dom7;
-
-var mycard = {};
 var fields = {};
 var cards_fields = {};
-var cards = {
-	current:[],
-	waiting:[]
-};
 var fields_list = [];
 
-var cards_templates = [
-	'<div style="top:4px;left:0px;font-weight:bold;font-size:16px;">{{complete name}}{{firstname}} {{lastname}}</div>\
-	<div style="top:28px;left:0px;">{{title}}</div>\
-	<div style="top:46px;left:0px;">{{company name}}{{company}}</div>\
-	<div style="top:75px;left:120px;">{{address}}</div>\
-	<div style="top:90px;left:120px;">{{city}} {{state_prov}} {{country}} {{postal code}}</div>\
-	<div style="top:105px;left:120px;">{{website}}</div>\
-	<div style="top:120px;left:120px;">{{email}}</div>\
-	<div style="top:135px;left:120px;">{{cellphone}}</div>\
-	<div style="top:150px;left:120px;">{{fax}}</div>\
-	<div class="img" style="top:75px;left:0px;background-image:url({{logo}});">\
-		<i class="fa fa-user fa-4x" style="margin-top:20px;"></i>\
-	</div>',
-	
-	'<div style="top:4px;left:120px;font-weight:bold;font-size:16px;">{{complete name}}{{firstname}} {{lastname}}</div>\
-	<div style="top:28px;left:120px;">{{title}}</div>\
-	<div style="top:46px;left:120px;">{{company name}}{{company}}</div>\
-	<div style="top:75px;left:120px;">{{address}}</div>\
-	<div style="top:90px;left:120px;">{{city}} {{state_prov}} {{country}} {{postal code}}</div>\
-	<div style="top:105px;left:120px;">{{website}}</div>\
-	<div style="top:120px;left:120px;">{{email}}</div>\
-	<div style="top:135px;left:120px;">{{cellphone}}</div>\
-	<div style="top:150px;left:120px;">{{fax}}</div>\
-	<div class="img" style="top:0px;left:0px;background-image:url({{logo}});">\
-		<i class="fa fa-user fa-4x" style="margin-top:20px;"></i>\
-	</div>',
-	
-	'<div style="top:84px;width:50%;text-align:right;font-weight:bold;font-size:16px;">{{complete name}}{{firstname}} {{lastname}} |</div>\
-	<div style="top:88px;left:50%;width:50%;text-align:left;">&nbsp;{{title}}</div>\
-	<div style="top:104px;width:100%;text-align:center;">{{company name}}{{company}}</div>\
-	<div style="top:120px;width:100%;text-align:center;">{{address}} {{city}}</div>\
-	<div style="top:136px;width:100%;text-align:center;">{{state_prov}} {{country}} {{postal code}}</div>\
-	<div style="top:152px;width:50%;text-align:right;">{{website}} |</div>\
-	<div style="top:152px;left:50%;width:50%;text-align:left;">&nbsp;{{email}}</div>\
-	<div style="top:168px;width:50%;text-align:right;">{{cellphone}} |</div>\
-	<div style="top:168px;left:50%;width:50%;text-align:left;">&nbsp;{{fax}}</div>\
-	<div class="img" style="top:0px;width:75px;height:75px;left:50%;margin-left:-38px;background-image:url({{logo}});">\
-		<i class="fa fa-user fa-4x" style="margin-top:10px;"></i>\
-	</div>'
-];
+var B = {
+	about:'Bizswiper v0.4.0<br>2019-01',
+	container:'',
+	swiper:{},
+	input_text:'',
+	input_name:'',
+	input_type:'',
+	input_labl:'',
+	card_side:'',
+	options: {
+		ocr_match: false
+	},
+	cards: {
+		mycard: {},
+		current: [],
+		waiting: []
+	}
+};
 
-var li_tpl = '<li> \
-            <div class="item-content"> \
-              <div class="item-inner"> \
-                <div class="item-title label">{{label}}</div> \
-                <div class="item-input"> \
-                  {{input}} \
-                </div> \
-              </div> \
-            </div> \
-          </li>';
-var input_tpl = '<input type="text" name="{{name}}" placeholder="{{placeholder}}" value="{{value}}"/>';
+
 
 var templates_name = ["Standard","Classical","Centered"];
 
@@ -178,13 +75,8 @@ $$.each(cards_templates, function(i,e){
 	$$(".popup-templates > .content-block").append(HTML);
 });
 
-//var template = $$('#card-form').html();
-//var cardForm = Template7.compile($$('#card-form').html());
-
-//var template = $$('#current-list').html();
 var currentList = Template7.compile($$('#current-list').html());
 
-//var template = $$('#waiting-list').html();
 var waitingList = Template7.compile($$('#waiting-list').html());
 
 // Add view
@@ -196,36 +88,34 @@ var mainView = myApp.addView('.view-main', {
 var mySearchbar = {};
 
 $$(document).on("click", ".card-item", function(){
-	/*
-	var context = $$(this).dataset();
-	context["titre"] = context.firstname + ' ' + context.lastname;
-	card_form_open(context);
-	*/
+	
+	var list 	= $$(this).parent().attr("id");
+	var index 	= $$(this).index();
 	
 	B.container = '#card-form-list';
 	
 	B.card_side = '';
 	
-	card_form_open($$(this).parent().attr("id"), $$(this).index());
+	card_form_open(list, index);
 	
 });
+
+$$(document).on("click", ".initial-setup", card_initial_setup);
 
 $$(document).on('form:success', 'form.ajax-submit', function (e) {
 	
 	myApp.alert("Recorded!");
 	
-	if ($$("form.ajax-submit input[name='id']").val()!=mycard.id) return false;
+	if ($$("form.ajax-submit input[name='id']").val()!=B.cards.mycard.id) return false;
 	
 	$$.each($$(this).find("input, select"), function(i,e){
-		if (e.name) mycard[e.name] = e.value;
+		if (e.name) B.cards.mycard[e.name] = e.value;
 	})
 	
-	card_populate("mycard",mycard);
-	card_populate("thecard",mycard);
+	card_populate("mycard",B.cards.mycard);
+	card_populate("thecard",B.cards.mycard);
 	
 });
-
-
 
 $$(".index-open").on("click", function(){
 	
@@ -234,21 +124,42 @@ $$(".index-open").on("click", function(){
 });
 
 $$(".current-list-open").on("click", function(){
+	var list = { current:[] };
+	for(var i=0; i<B.cards.current.length; i++) {
+		list.current[i] = {};
+		$$.each(cards_fields, function(ii,cf){
+			if(cf.cid==B.cards.current[i].id) {
+				switch(cf.fid) {
+					case 35: list.current[i]['firstname']	=cf.v; break;
+					case 38: list.current[i]['lastname']	=cf.v; break;
+					case 29: list.current[i]['company']		=cf.v; break;
+				}
+			}
+		});	
+	}
 	
-	var html = currentList(cards);
+	var html = currentList(list);
 	
 	mainView.router.loadContent(html);
-	
-	mySearchbar = myApp.searchbar('.searchbar', {
-	    searchList: '.list-block-search',
-	    searchIn: '.item-title'
-	});   
 	
 });
 
 $$(".waiting-list-open").on("click", function(){
+	var list = { waiting:[] };
+	for(var i=0; i<B.cards.waiting.length; i++) {
+		list.waiting[i] = {};
+		$$.each(cards_fields, function(ii,cf){
+			if(cf.cid==B.cards.waiting[i].id) {
+				switch(cf.fid) {
+					case 35: list.waiting[i]['firstname']	=cf.v; break;
+					case 38: list.waiting[i]['lastname']	=cf.v; break;
+					case 29: list.waiting[i]['company']		=cf.v; break;
+				}
+			}
+		});	
+	}
 	
-	var html = waitingList(cards);
+	var html = waitingList(list);
 	
 	mainView.router.loadContent(html);
 	
@@ -270,7 +181,7 @@ $$(".card-back-camera-open").on("click", function(){
 });
 
 $$(".my-card-open").on("click", function(){
-	card_form_open("mycard", mycard);
+	card_form_open("mycard", false);
 });
 
 $$(document).on("click", ".radio_btn", function () {
@@ -284,33 +195,126 @@ $$(document).on("click", "li.reputation i.fa", function () {
 	card_form_star($$(this).data("star"));
 });
 
-$$(document).on("click", "i.fa-edit", function () {
-	/*	
-	$$("ul.thecard, #thecard").toggleClass("disabled");
-	$$("ul.card-form-ul-acc, div.card-form-buttons").toggleClass("hidden");
-	*/
+$$(document).on("click", "#card-form-edit", function () {
+	$$(this).toggleClass('fa-edit').toggleClass('fa-times-circle');
 	$$("#card-form > div > div").toggleClass("hidden");
 });
 
 $$(".log-off").on("click", function(){
 	myApp.formDeleteData('login_form');
-	welcomescreen.open();
+	//welcomescreen.open();
+	myApp.loginScreen();
 });
 
 $$(".card_template").on("click", function() {
 	$$(".card_template").removeClass("on");
-	welcomescreen.open();
+	//welcomescreen.open();
+	myApp.loginScreen(".login-screen.modal-in");
 	$$(this).addClass("on");
 	$$("#template_text").text($$(this).data("name"));
 	$$("#template").val($$(this).attr("id"));
 });
 
 function card_about() {
-	console.log('card_about()')
-	;
+	console.log('card_about()');
 	myApp.alert(B.about);
 }
- 
+
+function card_initial_setup() {
+	mainView.router.load({pageName: 'initial-setup'});
+	B.swiper = $$('.swiper-container-setup')[0].swiper;
+	B.swiper.slideTo(0);
+	
+	// Initializing the fields for different actions...
+	$$("#setup-1").find("input").on("keyup", function(){
+		var fullname = $$("#setup-1").find("input[name='35']").val() + $$("#setup-1").find("input[name='38']").val();
+		if (fullname.length>4) {
+			$$("#setup-1").find(".card-info-button").removeClass("hidden");
+		} else {
+			$$("#setup-1").find(".card-info-button").addClass("hidden");
+		}
+	});
+	$$("#setup-2").find("input").on("keyup", function(){
+		var Tel = /(^\d{10,12}$)/;
+		var cell = $$("#setup-2").find("input[name='26']").val().replace(/[^0-9]/g,'') 
+		if (cell.match(Tel)) {
+			$$("#setup-2").find(".reveal").removeClass("hidden");
+		} else {
+			$$("#setup-2").find(".reveal").addClass("hidden");
+		}
+	});
+	$$("#setup-3").find("input.catg").on("click, focus", function() {
+		B.container = '#setup-3';
+		category_open($$(B.container).find("input.catg").val(), 'catg');
+	});
+	$$("#setup-3").find("input.func").on("click, focus", function() {
+		B.container = '#setup-3';
+		category_open($$(B.container).find("input.func").val(), 'func');
+	});
+	$$("#setup-3").find(".card-info-button").on("click", function() {
+		var pars = {
+			id:B.cards.mycard.id,
+			owner:B.cards.mycard.id,
+			33:B.cards.mycard.email
+		};
+		$$("#setup_page").find("input").each(function(i,f){
+			pars[$$(this).attr("name")] = $$(this).val();
+			cards_fields.push({cid:pars.id, fid:$$(this).attr("name"), own:pars.id, v:$$(this).val()});
+		});
+		socket.emit('card record', pars);
+			
+		card_populate('mycard',pars)
+		
+		mainView.router.load({pageName: 'index'});
+	});
+}
+
+function card_sms_validate() {
+	console.log('card_sms_validate()');
+	
+	var cell = $$("#setup-2").find("input[name='26']").val().replace(/[^0-9]/g,'');
+	var Tel = /(^\d{10,12}$)/;
+	if (cell.match(Tel)) {
+		var data = {"cell":cell,"email":B.cards.mycard.email};
+		socket.emit('send validate sms', data);
+		
+		myApp.modal({
+			title: 'Cellphone validation', 
+			text: '<div id="validation_modal_text"><b><span id="sms_test_msg">Please enter de validation-code from the SMS</span></b> \
+						<div class="row"> \
+						  <div class="col-50"> \
+						    <input type="number" id="sms_test_code" value="" placeholder="999999" style="padding:3px;"/> \
+						  </div> \
+						  <div class="col-50" onClick="card_sms_test_code();"> \
+						    <a href="#" class="button color-blue" style="margin:10px 0;">Submit</a> \
+						  </div> \
+						</div>', 
+			buttons: [
+				{ text: "Close" }
+			]
+		});
+	
+	} else {
+		myApp.alert("This entry doesn't match a cellphone number.\nPlease correct and retry.");
+	}
+	
+}
+
+function card_sms_test_code() {
+	console.log('card_sms_test_code()');
+	
+	var sms_test_code = $$("#sms_test_code").val();
+	var Sms = /(^\d{6}$)/;
+	
+	if (sms_test_code.match(Sms)) {
+		var cell = $$("#setup-2").find("input[name='26']").val().replace(/[^0-9]/g,'');
+		var data = {"cell":cell,"email":B.cards.mycard.email,"code":sms_test_code};
+		socket.emit('send sms test code', data);
+	} else {
+		$$("#sms_test_msg").text("The code should have 6 digit.<br>Please correct and retry.");
+	}
+}
+
 function card_form_star(star) {
 	console.log('card_form_star('+star+')');
 	
@@ -323,112 +327,58 @@ function card_form_star(star) {
 	});
 }
 
-function card_form_open_(context) {
-	console.log('card_form_open_('+context+')');
+function card_form_open(list, index) {
+	console.log('card_form_open('+list+', '+index+')');
 	
-	var draggie2 = '';
-	var cardid = context.id;
-	var v = '', n = '', fieldid = '', h = '', h2 = '';
-	var h1 = '<input type="hidden" name="id" value="'+cardid+'"/>';
- 	$$.each(fields, function (ii,f) {
- 	  v = '';
-	  $$.each(cards_fields, function(iii,cf) {
-	  	 if (cf.card_id==cardid && cf.field_id==f.id) {
-	  	 	v = cf.value + '';
-	  	 	fieldid = cf.field_id;
-	  	 	return false;
-	  	 }
-	  });
-	  // We handle all "system" field...
-	  if (fieldid<22) {
-	  	 if (fieldid==1 && !context['payed_date']) { // payed_date
-	  	 	context['payed_date'] = v;
-	  	 }
-	  }
-	  else if (f.base || v!='') {
-       n = f['en'].charAt(0).toUpperCase() + f['en'].substr(1)
-       
-       // if (context.birthdate) context["birthdate"] = context.birthdate.substr(0,10);
-       
-       if (fieldid==33) {
-       	h = li_tpl.replace(/{{input}}/, v+'<input type="hidden" name="'+fieldid+'" value="'+v+'"/>').replace(/{{label}}/, n+'<i class="fa fa-lock" style="float:right"></i>');
-       }
-       else {
-       	h = input_tpl.replace(/{{name}}/, fieldid).replace(/{{placeholder}}/, 'Your '+n.toLowerCase()).replace(/{{value}}/, v);
-       	h = li_tpl.replace(/{{input}}/, h).replace(/{{label}}/, n);
-       }
-       
-       (f.base ? h1 += h : h2 += h);
-     }
-	});
-	
-	/*
-	context["template_text"] = templates_name[context.template];
-	
-	$$(".pages").find('.page.cached[data-page="thecard"]').remove();
-	$$("#thecard"+cardid).remove();
-	
-	var html = cardForm(context);
-	
-	mainView.router.loadContent(html);
-	*/
+	var card = (list=='mycard' ? B.cards[list] : B.cards[list][index]);	
+	var cardid = (list=='mycard' ? B.cards.mycard.id : card.id);
+	$$(B.container).data("id",cardid);
 	
 	mainView.router.load({pageName: 'card-form'});
 	
-	card_populate('thecard',context);
-	
-	$$(".card-form-ul-"+cardid).html(h1+h2);
-	
-	//card_form_star(context.reputation);
-	
-	
-	if (cardid != mycard.id) {	
-	
-		var h = $$('#thecard').width() / 3.5 * 2.0;
-		var t = $$('#thecard').offset().top;
-		$$('#thecard').data("top", t);
-		$$('#thecard').css({"height": h, "bottom":t+h});
-		
-		if (!draggie2) {
-			draggie2 = new Draggabilly( '#thecard', { axis:"y" });
-			draggie2.on( 'dragEnd', function( event, pointer ) {
-				if (this.position.y < (t-h)) {
-					card_offered('thecard',cardid);
-				} else {
-					card_offer_completed('thecard');
-				}
-			});
-			draggie2.on( 'staticClick', function(){ card_offer('thecard',cardid); });
-		}
-
+	if (list=='mycard') {
+		$$("#card-form > div > div").addClass("hidden");
+		$$("#card-form > div > div.edit").removeClass("hidden");
+		$$("#card-form-edit").hide();
+		var pre_ph = 'your ';
+	} else {
+		$$("#card-form > div > div").removeClass("hidden");
+		$$("#card-form > div > div.edit").addClass("hidden");
+		$$("#card-form-edit").show();
+		$$("#card-form-edit").addClass('fa-edit')
+		$$("#card-form-edit").removeClass('fa-times-circle');
+		var pre_ph = 'the ';
 	}
 	
-}
-
-function card_form_open(list, cards_index) {
-	console.log('card_form_open('+cards_index+')');
 	
-	mainView.router.load({pageName: 'card-form'});
+	var locked_base = (card.payed_date && B.cards.mycard.id!=card.id);
+	$$(B.container).html(base_tpl.replace(/{{lock}}/g, (locked_base ? 'lock' : 'unlock')).replace(/{{class}}/g, (locked_base ? 'lock' : '')));
 	
-	card_load();
+	// on batit la matrice de cles-valeurs de la carte... 
+	for (var i=0; i<cards_fields.length; i++) {
+		if (cards_fields[i].cid >cardid) break;
+		if (cards_fields[i].cid==cardid) card[cards_fields[i].fid] = cards_fields[i];
+	}
 	
-	$$("#card-form > div > div").removeClass("hidden");
-	$$("#card-form > div > div.edit").addClass("hidden");
+	var input_li = input_tpl;
 	
-	var card = cards[list][cards_index];	
-	var cardid = card.id;
-	var field_ids = {33:"email", 35:"firstname", 38:"lastname", 26:"cellphone", 29:"company", 49:"category"};
-	$$(B.container+" input[name='cardid']").val(cardid);
-	
-	$$.each(field_ids, function(i,n){
-		$$(B.container+" input[name='"+i+"']").val(card[n]);
-	})
+	for (var i=0; i<fields.length; i++) {
+		var f = fields[i];
+		if (f.base) {
+			$$(B.container+" input[name='"+f.id+"']").val((card[f.id] ? card[f.id].v : ''));
+		} else if(card[f.id]) {
+			var input = input_li.replace(/{{name}}/, f.id).replace(/{{value}}/, card[f.id].v).replace(/{{class}}/, f.format).replace(/{{label}}/, f['en']).replace(/{{placeholder}}/, pre_ph+f['en']);
+			var li = li_tpl.replace(/{{data-id}}/g, i).replace(/{{data-i}}/, f.id).replace(/{{label}}/, f['en']);
+			li = li.replace(/{{input}}/, input).replace(/{{lock}}/, (card[f.id].own==B.cards.mycard.id ? 'unlock' : 'lock'));
+	      $$(B.container).append(li);
+		}
+	}
 	
 	card_init();
 	
 	card_populate('thecard',card);
 	
-	if (cardid != mycard.id) {
+	if (cardid != B.cards.mycard.id) {
 		
 		var h = $$('#thecard').width() / 3.5 * 2.0;
 		var t = $$('#thecard').offset().top;
@@ -469,7 +419,7 @@ function qrcode_open() {
 			$$("#qr_img").attr("src", qr_src);
 		}
 		else {
-			socket.emit('card qr', {"cardid":mycard.id});
+			socket.emit('card qr', {"cardid":B.cards.mycard.id});
 		}
 	}
 	
@@ -482,73 +432,19 @@ function template_open(no) {
 	$$(".card_template").eq(no).addClass("on")
 	myApp.popup(".popup-templates");
 }
+/*
 
-function category_load(code_name) {
-	console.log('category_load('+code_name+')');
+*/
+
+function category_open(code_name,cls) {
+	console.log('category_open('+code_name+','+cls+')');
 	
-	B.category_code_name = code_name;
-	var cname = code_name.split(": ");
-	var code = cname[0];
-	var name = cname[1];
-	
-	var l = ['level','a','b','c','d','e'];
-	var li_tpl = '<li> \
-      <label class="label-radio item-content"> \
-        <input type="radio" name="{{scian}}" value="{{value}}" {{checked}} > \
-        <div class="item-inner"> \
-          <div class="item-title">{{name}}</div> \
-        </div> \
-      </label> \
-    </li>';
-   /*
-   var li_placeholder = '<li> \
-							<label class="label-radio item-content"> \
-								<div class="item-inner"> \
-									<div class="item-title">Please select in previous level</div> \
-								</div> \
-							</label> \
-						</li>';
-	*/
-	var html = '';
-	
-	var codes = categories[level];
-	
-	if (!codes) return false;
-	
-	for (var i=0; i<codes.length; i++) {
-		if (codes[i].code.substr(0,code.length)==code || level==1) {
-			var li = li_tpl.replace(/{{scian}}/,'scian'+level).replace(/{{value}}/,codes[i].code).replace(/{{name}}/,codes[i].en);
-			html += li.replace(/{{checked}}/, (code.substr(0,(level+1))==codes[i].code ? 'checked="checked"' : ''));
-		}
+	if (code_name) {
+		var cname = code_name.split(": ");
+		var code = cname[0];
+	} else {
+		var code = '';
 	}
-	
-	$$("#"+level).html(html);
-	
-	myApp.popup(".popup-category");
-	myApp.accordionOpen(".category-level"+level)
-	
-	$$("#scian"+level+" li").on("click", function(){
-		var code = $$(this).find("input").val();
-		var name = $$(this).find(".item-title").text();
-		B.category_code_name = code+': '+name;
-		if (level<6) category_load(B.category_code_name, (level+1));
-	}, true);
-	
-	for (var i=2; i<6; i++) { if (level<i) $$("#scian"+i).html(li_placeholder); }
-}
-
-function category_open(code_name,func_name) {
-	console.log('category_open('+code_name+','+func_name+')');
-	
-	B["category_code_name"] = "";
-	
-	var cname = code_name.split(": ");
-	var code = cname[0];
-	var name = cname[1];
-	var fname = func_name.split(": ");
-	var func = fname[0];
-	
-	//var l = ['level','a','b','c','d','e'];
 	var li_tpl = '<li data-groups="{{groups}}"> \
       <label class="label-radio item-content"> \
         <input type="radio" name="{{level}}" value="{{value}}" {{checked}} > \
@@ -557,94 +453,139 @@ function category_open(code_name,func_name) {
         </div> \
       </label> \
     </li>';
-	
-	var codes = categories.groups, html = '';
-	for (var i=0; i<codes.length; i++) {
-		html += li_tpl.replace(/{{level}}/, 'groups').replace(/{{value}}/, codes[i].code).replace(/{{name}}/, codes[i].en);
-	}
-	$$("#groups").html(html);
-	
-	var codes = categories.industries, html1 = '', html2 = '';
-	for (var i=0; i<codes.length; i++) {
-		if (code==codes[i].code) {
-			html1 += li_tpl.replace(/{{level}}/,'industries').replace(/{{value}}/, codes[i].code).replace(/{{name}}/, codes[i].en).replace(/{{groups}}/, codes[i].groups).replace(/{{checked}}/, 'checked="checked"');
-		} else {
-			html2 += li_tpl.replace(/{{level}}/,'industries').replace(/{{value}}/, codes[i].code).replace(/{{name}}/, codes[i].en).replace(/{{groups}}/, codes[i].groups);
-		}
+   $$(".accordion-item").hide();
+   $$("#popup-category-ok").hide();
+    
+	if (cls=='catg') {
 		
-	}
-	$$("#industries").html(html1+html2);
-	
-	var codes = categories.functions, html3 = '', html4 = '';
-	for (var i=0; i<codes.length; i++) {
-		if (func==codes[i].code) {
-			html3 += li_tpl.replace(/{{level}}/,'functions').replace(/{{value}}/, codes[i].code).replace(/{{name}}/, codes[i].en).replace(/{{groups}}/, codes[i].functions).replace(/{{checked}}/, 'checked="checked"');
-		} else {
-			html4 += li_tpl.replace(/{{level}}/,'functions').replace(/{{value}}/, codes[i].code).replace(/{{name}}/, codes[i].en).replace(/{{groups}}/, codes[i].functions);
+		B["category_code_name"] = "";
+		var codes = categories.groups, html = '';
+		for (var i=0; i<codes.length; i++) {
+			html += li_tpl.replace(/{{level}}/, 'groups').replace(/{{value}}/, codes[i].code).replace(/{{name}}/, codes[i].en);
 		}
+		$$("#groups").html(html);
 		
-	}
-	html4 += '<div class="list-block inset" style="margin-bottom:0px;line-height:35px;"> \
-				<input id="func_code_input" type="text" name="" value="'+func_name+'" placeholder="Enter your title..."/> \
-			</div>';
-	$$("#functions").html(html3+html4);
-	
-	$$("#groups li").on("click", function(){
-		var group = $$(this).find("input").val();
-		$$("#industries li").hide();
-		$$("#industries li").find("input").prop("checked", false);
-		$$("#industries li").each(function(){
-			if ($$(this).data('groups').indexOf(group)>-1) $$(this).show();
+		var codes = categories.industries, html1 = '', html2 = '';
+		for (var i=0; i<codes.length; i++) {
+			if (code==codes[i].code) {
+				html1 += li_tpl.replace(/{{level}}/,'industries').replace(/{{value}}/, codes[i].code).replace(/{{name}}/, codes[i].en).replace(/{{groups}}/, codes[i].groups).replace(/{{checked}}/, 'checked="checked"');
+			} else {
+				html2 += li_tpl.replace(/{{level}}/,'industries').replace(/{{value}}/, codes[i].code).replace(/{{name}}/, codes[i].en).replace(/{{groups}}/, codes[i].groups);
+			}
+			
+		}
+		$$("#industries").html(html1+html2);
+		$$(".category-level1,.category-level2").show()
+		
+		$$("#groups li").on("click", function(){
+			var group = $$(this).find("input").val();
+			$$("#industries li").hide();
+			$$("#industries li").find("input").prop("checked", false);
+			$$("#industries li").each(function(){
+				if ($$(this).data('groups').indexOf(group)>-1) $$(this).show();
+			});
+			myApp.accordionOpen(".category-level2");
+		}, true);
+		
+		$$("#industries li").on("click", function(){
+			B["category_code_name"] = $$(this).find("input").val() + ': ' + $$(this).find(".item-title").text();
+			$$("#popup-category-ok").show();
+		}, true);
+		
+		$$("#popup-category-ok").off("click");
+		$$("#popup-category-ok").on("click", function(){
+			$$(B.container).find("input.catg").val(B.category_code_name);
 		});
-		myApp.accordionOpen(".category-level2");
-	}, true);
 	
-	$$("#industries li").on("click", function(){
-		B["category_code_name"] = $$(this).find("input").val() + ': ' + $$(this).find(".item-title").text();
-		$$("#functions li").find("input").prop("checked", false);
-		$$("#functions li").show();
-		$$("#func_code_input").val('');
-		myApp.accordionOpen(".category-level3");
-	}, true);
+	}
 	
-	$$("#functions li").on("click", function(){
-		$$("#func_code_input").val($$(this).find("input").val() + ': ' + $$(this).find(".item-title").text());
-		$$("#functions li").hide();
-	}, true);
+	if (cls=='func') {
+		
+		B["function_code_name"] = "";
+		var codes = categories.functions, html3 = '', html4 = '';
+		for (var i=0; i<codes.length; i++) {
+			if (code==codes[i].code) {
+				html3 += li_tpl.replace(/{{level}}/,'functions').replace(/{{value}}/, codes[i].code).replace(/{{name}}/, codes[i].en).replace(/{{groups}}/, codes[i].functions).replace(/{{checked}}/, 'checked="checked"');
+			} else {
+				html4 += li_tpl.replace(/{{level}}/,'functions').replace(/{{value}}/, codes[i].code).replace(/{{name}}/, codes[i].en).replace(/{{groups}}/, codes[i].functions);
+			}
+			
+		}
+		html4 += '<div class="list-block inset" style="margin-bottom:0px;line-height:35px;"> \
+					<input id="func_code_input" type="text" name="" value="'+code_name+'" placeholder="Enter your title..."/> \
+				</div>';
+		$$("#functions").html(html3+html4);
+		$$(".category-level3").show()
+		
+		$$("#functions li").on("click", function(){
+			B.function_code_name = $$(this).find("input").val() + ': ' + $$(this).find(".item-title").text();
+			$$("#popup-category-ok").show();
+		}, true);
+		
+		$$("#popup-category-ok").off("click");
+		$$("#popup-category-ok").on("click", function(){
+			$$(B.container).find("input.func").val(B.function_code_name);
+		});
+		
+	}
 	
-	$$("#popup-category-ok").on("click", function(){
-		$$(B.container).find(".item-input input.category").val(B.category_code_name);
-		$$(B.container).find(".item-input input.function").val($$("#func_code_input").val());
-	});
+	if (cls=='ctry') {
+	
+		B["country_code_name"] = "";
+		var codes = categories.countries, html5 = '';
+		for (var i=0; i<codes.length; i++) {
+			if (code==codes[i]) {
+				html5 += li_tpl.replace(/{{level}}/,'countries').replace(/{{value}}/, codes[i]).replace(/{{name}}/, codes[i]).replace(/{{groups}}/, '').replace(/{{checked}}/, 'checked="checked"');
+			} else {
+				html5 += li_tpl.replace(/{{level}}/,'countries').replace(/{{value}}/, codes[i]).replace(/{{name}}/, codes[i]).replace(/{{groups}}/, '').replace(/{{checked}}/, '');
+			}
+			
+		}
+		$$("#countries").html(html5);
+		$$(".category-level4").show()
+		
+		$$("#countries li").on("click", function(){
+			B.countries_code_name = $$(this).find("input").val();
+			$$("#popup-category-ok").show();
+		}, true);
+		
+		$$("#popup-category-ok").off("click");
+		$$("#popup-category-ok").on("click", function(){
+			$$(B.container).find("input.ctry").val(B.countries_code_name);
+		});
+	}
 	
 	myApp.popup(".popup-category");
-	myApp.accordionOpen(".category-level"+(func_name ? 3 :(code_name ? 2 : 1)));
+	myApp.accordionOpen(".category-level"+(cls=='func'? 3 : (cls=='ctry' ? 4 : 1)));
 	
 }
 
 
-function card_record(container) {
-	console.log('card_record('+container+')');
+function card_record() {
+	console.log('card_record()');
 
 	var pars = {};
 	
-	if ($$(container).data('id')) pars['id'] = $$(container).data('id');
+	if ($$(B.container).data('id')) pars['id'] = $$(B.container).data('id');
 	
-	$$.each($$(container+" li"), function(i,li) {
-		var label = $$(li).find(".label").text();
-		var champ = $$(li).find("input").attr("name").toLowerCase();
-		var valeur = $$(li).find("input").val().replace('-change-','').trim();
-		var oblige = ($$(li).find("input").hasClass('base')); //  || $$(li).find("input").hasClass('category')
+	$$.each($$(B.container+" li"), function(i,li) {
+		var label 	= $$(li).find(".label").text();
+		var champ 	= $$(li).find("input").attr("name").toLowerCase();
+		var valeur 	= $$(li).find("input").val().replace('-change-','').trim();
+		var oblige 	= ($$(li).find("input").hasClass('base'));
+		var phone 	= ($$(li).find("input").hasClass('tel')); 
 		
 		// Skip incomplete fields name...
 		if (!champ) return true;
 		
 		// For phone-like fields we filter all except number...
-		if (['24','26','34','43','53','54'].indexOf(champ)>=0) valeur = valeur.replace(/[^0-9]/g, '');
+		if (phone) valeur = valeur.replace(/[^0-9]/g, '');
+		
+		// Add to the parameters sent to server...
 		pars[champ] = valeur;
 		
 		// Delete non-mandatory field without value...
-		if (valeur=='') {
+		if (valeur=='' && pars.id==B.cards.mycard.id) {
 			if (oblige) {
 				myApp.alert("Field '"+label+"' is mandatory!<br>Please enter a value.");
 				$$(li).find("input").focus();
@@ -660,17 +601,19 @@ function card_record(container) {
 		if (pars.id) {
 			var updated = false;
 			$$.each(cards_fields, function(i,cf){
-				if (cf.card_id==pars['id'] && cf.field_id==champ) {
-					cf.value = valeur;
+				if (cf.cid==pars['id'] && cf.fid==champ) {
+					cards_fields[i].v = valeur;
 					updated = true;
 					return false;
 				}
 			});
+			// If we add a field we are the owner...
 			if (!updated) {
 				cards_fields.push({
-					"card_id": pars.id,
-					"field_id":champ,
-					"value":valeur
+					"cid": pars.id,
+					"fid":champ,
+					"own":B.cards.mycard.id,
+					"v":valeur
 				});
 			}
 		}
@@ -685,19 +628,19 @@ function card_record(container) {
 	}
 	
 	// Always identify the owner...
-	pars['owner'] = mycard.id;
+	pars['owner'] = B.cards.mycard.id;
 	
 	// For scan entry we record the original image...
-	if (container=='#add_card_list' && scanImg[B.card_side].dataUrl!=undefined) pars[(B.card_side=='recto' ? '44' : '45')] = scanImg[B.card_side].dataUrl;
+	if (B.container=='#add_card_list' && scanImg[B.card_side].dataUrl!=undefined) pars[(B.card_side=='recto' ? '44' : '45')] = scanImg[B.card_side].dataUrl;
 	
 	// Send to sender...
 	socket.emit('card record', pars);
 	
 	// For existing card update we refresh the card template...
-	if (container!='#add_card_list') {
+	if (B.container!='#add_card_list') {
 		card_populate("thecard", pars);
 		
-		if ($$("#thecard_form input[name='id']").val()==mycard.id) {
+		if (pars['id']==B.cards.mycard.id) {
 			card_populate("mycard", pars);
 		}
 	}
@@ -707,16 +650,17 @@ function card_record(container) {
 function card_recorder(data) {
 	console.log('card_recorder('+data+')');
 	
+	/*
 	var list_field = ['company','companyname','firstname','lastname','email','id','poinst_img']
 	var pars = {};
 	$$.each($$(B.container+" > li"), function(i,li) {
 		var name = $$(li).find(".label").text().toLowerCase().replace(/\s/g,'');
 		if (list_field.indexOf(name)!==false) pars[name] = $$(li).find("input").val();
 	});
-	pars['cardid'] 	= mycard.id;
+	pars['cardid'] 	= B.cards.mycard.id;
 	pars["accepted"] 	= 1;
 	pars["id"] 			= data.id;
-	cards.current.push(pars);
+	B.cards.current.push(pars);
 	for (var i=0; i<data.cards_fields.length; i++) {
 		var cf = {
 			"cid":data.cards_fields[i].card_id,
@@ -725,19 +669,22 @@ function card_recorder(data) {
 		};
 		cards_fields.push(cf);
 	}
+	*/
+	B.cards.current.push(data.cards_fields);
+	
 	myApp.alert("New card added to your current list!");
-	$$(".badge.current-list-nbr").html(cards.current.length);
+	$$(".badge.current-list-nbr").html(B.cards.current.length);
 	mainView.router.load({pageName: 'index'});
 }
 
-function card_populate(id,data) {
-	console.log('card_populate('+id+', '+data+')');
+function card_populate(container,data) {
+	console.log('card_populate('+container+', '+data+')');
 	
 	var html2 = '<div class="card-info-name">{{firstname}} {{lastname}}</div><div class="card-info-add">{{email}}{{title}}{{address}} {{city}} {{state_prov}} {{country}} {{postal code}}</div>'
 	var initials = '--', complete_name = 'No name card';
 	var cardid = data.id;
 	var html = cards_templates[(data.template ? data.template : 0)];
-	$$.each(['firstname','lastname','title','company','company name','address','city','state_prov','postal code','country','website','email','cellphone','fax','logo'], function(i,e){
+	$$.each(['firstname', 'lastname', 'title', 'company', 'company name', 'address', 'city', 'state_prov', 'postal code', 'country', 'website', 'email', 'cellphone', 'fax', 'logo'], function(i,e){
 		var v = '';
  		$$.each(fields, function (ii,f) {
 			if(e==f.en) {
@@ -769,16 +716,63 @@ function card_populate(id,data) {
 		html2 = html2.replace(new RegExp('{{'+e+'}}', 'g'), v.replace('E: ',''));
 	});
 	
+	if (container=='mycard' && complete_name.trim()=='No name card') {
+		card_initial_setup();
+		return false;
+	}
+	
 	html = html.replace(new RegExp('{{.+}}', 'g'), '');
 	html2 = html2.replace(new RegExp('{{.+}}', 'g'), '');
 	
+	if (container=='mycard') {
+		
+		var img = card_points_img(B.cards.mycard)
+		B.cards.mycard["points_target"] = img.points_target;
+		B.cards.mycard["points_img"] 	= img.points_img;
+		B.cards.mycard["points_color"] 	= img.points_color;
+		
+		$$(".pieID.pie_text").html(B.cards.mycard.points_img +'<br>'+ Math.round(B.cards.mycard.points/B.cards.mycard.points_target*100)+"%");
+		$$(".pieID.legend span.actual").html(B.cards.mycard.points+"");
+		$$(".pieID.legend span.missing").html(B.cards.mycard.points_target-B.cards.mycard.points+"");
+		$$(".pieID.legend span.target").html(B.cards.mycard.points_target+"");
+		
+		var next_target = "Your next target:<br>Bronze";
+		switch(B.cards.mycard.points_img) {
+			case "Bronze":	next_target = "Your next target:<br>Silver"; break;
+			case "Silver": next_target = "Your next target:<br>Gold"; 	break;
+			case "Gold": 	next_target = "Your next target:<br>Diamond";break;
+			case "Diamond":
+				next_target = "You're at the TOP!"; 			
+				$$(".pieID.legend li.missing, .pieID.legend li.target").hide();
+				break;
+		}
+		$$(".pieID.legend span.next_target").html(next_target);
+		$$(".pieID.pie").addClass(B.cards.mycard.points_img.toLowerCase());
+		pie_create(".pieID.legend", ".pieID.pie");
+		
+		var h = $$("#mycard").width() / 3.5 * 2.0;
+		var t = $$("#mycard").offset().top;
+		$$("#mycard").data("top", t);
+		$$("#mycard").css({"height": h, "bottom":t+h});
+		
+		var draggie = new Draggabilly( '#mycard', { axis:"y" });
+		draggie.on( 'dragEnd', function( event, pointer ) {
+			if (this.position.y < (t-h)) {
+				card_offered('mycard',B.cards.mycard.id);
+			} else {
+				card_offer_completed('mycard');
+			}
+		});
+		draggie.on( 'staticClick', function(){ card_offer('mycard',B.cards.mycard.id); });
 	
-	if (id) {
-		$$("#"+id+" .content").html(html);
+	}	
+	
+	if (container) {
+		$$("#"+container+" .content").html(html);
 		data.points_img = (data.points_img ? data.points_img : 'none');
-		$$("#"+id+" .points > img").attr("src", "img/badge_"+ data.points_img.toLowerCase() +".png");
-		$$(".card-info-txt").html(html2);
-		$$(".card-info-pastille").text(initials);
+		$$("#"+container+" .points > img").attr("src", "img/badge_"+ data.points_img.toLowerCase() +".png");
+		$$("#card-form .card-info-txt").html(html2);
+		$$("#card-form .card-info-pastille").text(initials);
 		$$(".card-info-title").text(complete_name);
 	}
 	else {
@@ -789,10 +783,10 @@ function card_populate(id,data) {
 
 function card_auth(id,action) {
 	console.log('card_auth('+id+', '+action+')');
-
-	socket.emit('card '+action, {"cardid":mycard.id, "authid":id});
-	
+	socket.emit('card '+action, {"cardid":B.cards.mycard.id, "authid":id});
 }
+
+
 
 // section ranking...
 
@@ -846,15 +840,22 @@ function pie_create(dataElement, pieElement) {
   }
 }
 
-function card_login(email,password,create,auto_login) {
-	console.log('card_login('+email+', '+password+', '+create+', '+auto_login+')');
+// section ranking...
+
+
+
+
+function card_login(email) {
+	console.log('card_login('+email+')');
+	
+	if (!email) return false;
 	
 	// validation des champs de login...
-	if (!email) return false;
 	var regexp = /^[a-z0-9](\.?[a-z0-9_-]){0,}@[a-z0-9-]+\.([a-z]{1,6}\.)?[a-z]{2,6}$/gi;
 	if (!email.match(regexp)) {
 		myApp.alert("Your email address doesn't respect the standards. Please correct it and try again.")
-		welcomescreen.open();
+		//welcomescreen.open();
+		myApp.loginScreen();
 		$$("#email").val('');
 		$$("#email").focus();
 		return false;
@@ -864,30 +865,29 @@ function card_login(email,password,create,auto_login) {
 		"email":email
    });
    
-   var uuid = '';
-   if (typeof device === 'undefined') {
-   	uuid = 'portable_louis';
-   } else {
-   	uuid = device.uuid;
-   }
+   var uuid = window.localStorage.getItem('uuid');
+   if (uuid === null) uuid = '';
 		   
 	var login_data = {
 		"email":email,
 		"uuid":uuid
 	}
 	
-	socket.emit('card login', login_data);
+	socket.emit('card login2', login_data);
 
 }
 
 function card_reload() {
-	console.log('card_about()');
+	console.log('card_reload()');
 	
-	socket.emit('card load', mycard["id"]);
+	myApp.alert('Synchronizing your data...<br>Please wait.');
+	socket.emit('card load2', B.cards.mycard.id);
 }
 
-function card_remove(cardid) {
-	var data = {"cardid":(cardid ? cardid : mycard.id)};
+function card_remove() {
+	console.log('card_remove('+cardid+')');
+	
+	var data = {"cardid":B.cards.mycard.id, email:B.cards.mycard.email};
 	myApp.modal({
 		title: 'Delete card...', 
 		text: '<b>Are you sure?</b>', 
@@ -910,11 +910,6 @@ var socket = io('https://bizswiper.com:3333/');
 var $connected = false;
 var $online = false;
 
-socket.on('card rem', function() {
-	myApp.formDeleteData('login_form');
-	welcomescreen.open();
-	myApp.hidePreloader();
-});
 socket.on('connect_error', function() {
     $connected = false;
     console.log('$connected = '+$connected);
@@ -935,104 +930,79 @@ socket.on('card msg', function(data){
 	myApp.alert(data)
 });
 socket.on('card login', function (data) {
+	console.log('on card login : '+data.msg)
 	
 	switch(data.msg) {
 		case "card not found":
 			myApp.formDeleteData('login_form');
-			myApp.alert("It's the first time you use this email from this device.<b>We sent a message to confirm ownership so please open it to have access.");
-			welcomescreen.open();
+			myApp.alert("It's the first time we see this email used from this device. <b>We sent a message to this address</b> to confirm ownership so please open it and follow the instructions to gain access.");
+			//welcomescreen.open();
+			myApp.loginScreen();
 			$$("#email").focus();
 			break;
 		case "card not confirmed":
 			myApp.formDeleteData('login_form');
 			myApp.alert("This email is not confirmed on this device.<br>We sent a new message to confirm ownership so please open it to have access.");
-			welcomescreen.open();
+			//welcomescreen.open();
+			myApp.loginScreen();
 			$$("#email").focus();
 			break;
 		case "card login try count":
 			myApp.formDeleteData('login_form');
 			myApp.alert("This email is not confirmed on this device and you exceeded the number of try without confirming.");
-			welcomescreen.open();
+			//welcomescreen.open();
+			myApp.loginScreen();
 			$$("#email").html('');
 			$$("#email").focus();
 			break;
 		case "card logged in":
-			socket.emit('card load', data.id);
-		   welcomescreen.close();
+			socket.emit('card load2', data.id);
+		   //welcomescreen.close();
+		   myApp.closeModal(".login-screen.modal-in");
 		   myApp.alert('Synchronizing your data...<br>Please wait.');
 		   geoPermission();
+			break;
+		case "card set uuid":
+			window.localStorage.setItem('uuid',data.uuid);
+			break;
 	}
 	
 });
 
+socket.on('card rem', function() {
+	myApp.formDeleteData('login_form');
+	//welcomescreen.open();
+	myApp.loginScreen(".login-screen.modal-in");
+	myApp.hidePreloader();
+});
 
 socket.on('card load', function (data) {
 	
 	if (data.fields) fields = data.fields;
 	if (data.cards_fields2) cards_fields = data.cards_fields2;
 	
-	mycard["id"] = data.id;
-	mycard["points"] = parseInt(data.points);
-	mycard["points_target"] = data.points_target;
-	mycard["points_img"] = data.points_img;
-	mycard["points_color"] = data.points_color;
-	mycard["gender"] = data.gender;
-	mycard["language"] = data.language;
-	mycard["titre"] = "My profile";
-	mycard["current"] = "0";
-	mycard["own"] = "1";
-	
-	$$(".pieID.pie_text").html(mycard.points_img +'<br>'+ Math.round(mycard.points/mycard.points_target*100)+"%");
-	$$(".pieID.legend span.actual").html(mycard.points+"");
-	$$(".pieID.legend span.missing").html(mycard.points_target-mycard.points+"");
-	$$(".pieID.legend span.target").html(mycard.points_target+"");
-	
-	var next_target = "Your next target:<br>Bronze";
-	switch(mycard.points_img) {
-		case "Bronze":	next_target = "Your next target:<br>Silver"; break;
-		case "Silver": next_target = "Your next target:<br>Gold"; 	break;
-		case "Gold": 	next_target = "Your next target:<br>Diamond";break;
-		case "Diamond":
-			next_target = "You're at the TOP!"; 			
-			$$(".pieID.legend li.missing, .pieID.legend li.target").hide();
-			break;
+	B.cards = {
+		mycard: {},
+		current: [],
+		waiting: []
 	}
-	$$(".pieID.legend span.next_target").html(next_target);
-	$$(".pieID.pie").addClass(mycard.points_img.toLowerCase());
-	pie_create(".pieID.legend", ".pieID.pie");
 	
-	card_populate('mycard',mycard);
+	B.cards.mycard = data.mycard;
 	
-	
-	
-	var h = $$("#mycard").width() / 3.5 * 2.0;
-	var t = $$("#mycard").offset().top;
-	$$("#mycard").data("top", t);
-	$$("#mycard").css({"height": h, "bottom":t+h});
-	
-	var draggie = new Draggabilly( '#mycard', { axis:"y" });
-	draggie.on( 'dragEnd', function( event, pointer ) {
-		if (this.position.y < (t-h)) {
-			card_offered('mycard',mycard.id);
+	for(var i=0; i<data.cards.length; i++) {
+		if (data.cards[i].accepted) {
+			B.cards.current.push(data.cards[i]);
 		} else {
-			card_offer_completed('mycard');
+			B.cards.waiting.push(data.cards[i]);
 		}
-	});
-	draggie.on( 'staticClick', function(){ card_offer('mycard',mycard.id); });
-	
-	if (data.cards) {
-		cards = data.cards;
-		if (cards.current) $$(".badge.current-list-nbr").html(cards.current.length);
-		if (cards.waiting) $$(".badge.waiting-list-nbr").html(cards.waiting.length);
 	}
+	if (B.cards.current) $$(".badge.current-list-nbr").html(B.cards.current.length);
+	if (B.cards.waiting) $$(".badge.waiting-list-nbr").html(B.cards.waiting.length);
 	
-	/*
-	if (!data.firstname || !data.lastname || !data.cellphone) {
-		card_form_open(mycard);
-		myApp.alert("Your card is not complete<br>Please enter something in the mandatory fields.");
-	}
-	*/
+	card_populate('mycard',B.cards.mycard);
+	
 	myApp.hidePreloader();
+	myApp.closeModal();
 	
 }); // socket on load
 				
@@ -1043,7 +1013,7 @@ socket.on('card record', function (data) {
 			myApp.alert("Card updated!");
 			break;
 		case "EMAIL_EXIST":
-			if (data.id==mycard.id) {
+			if (data.id==B.cards.mycard.id) {
 				myApp.alert("<b>This email address is exactly like your's!</b><br>Please change it and try again.");
 			} else if (data.accepted) {
 				myApp.alert("<b>This email address is already in your current cards!</b>");
@@ -1072,7 +1042,7 @@ socket.on('card record', function (data) {
 							$$(B.container+" input[type='email']").focus();
 						} },
 						{ text: "Yes, add it", onClick: function(){
-							data["cardid"] = mycard.id;
+							data["cardid"] = B.cards.mycard.id;
 							socket.emit("card add",data);
 							mainView.router.load({pageName: 'index'});
 						}}
@@ -1101,7 +1071,7 @@ socket.on('card add', function(data){
 		if (list_field.indexOf(name)!==false) pars[name] = data.cards_fields[i].value;
 		cards_fields.push(data.cards_fields[i]);
 	}
-	pars['cardid'] = mycard.id;
+	pars['cardid'] = B.cards.mycard.id;
 	pars["accepted"] = data.card.accepted;
 	pars["id"] = data.card.id;
 	if (data.card.accepted==null) {
@@ -1201,84 +1171,14 @@ socket.on('custom field', function(data){
 	li.find("input").attr("name",data.id);
 	myApp.closeModal(".choseModal");
 });
-
-function card_load() {
-	console.log('card_load()'); 
-
-	var html = '<input type="hidden" name="cardid" value="" />\
-				<li class="list-item ii_1">\
-	            <div class="item-content">\
-	              <div class="item-inner"> \
-	                <div class="item-title label" data-i="33" data-id="1">Email</div>\
-	                <div class="item-input">\
-	                  <input type="email" name="33" value="" placeholder="your email" class="base" data-label="Email" readonly="true" />\
-	                </div>\
-	              </div>\
-	            </div>\
-	          <li class="list-item ii_2">\
-	            <div class="item-content">\
-	              <div class="item-inner"> \
-	                <div class="item-title label" data-i="35" data-id="2">Firstname</div>\
-	                <div class="item-input">\
-	                  <input type="text" name="35" value="" placeholder="your firstname" class="base" data-label="Firstname" readonly="true" />\
-	                </div>\
-	              </div>\
-	            </div>\
-	          </li>\
-	          <li class="list-item ii_3">\
-	            <div class="item-content">\
-	              <div class="item-inner"> \
-	                <div class="item-title label" data-i="38" data-id="3">Lastname</div>\
-	                <div class="item-input">\
-	                  <input type="text" name="38" value="" placeholder="your lastname" class="base" data-label="Lastname" readonly="true" />\
-	                </div>\
-	              </div>\
-	            </div>\
-	          </li>\
-	          <li class="list-item ii_4">\
-	            <div class="item-content">\
-	              <div class="item-inner"> \
-	                <div class="item-title label" data-i="26" data-id="4">Cellphone</div>\
-	                <div class="item-input">\
-	                  <input type="tel" name="26" value="" placeholder="your cellphone" class="base" data-label="Cellphone" readonly="true" />\
-	                </div>\
-	              </div>\
-	            </div>\
-	          </li>\
-	          <li class="list-item ii_5">\
-	            <div class="item-content">\
-	              <div class="item-inner"> \
-	                <div class="item-title label" data-i="29" data-id="5">Company</div>\
-	                <div class="item-input">\
-	                  <input type="text" name="29" value="" placeholder="your company name" class="base" data-label="Company" readonly="true" />\
-	                </div>\
-	              </div>\
-	            </div>\
-	          </li>\
-	          <li class="list-item ii_6">\
-	            <div class="item-content">\
-	              <div class="item-inner"> \
-	                <div class="item-title label" data-i="49" data-id="6">Category</div>\
-	                <div class="item-input">\
-	                  <input type="text" name="49" value="" placeholder="your company category" class="category" data-label="Category" readonly="true" />\
-	                </div>\
-	              </div>\
-	            </div>\
-	          </li>\
-	          <li class="list-item ii_7">\
-	            <div class="item-content">\
-	              <div class="item-inner"> \
-	                <div class="item-title label" data-i="49" data-id="6">Job title</div>\
-	                <div class="item-input">\
-	                  <input type="text" name="40" value="" placeholder="your job title" class="function" data-label="Function" readonly="true" />\
-	                </div>\
-	              </div>\
-	            </div>\
-	          </li>';
-	
-	$$(B.container).html(html);
-
-}
+socket.on('sms test result', function(data){
+	switch(data.act) {
+		case "good":
+		case "not": $$("#validation_modal_text").html(data.msg); break;
+		case "bad": $$("#sms_test_msg").text(data.msg); $$("#sms_test_code").val(''); break;
+	}
+});
+ 
 
 function add_card_li_match(ii,v) {
 	console.log('add_card_li_match('+ii+', '+v+')');
@@ -1326,7 +1226,6 @@ function add_card_li_match(ii,v) {
 				cls = 'off';
 			}
 		}
-		/*
 		else if (v.match(Website)) {
 			if ($$(B.container).find("input[name='41']").length==0) i = 41;
 			cls = 'off';
@@ -1343,9 +1242,10 @@ function add_card_li_match(ii,v) {
 			if ($$(B.container).find("input[name='22']").length==0) i = 22;
 			cls = 'off';
 		}
-		*/
+		
 	}
 	
+	v = v.replace(/(\()/g,' (').replace(/(\s\s)/g,' ');
 	var ocr_words = v.trim().split(' ');
 	for (var i=0; i<ocr_words.length; i++) {
 		cls = '';
@@ -1355,14 +1255,14 @@ function add_card_li_match(ii,v) {
 	
 }
 
-function add_card_li(ii,v) {
-	console.log('add_card_li()');
+function add_card_li(ii,v,n,i) {
+	console.log('add_card_li('+ii+','+v+','+n+','+i+')');
 	
-	var l = '-change-', n = '', p = '', i = '';
+	var l = '-change-', p = '';
 	
-	$$.each(fields, function(i,kv) {
-		if (i==kv.id) {
-			n = kv["en"];
+	$$.each(fields, function(iii,f) {
+		if (i==f.id) {
+			n = f["en"];
 			l = n.substr(0,1).toUpperCase() + n.substr(1).toLowerCase();
 			return false;
 		}
@@ -1372,26 +1272,26 @@ function add_card_li(ii,v) {
 		p = v; v = '';
 	}
 	
-	var li = '<li class="list-item ii_'+ii+'">\
-	            <div class="item-content">\
-	              <div class="item-inner"> \
-	                <div class="item-title label" data-i="'+i+'" data-id="'+ii+'">'+l+'</div>\
-	                <div class="item-input">\
-	                  <input type="text" name="'+i+'" value="'+v+'" placeholder="'+p+'" data-label="'+l+'" class="new" readonly="true" />\
-	                </div>\
-	              </div>\
-	            </div>\
-	          </li>';
-	
+	var input = input_tpl.replace(/{{name}}/, i).replace(/{{value}}/, v).replace(/{{class}}/, 'new').replace(/{{label}}/, l).replace(/{{placeholder}}/, p).replace(/{{readonly}}/, 'false');
+	var li = li_tpl.replace(/{{data-i}}/, i).replace(/{{data-id}}/g, ii).replace(/{{label}}/, l).replace(/{{lock}}/, 'unlock').replace(/{{input}}/, input);
 	          
 	$$(B.container).append(li);
 	
-	$$(B.container).find(".item-input input.new").on("click", function(){
-		if ($$(this).val()) return false;
-		B['input_name'] = $$(this).attr("name");
-		myApp.pickerModal(".picker-ocr-words");
-	});
+	if (B.container=="#card-form-list") {
+		
+		$$(B.container).find(".item-input input.new").off("click")
+		$$(B.container).find(".item-input input.new").filter(is_locked).on("click", card_input_modal);
+		$$(B.container).find(".item-input input.new").eq(0).trigger("click");
 	
+	} else {
+	
+		$$(B.container).find(".item-input input.new").on("click", function(){
+			if ($$(this).val()) return false;
+			B['input_name'] = $$(this).attr("name");
+			myApp.pickerModal(".picker-ocr-words");
+		});
+		
+	}
 }
 
 function add_card_word_detect() {
@@ -1432,40 +1332,51 @@ function add_card_word_detect() {
 	
 };
 
+function is_locked() {
+	return !$$(this).hasClass('lock');
+}
+
 function card_init() {
 	console.log('card_init()');
 	
-	$$(B.container).find(".item-input input.base").off("click");
-	$$(B.container).find(".item-input input.base").on("click", function(){
-		$$("#card_ocr_title").text($$(this).data("label"));
-		B.input_text = $$(this).val();
-		$$("#card_ocr_input").val(B.input_text);
-		B['input_name'] = $$(this).attr("name");
-		myApp.pickerModal(".picker-ocr-words");
-		if (B.card_side) add_card_word_detect();
-	});
-	$$(B.container).find(".item-input input.category").off("click")
-	$$(B.container).find(".item-input input.category, .item-input input.function").on("click", function(){
-		category_open($$(B.container).find(".item-input input.category").val(), $$(B.container).find(".item-input input.function").val());
+	if (B.container!="#add_card_list") {
+		
+		$$(B.container).find(".item-input input").off("click")
+		$$(B.container).find(".item-input input").filter(is_locked).on("click", card_input_modal);
+	
+	} 
+	
+	$$(B.container).find(".item-input input.catg").off("click")
+	$$(B.container).find(".item-input input.catg").filter(is_locked).on("click", function(){
+		category_open($$(B.container).find(".item-input input.catg").val(), 'catg');
 	});
 	
-	if (B.card_side!='verso') {
+	$$(B.container).find(".item-input input.func").off("click")
+	$$(B.container).find(".item-input input.func").filter(is_locked).on("click", function(){
+		category_open($$(B.container).find(".item-input input.func").val(), 'func');
+	});
+	
+	if (B.container=="#add_card_list") {
 		
-		if (B.card_side) {
+		$$(B.container).find(".item-input input.base").off("click");
+		$$(B.container).find(".item-input input.base").filter(is_locked).on("click", function(){
+			$$("#card_ocr_title").text($$(this).data("label"));
+			B.input_text = $$(this).val();
+			$$("#card_ocr_input").val(B.input_text);
+			B['input_name'] = $$(this).attr("name");
+			myApp.pickerModal(".picker-ocr-words");
+			if (B.card_side) add_card_word_detect();
+		});
+		
+		if (B.card_side=='recto') {
+			
 			var html = '<div class="list-block" style="margin:0px;line-height:35px;"> \
 				<input id="card_ocr_input" type="text" name="" value="'+B.input_text+'" placeholder="Pick words or enter text..."/> \
 					Words from the card: \
 			</div>';
-		} else {
-			var html = '<div class="list-block" style="margin-bottom:0px;line-height:35px;"> \
-				<input id="card_ocr_input" type="text" name="" value="'+B.input_text+'" placeholder="Enter text..."/> \
-			</div>';
-		}
-		
-		$$("#card_ocr_words").prepend(html);
-		
-		if (B.card_side) 
-		{
+			
+			$$("#card_ocr_words").prepend(html);
+			
 			$$("#card_ocr_input").on("change", add_card_word_detect);
 		
 			$$("#card_ocr_words").on("click", ".word", function(event) {
@@ -1478,14 +1389,84 @@ function card_init() {
 				$$("#card_ocr_input").val(new_text.trim())
 				$$(this).toggleClass("on");
 			});
+			
+			$$("#card_ocr_ok").on("click", function(){
+					$$(B.container+" input[name='"+B.input_name+"']").val($$("#card_ocr_input").val());
+			});
 		}
 		
-		$$("#card_ocr_ok").on("click", function(){
-				$$(B.container+" input[name='"+B.input_name+"']").val($$("#card_ocr_input").val());
-		});
 	}
-	
+
 }
+
+function card_input_modal() {
+	console.log('card_input_modal()');
+	
+	B.input_text = $$(this).val();
+	B.input_name = $$(this).attr("name");
+	B.input_type = $$(this).attr("class").replace('active-state','').trim();
+	B.input_labl = $$(this).data('label');
+	var aftertext = '<input type="text" value="'+B.input_text+'">';
+	var title = 'Enter value for <b>'+B.input_labl+'</b>';
+	
+	switch (B.input_type) {
+		case 'catg' : 
+		case 'func' : 
+		case 'ctry' : 
+			category_open(B.input_text, B.input_type);
+			return false;
+		case 'date' : 
+			aftertext = '<input type="hidden" id="calendar-input"><div id="calendar-inline-container"></div>';
+			title = 'Select value for <b>'+B.input_labl+'</b>';
+			break;
+		case 'img'  : break;
+		case 'mail' : break;
+		case 'www'  : break;
+		case 'zip'  : break;
+		case 'tel'  : break;
+		case 'tpl'  : break;
+		case 'en,fr': 
+			aftertext = '<select><option value="en">english</option><option '+(B.input_text=='fr' ? 'selected' : '')+' value="fr">francais</option></select>';
+			title = 'Select value for <b>'+B.input_labl+'</b>';
+			break;
+		case 'm,f'  : 
+			aftertext = '<select><option value="m">Male</option><option '+(B.input_text=='f' ? 'selected' : '')+' value="f">Femalle</option></select>';
+			title = 'Select value for <b>'+B.input_labl+'</b>';
+			break;
+	}
+
+	
+  	var myModal= myApp.modal({
+  		title:title,
+  		afterText:aftertext,
+  		buttons: [
+  			{
+  				text:'Cancel'
+  			},
+  			{
+  				text:'Ok',
+  				onClick: function () {
+  					var value = $$(myModal).find('input,select').val();
+  					if (value.replace(/\s/g,'')=='') return false;
+  					$$(B.container+" input[name='"+B.input_name+"']").val(value);
+  				}
+  			}
+  		]
+   },
+   function(){
+   	// bouton cancel...
+   });
+   
+   if (B.input_type=='date') {
+   	var calendarInline = myApp.calendar({
+		    container: '#calendar-inline-container',
+		    input:'#calendar-input',
+		    value: [B.input_text],
+		    weekHeader: false
+		});
+		$$(".modal.modal-in").css({"margin-top":"-150px", "width":"calc(100% - 10px)", "left":"5px", "margin-left":"0"})
+   }
+ }
 
 function card_field_add() {
 	console.log('card_field_add()');
@@ -1621,7 +1602,7 @@ function card_field_add() {
   			}
 		  			
   			if (add_new) {
-			 	add_card_li(ii,'-change-')
+			 	add_card_li(ii,'-change-',n,i)
 		  	}
 	  		if (i==999) {
 	  			myApp.prompt('What is the field\'s name?', 'Custom Field <i class="fa fa-cube"></i>', function (value) {
@@ -1641,24 +1622,34 @@ function card_field_add() {
 			ii++; iii++;
   		});
   		
-		$$(B.container).find(".item-input input.new").off("click");
-		$$(B.container).find(".item-input input.new").on("click", function(){
-			$$("#card_ocr_title").text($$(this).data("label"));
-			B.input_text = $$(this).val();
+  		if (B.container=="#card-form-list") {
+		
+			$$(B.container).find(".item-input input.new").off("click")
+			$$(B.container).find(".item-input input.new").filter(is_locked).on("click", card_input_modal);
+			$$(B.container).find(".item-input input.new").eq(0).trigger("click");
+	  		
+  		} else {
+  		
+			$$(B.container).find(".item-input input.new").off("click");
+			$$(B.container).find(".item-input input.new").on("click", function(){
+				$$("#card_ocr_title").text($$(this).data("label"));
+				B.input_text = $$(this).val();
+				$$("#card_ocr_input").val(B.input_text);
+				B['input_name'] = $$(this).attr("name");
+				myApp.pickerModal(".picker-ocr-words");
+				add_card_word_detect();
+			});
+  		
+			$$("#card_ocr_title").text(n0);
+			B.input_text = '';
 			$$("#card_ocr_input").val(B.input_text);
-			B['input_name'] = $$(this).attr("name");
-			myApp.pickerModal(".picker-ocr-words");
-			add_card_word_detect();
-		});
+			B['input_name'] = i0;
+	  		myApp.pickerModal(".picker-ocr-words");
+	  		add_card_word_detect();
+  		
+  		}
   		
   		myApp.closeModal(".choseModal");
-  		
-		$$("#card_ocr_title").text(n0);
-		B.input_text = '';
-		$$("#card_ocr_input").val(B.input_text);
-		B['input_name'] = i0;
-  		myApp.pickerModal(".picker-ocr-words");
-  		add_card_word_detect();
   });
 }
 
@@ -1715,9 +1706,35 @@ function card_custom_field_validate(ii, v) {
 	console.log('card_custom_field_validate('+ii+', '+v+')');
 	
 	if (v=="") return false;
-	var pars = {"owner":mycard.id,"ii":ii,"field":v}
+	var pars = {"owner":B.cards.mycard.id,"ii":ii,"field":v}
 	socket.emit('custom field', pars);
 }
+
+function card_points_img(card) {
+	var $data = {};
+	if (card.points>30000000) {
+		$data['points_img'] = 'Diamond';
+		$data['points_target'] = points;
+		$data['points_color'] = "#caf1f7";
+	} else if(card.points>3500000) {
+		$data['points_img'] = 'Gold';
+		$data['points_target'] = 30000000;
+		$data['points_color'] = "#ffeb56";
+	} else if(card.points>100000) {
+		$data['points_img'] = 'Silver';
+		$data['points_target'] = 3500000;
+		$data['points_color'] = "#ccd1f9";
+	} else if(card.payed_date) {
+		$data['points_img'] = 'Bronze';
+		$data['points_target'] = 100000;
+		$data['points_color'] = "Bronze";
+	} else {
+		$data['points_img'] = 'none';
+		$data['points_target'] = 100000;
+		$data['points_color'] = "#eeeeee";
+	}
+	return $data;
+} 
 
 function online(event) {
   $online = (event.type=='online');
@@ -1807,9 +1824,9 @@ function geoLocation(func) {
 	var storedData = myApp.formGetData('login_form');
 	
 	if (storedData) {
-		card_login(storedData.email,storedData.password,false,true);
+		card_login(storedData.email);
 	} else {
-		welcomescreen.open();
+		//welcomescreen.open();
 		$$("#email").focus();
 	}
 }(document));
