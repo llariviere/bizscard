@@ -114,8 +114,12 @@ function card_ocr_process(data) {
 	
 	B.container="#add_card_list";
 	
-	if (B.card_side=='recto') { card_load(); }
-	else { $$(".card-back-camera-open").hide(); }
+	if (B.card_side=='recto') {
+		$$(B.container).html(base_tpl.replace(/lock/g,'unlock').replace(/{{unlock}}/g,'unlock').replace(/{{class}}/g, ''));
+	}
+	else { 
+		$$(".card-back-camera-open").hide(); 
+	}
 	
 	for (var ii=0; ii<ocrLines.length; ii++) {
 		var ocrLine = ocrLines[ii].replace(/^[ ]+|[ ]+$/g,'');
