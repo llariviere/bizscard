@@ -1798,7 +1798,7 @@ function geoLocation(func) {
 		myApp.hidePreloader();
 		myApp.modal({
 	   	title: 'GeoLocation is not permitted on your device', 
-	   	text: err.code+' You have to activate GeoLocation in your app parameters for Bizswiper card exchange to work.', 
+	   	text: err.code+': '+err.message+' You have to activate GeoLocation in your app parameters for Bizswiper card exchange to work.', 
 	   	buttons: [
 				{ text: "Ok", onClick: function () {} }
 			]
