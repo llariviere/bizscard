@@ -341,9 +341,10 @@
 
 ul.hidden,
 div.hidden {
-	opacity: 0;
-	height: 0;
-	transition: * 1s;
+  visibility: hidden;
+  opacity: 0;
+  height: 0;
+  transition: visibility 0.5s, opacity 0.5s linear;
 }
 
 .list-block .item-input {
@@ -425,10 +426,49 @@ img.recto, img.verso {
 	line-height: 80px;
 	font-size: 40px;
 }
+.card-info-pastille.a {
+	border-radius: 10% 50% 50% 50%;
+}
+.card-info-pastille.b {
+	border-radius: 50% 10% 50% 50%;
+}
+.card-info-pastille.c {
+	border-radius: 50% 50% 10% 50%;
+}
 .card-info-txt {
-	padding: 50px 10px 10px 10px; 
+	padding: 50px 10px calc(100% - 160px) 10px; 
 }
 .card-info-name {
+	margin: 10px;
 	font-weight: bold;
 	font-size: 20px;
+}
+.card-info-add {
+	margin: 0 10px;
+}
+.card-info-input input {
+	font-size: 20px;
+	padding: 10px;
+	width: calc(100% - 20px);
+	border: 1px solid #aaa;
+	border-radius: 4px;
+}
+.card-info-button {
+	margin: 15px 0;
+}
+
+.modal-inner input,
+.modal-inner select {
+	width: calc(100% - 30px);
+	margin: 10px 0;
+	padding: 5px;
+	font-size: 18px;
+	border: solid 1px #aaa;
+	border-radius: 4px;
+}
+
+.item-title.label > span {
+	position: absolute;
+	right: 0px;
+   color: #ccc;
 }
