@@ -4,5 +4,13 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
     },
-    "displayName": "Bizcard"
+    "displayName": "Bizcard",
+  "dependencies": {
+    "cordova-plugin-geolocation": "^4.0.1"
+  },
+  "cordova": {
+    "plugins": {
+      "cordova-plugin-geolocation": {}
+    }
+  }
 }
