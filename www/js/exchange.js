@@ -41,7 +41,7 @@ function card_offer_cancel(id) {
 function card_offer_complete(id) {
 	var p = geoLocation(function(p){
 		console.log({"cardid":mycard.id, "id":id ,"lat":p.latitude, "lng":p.longitude, "alt":p.altitude})
-		socket.emit('card offer', {"cardid":mycard.id, "id":id ,"lat":p.latitude, "lng":p.longitude, "alt":p.altitude});
+		socket.emit('card offer', {"cardid":B.cards.mycard.id, "id":id ,"lat":p.latitude, "lng":p.longitude, "alt":p.altitude});
 	});
 }
 
@@ -72,7 +72,7 @@ socket.on('cards list', function(data){
 			var fullname = (card.firstname && card.lastname ? card.firstname+' '+card.lastname : card.email);
 			var linked = (card.accepted ? "fa-id-card-o" : (card.added ? "fa-id-card" : "fa-check-square-o"));
  				
-			if (card.card!=mycard.id) fnds.push('<tr style="border-bottom:solid 1px #bbb;" onClick="card_auth('+card.card+',\'offer auth\');myApp.closeModal()">\
+			if (card.card!=B.cards.mycard.id) fnds.push('<tr style="border-bottom:solid 1px #bbb;" onClick="card_auth('+card.card+',\'offer auth\');myApp.closeModal()">\
 <td align="left">'+fullname+'<span style="float:right">'+(30-card.delais)+'s</span></td>\
 <td align="right"><i class="fa '+linked+'"></i></td>\
 </tr>');
