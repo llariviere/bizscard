@@ -269,6 +269,83 @@ function card_initial_setup() {
 	});
 }
 
+function card_share(list, by) {
+	var id = (list=='mycard' ? B.cards.mycard.id : $$(B.container).data("id"));
+	var title = '';
+	var aftertext = '<input type="text" value="">';
+	
+	switch(by) {
+		case 'email':title='Email sharing';aftertext = 'Enter the email address:'+aftertext; break;
+		case 'texto': title='SMS sharing'; aftertext = 'Enter the cellphone number:'+aftertext; break;
+		case 'qrcode': socket.emit('card qr', {"cardid":id}); return false; break;
+		case 'direct': 
+			title='Direct sharing'; 
+			var recipients = '<select><option value="">-- choose --</option>';
+			$$.each(B.cards.current, function(i,card) {
+				if (!card.payed_date) return true;
+				var cid = card.id;
+				var rec = {"35":'', "38":''};
+				$$.each(cards_fields, function (ii,cf) {
+					if(cf.cid>cid) return false;
+					if(cf.cid==cid && (cf.fid=='35' || cf.fid=='38')) { rec[cf.fid.toString()]=cf.v; }
+				});
+				recipients += '<option value="'+card.id+'">'+rec['35']+' '+rec['38']+'</option>';
+			});
+			recipients += '</option>'
+			aftertext = 'Choose the recipient and write a short message:'+recipients+aftertext; 
+			break;
+		default: return false;
+	}
+	
+  	var myModal= myApp.modal({
+  		title:title,
+  		afterText:aftertext,
+  		buttons: [
+  			{
+  				text:'Cancel'
+  			},
+  			{
+  				text:'Send',
+  				onClick: function () {
+  					var value = $$(myModal).find('input').val().trim();
+  					switch(by) {
+  						case 'email':
+  							var email = value;
+  							var Email = /\w+@\w+/;
+  							if (value.match(Email)) {
+  								socket.emit('card share email', {"from":B.cards.mycard.id,"cardid":id,"email":email});
+  							} else {
+  								myApp.alert("The address is not valid. Send aborted");
+  							}
+  							break;
+  						case 'texto':
+  							var cell = value.replace(/[^0-9]/g,'');
+  							var Tel = /(^\d{10,12}$)/;
+  							if (value.match(Tel)) {
+  								socket.emit('card share sms', {"from":B.cards.mycard.id,"cardid":id,"cell":cell});
+  							} else {
+  								myApp.alert("The number is not valid. Send aborted");
+  							}
+  							break;
+  						case 'direct':
+  							var dest = $$(myModal).find('select').val();
+  							if (dest) {
+  								socket.emit('card share direct', {"from":B.cards.mycard.id,"cardid":id,"dest":dest,"mesg":value});
+  							} else {
+  								myApp.alert("No recipient chosen. Send aborted");
+  							}
+  							break;
+  					};
+  				}
+  			}
+  		]
+   },
+   function(){
+   	// bouton cancel...
+   });
+   
+}
+
 function card_sms_validate() {
 	console.log('card_sms_validate()');
 	
@@ -410,31 +487,11 @@ function storageAvailable() {
     }
 }
 
-function qrcode_open() {
-	console.log('qrcode_open()');
-	
-	if (storageAvailable()) {
-		if (localStorage.getItem('card_qr')) {
-			qr_src = 'data:image/png;base64,' + localStorage.getItem('card_qr');
-			$$("#qr_img").attr("src", qr_src);
-		}
-		else {
-			socket.emit('card qr', {"cardid":B.cards.mycard.id});
-		}
-	}
-	
-	myApp.pickerModal(".picker-qrcode");
-
-}
-
 function template_open(no) {
 	console.log('template_open('+no+')');
 	$$(".card_template").eq(no).addClass("on")
 	myApp.popup(".popup-templates");
 }
-/*
-
-*/
 
 function category_open(code_name,cls) {
 	console.log('category_open('+code_name+','+cls+')');
@@ -1151,11 +1208,15 @@ socket.on('card deleted', function(data){
 	}
 });
 socket.on('card qr', function(data){
-  if (data.image) {
-  	 if (storageAvailable()) localStorage.setItem('card_qr', data.buffer);
-    qr_src = 'data:image/png;base64,' + data.buffer;
-    $$("#qr_img").attr("src", qr_src);
-  }
+
+	if (data.image) {
+  	 //if (storageAvailable()) localStorage.setItem('card_qr', data.buffer);
+    //qr_src = 'data:image/png;base64,' + data.buffer;
+    //$$("#qr_img").attr("src", qr_src);
+		myApp.alert('<div class="picker-modal-inner"><div class="content-block" style="text-align: center;width:100%;"><img src="data:image/png;base64,'+data.buffer+'" align="middle" style="width:150px;" /></div></div>');
+  
+	}
+  
 });
 socket.on('card connected', function(data){
   console.log("card connected response: "+data)
@@ -1434,7 +1495,6 @@ function card_input_modal() {
 			title = 'Select value for <b>'+B.input_labl+'</b>';
 			break;
 	}
-
 	
   	var myModal= myApp.modal({
   		title:title,
@@ -1798,7 +1858,7 @@ function geoLocation(func) {
 		myApp.hidePreloader();
 		myApp.modal({
 	   	title: 'GeoLocation is not permitted on your device', 
-	   	text: err.code+': '+err.message+' You have to activate GeoLocation in your app parameters for Bizswiper card exchange to work.', 
+	   	text: err.PositionError.code+' You have to activate GeoLocation in your app parameters for Bizswiper card exchange to work.', 
 	   	buttons: [
 				{ text: "Ok", onClick: function () {} }
 			]
