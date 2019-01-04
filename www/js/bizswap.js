@@ -24,7 +24,7 @@ var cards_fields = {};
 var fields_list = [];
 
 var B = {
-	about:'Bizswiper v0.4.0<br>2019-01',
+	about:'Bizswiper v0.4.1<br>2019-01',
 	container:'',
 	swiper:{},
 	input_text:'',
@@ -33,7 +33,7 @@ var B = {
 	input_labl:'',
 	card_side:'',
 	options: {
-		ocr_match: false
+		ocr_match: true
 	},
 	cards: {
 		mycard: {},
@@ -126,7 +126,7 @@ $$(".index-open").on("click", function(){
 $$(".current-list-open").on("click", function(){
 	var list = { current:[] };
 	for(var i=0; i<B.cards.current.length; i++) {
-		list.current[i] = {};
+		list.current[i] = {"id":B.cards.current[i].id};
 		$$.each(cards_fields, function(ii,cf){
 			if(cf.cid==B.cards.current[i].id) {
 				switch(cf.fid) {
@@ -147,7 +147,7 @@ $$(".current-list-open").on("click", function(){
 $$(".waiting-list-open").on("click", function(){
 	var list = { waiting:[] };
 	for(var i=0; i<B.cards.waiting.length; i++) {
-		list.waiting[i] = {};
+		list.waiting[i] = {"id":B.cards.waiting[i].id};
 		$$.each(cards_fields, function(ii,cf){
 			if(cf.cid==B.cards.waiting[i].id) {
 				switch(cf.fid) {
@@ -197,7 +197,8 @@ $$(document).on("click", "li.reputation i.fa", function () {
 
 $$(document).on("click", "#card-form-edit", function () {
 	$$(this).toggleClass('fa-edit').toggleClass('fa-times-circle');
-	$$("#card-form > div > div").toggleClass("hidden");
+	$$("#card-form > div > div.current").toggleClass("hidden");
+	$$("#card-form > div > div.edit").toggleClass("hidden");
 });
 
 $$(".log-off").on("click", function(){
@@ -414,16 +415,30 @@ function card_form_open(list, index) {
 	mainView.router.load({pageName: 'card-form'});
 	
 	if (list=='mycard') {
-		$$("#card-form > div > div").addClass("hidden");
+		$$("#card-form > div > div").hide();
+		$$("#card-form > div > div.edit").show()
 		$$("#card-form > div > div.edit").removeClass("hidden");
 		$$("#card-form-edit").hide();
 		var pre_ph = 'your ';
+	} else if (list=='waiting') {
+		$$("#card-form > div > div").hide();
+		$$("#card-form > div > div.waiting").show()
+		$$("#card-form > div > div.waiting").removeClass("hidden");
+		$$("#card-form-edit").hide();
+		var pre_ph = 'the ';
 	} else {
-		$$("#card-form > div > div").removeClass("hidden");
+		$$("#card-form > div > div.waiting").hide()
+		$$("#card-form > div > div.current").show	();
+		$$("#card-form > div > div.edit").show()
 		$$("#card-form > div > div.edit").addClass("hidden");
-		$$("#card-form-edit").show();
+		$$("#card-form > div > div.current").removeClass("hidden");
 		$$("#card-form-edit").addClass('fa-edit')
 		$$("#card-form-edit").removeClass('fa-times-circle');
+		$$("#card-form-edit").show();
+		if (!B.cards.current[index].payed_date) {
+			$$("#card-form > div > div.payfor").removeClass("hidden");
+			$$("#card-form > div > div.payfor").show();
+		}
 		var pre_ph = 'the ';
 	}
 	
@@ -655,17 +670,17 @@ function card_record() {
 		}
 		
 		// If card exist, we update fields list...
+		var add_local = (B.container=='#add_card_list');
 		if (pars.id) {
-			var updated = false;
 			$$.each(cards_fields, function(i,cf){
 				if (cf.cid==pars['id'] && cf.fid==champ) {
 					cards_fields[i].v = valeur;
-					updated = true;
+					add_local = true;
 					return false;
 				}
 			});
-			// If we add a field we are the owner...
-			if (!updated) {
+			// If we add a new field (we are the owner)...
+			if (add_local) {
 				cards_fields.push({
 					"cid": pars.id,
 					"fid":champ,
@@ -674,6 +689,7 @@ function card_record() {
 				});
 			}
 		}
+		
 	});
 	
 	if (!pars) return false;
@@ -688,8 +704,10 @@ function card_record() {
 	pars['owner'] = B.cards.mycard.id;
 	
 	// For scan entry we record the original image...
-	if (B.container=='#add_card_list' && scanImg[B.card_side].dataUrl!=undefined) pars[(B.card_side=='recto' ? '44' : '45')] = scanImg[B.card_side].dataUrl;
-	
+	if (B.container=='#add_card_list' && scanImg[B.card_side].dataUrl!=undefined) { 
+		pars[(B.card_side=='recto' ? '44' : '45')] = scanImg[B.card_side].dataUrl;
+	}
+		
 	// Send to sender...
 	socket.emit('card record', pars);
 	
@@ -703,35 +721,21 @@ function card_record() {
 	}
 }
 
-
 function card_recorder(data) {
 	console.log('card_recorder('+data+')');
 	
-	/*
-	var list_field = ['company','companyname','firstname','lastname','email','id','poinst_img']
-	var pars = {};
-	$$.each($$(B.container+" > li"), function(i,li) {
-		var name = $$(li).find(".label").text().toLowerCase().replace(/\s/g,'');
-		if (list_field.indexOf(name)!==false) pars[name] = $$(li).find("input").val();
-	});
-	pars['cardid'] 	= B.cards.mycard.id;
-	pars["accepted"] 	= 1;
-	pars["id"] 			= data.id;
-	B.cards.current.push(pars);
-	for (var i=0; i<data.cards_fields.length; i++) {
-		var cf = {
-			"cid":data.cards_fields[i].card_id,
-			"fid":data.cards_fields[i].field_id,
-			"v"  :data.cards_fields[i].value
-		};
-		cards_fields.push(cf);
+	if (data.cards) {
+		if (data.cards.accepted) B.cards.current.push(data.cards);
+		else B.cards.waiting.push(data.cards);
 	}
-	*/
-	B.cards.current.push(data.cards_fields);
 	
+	if (data.cards_fields) {
+		for (var i=0; i<data.cards_fields.length; i++) cards_fields.push(data.cards_fields[i]);
+	}
+		
 	myApp.alert("New card added to your current list!");
 	$$(".badge.current-list-nbr").html(B.cards.current.length);
-	mainView.router.load({pageName: 'index'});
+	$$(".current-list-open").trigger("click");
 }
 
 function card_populate(container,data) {
@@ -838,7 +842,9 @@ function card_populate(container,data) {
 			
 }
 
-function card_auth(id,action) {
+function card_auth(id,action) {	
+	id = (id=='{{id}}' ? $$(B.container).data("id") : id);
+	
 	console.log('card_auth('+id+', '+action+')');
 	socket.emit('card '+action, {"cardid":B.cards.mycard.id, "authid":id});
 }
@@ -1062,6 +1068,13 @@ socket.on('card load', function (data) {
 	myApp.closeModal();
 	
 }); // socket on load
+
+socket.on('card shared data', function(card) {
+	B.cards.waiting.push(card.cards);
+	$$(".badge.waiting-list-nbr").html(B.cards.waiting.length);
+	for(var i=0; i<card.cards_fields.length; i++) cards_fields.push(card.cards_fields[i]);
+	myApp.alert("A new card in your waiting list!<br>Shared by someone"+(card.mesg ? " who wrote this:<br>\""+card.mesg+"\"" : '.'));
+});
 				
 socket.on('card record', function (data) {
 	
@@ -1108,7 +1121,8 @@ socket.on('card record', function (data) {
 			}
 			break;
 		case "INSERTED":
-			card_recorder(data);
+			console.log('cards_fields : '+data.cards_fields.length)
+			if (data.cards_fields) card_recorder(data);
 			break;
 	}
 	
@@ -1133,13 +1147,13 @@ socket.on('card add', function(data){
 	pars["id"] = data.card.id;
 	if (data.card.accepted==null) {
 		myApp.alert("Card added to your waiting list!")
-		cards.waiting.push(data.card);
-		$$(".badge.waiting-list-nbr").html(cards.waiting.length);
+		B.cards.waiting.push(data.card);
+		$$(".badge.waiting-list-nbr").html(B.cards.waiting.length);
 	} 
 	else {
 		myApp.alert("Card added to your current list!")
-		cards.current.push(data.card);
-		$$(".badge.current-list-nbr").html(cards.current.length);
+		B.cards.current.push(data.card);
+		$$(".badge.current-list-nbr").html(B.cards.current.length);
 	}
 	
 	mainView.router.load({pageName: 'index'});
@@ -1152,59 +1166,57 @@ socket.on('card details', function(data){
 	}
 	if (data.card.accepted==null) {
 		myApp.alert("Card added to your waiting list!")
-		cards.waiting.push(data.card);
-		$$(".badge.waiting-list-nbr").html(cards.waiting.length);
+		B.cards.waiting.push(data.card);
+		$$(".badge.waiting-list-nbr").html(B.cards.waiting.length);
 	} 
 	else {
 		myApp.alert("Card added to your current list!")
-		cards.current.push(data.card);
-		$$(".badge.current-list-nbr").html(cards.current.length);
+		B.cards.current.push(data.card);
+		$$(".badge.current-list-nbr").html(B.cards.current.length);
 	}
 });
 socket.on('card accepted', function(data){
 	if (data.msg=='OK') {
-		myApp.alert("Card accepted and transfered to your current card list!");
 		
-		for (var i=0; i<cards.waiting.length; i++) {
-			if (cards.waiting[i].id==data.id) {
-				cards.current.push(cards.waiting[i]);
-				cards.waiting.splice(i,1);
-				mainView.router.load({pageName: 'index'});
+		for (var i=0; i<B.cards.waiting.length; i++) {
+			if (B.cards.waiting[i].id==data.id) {
+				B.cards.current.push(B.cards.waiting[i]);
+				B.cards.waiting.splice(i,1);
 			}
 		}
 		
-		if (cards.current) $$(".badge.current-list-nbr").html(cards.current.length);
-		if (cards.waiting) $$(".badge.waiting-list-nbr").html(cards.waiting.length);
+		if (B.cards.current) $$(".badge.current-list-nbr").html(B.cards.current.length);
+		if (B.cards.waiting) $$(".badge.waiting-list-nbr").html(B.cards.waiting.length);
+		$$(".current-list-open").trigger("click");
+		myApp.alert("Card accepted and transfered to your current card list!");
 	}
 });
 socket.on('card refused', function(data){
 	if (data.msg=='OK') {
-		myApp.alert("Card deleted from your waiting card list!");
 		
-		for (var i=0; i<cards.waiting.length; i++) {
-			if (cards.waiting[i].id==data.id) {
-				cards.waiting.splice(i,1);
-				mainView.router.load({pageName: 'index'});
+		for (var i=0; i<B.cards.waiting.length; i++) {
+			if (B.cards.waiting[i].id==data.id) {
+				B.cards.waiting.splice(i,1);
 			}
 		}
 		
-		if (cards.waiting) $$(".badge.waiting-list-nbr").html(cards.waiting.length);
+		if (B.cards.waiting) $$(".badge.waiting-list-nbr").html(B.cards.waiting.length);
+		$$(".waiting-list-open").trigger("click");
+		myApp.alert("Card deleted from your waiting card list!");
 	}
 });
 socket.on('card deleted', function(data){
 	if (data.msg=='OK') {
-		myApp.alert("Card deleted from your current card list!");
 		
-		for (var i=0; i<cards.current.length; i++) {
-			if (cards.current[i].id==data.id) {
-				cards.current.splice(i,1);
+		for (var i=0; i<B.cards.current.length; i++) {
+			if (B.cards.current[i].id==data.id) {
+				B.cards.current.splice(i,1);
 				$$("li.card-item.item"+data.id).remove();
-				mainView.router.back();
-				//mainView.router.load({pageName: 'index'});
 			}
 		}
-		
-		if (cards.current) $$(".badge.current-list-nbr").html(cards.current.length);
+		$$(".current-list-open").trigger("click");
+		if (B.cards.current) $$(".badge.current-list-nbr").html(B.cards.current.length);
+		myApp.alert("Card deleted from your current card list!");
 	}
 });
 socket.on('card qr', function(data){
@@ -1247,7 +1259,7 @@ function add_card_li_match(ii,v) {
 	if (typeof v === "undefined") return false;
 	if (v.toString().replace(/^[^\d\w]$/,'')=='') return false;
 	
-	if (B.ocr_match) {
+	if (B.options.ocr_match) {
 		
 		var Name = /^[a-zéè\-]{2,}\s[a-zéè\-]{2,}$/i;
 		var Company = /\s(lt[eéè]e)|\s(inc)|\s(enr)/i;
