@@ -65,7 +65,7 @@
 		    	<a href="#" onclick="card_reload();" class="item-link my-preferences-open">
 		      <div class="item-content close-panel">
 		         <div class="item-inner">
-		            <div class="item-title">Reload my data</div>
+		            <div class="item-title">Synch my data</div>
 		            <div class="item-after"> </div>
 		          </div>
 		      </div>
@@ -299,7 +299,7 @@
           
             <div class="page-content">
 	        	
-					<div class="">
+					<div class="card-info current waiting hidden">
 						<div class="card-info-top">
 							<div class="card-info-pastille"></div>
 						</div>
@@ -330,13 +330,32 @@
 			          </div>
 			        </div>
 			      </div>
+			      
+			      <div class="content-block waiting hidden">
+			        <div class="row">
+			          <div class="col-50">
+			          	<a href="#" onclick="card_auth('{{id}}','refuse')" class="button button-big button-fill bg-red">Refuse</a>
+			          </div>
+			          <div class="col-50">
+			          	<a href="#" onclick="card_auth('{{id}}','accept')" class="button button-big button-fill bg-green">Accept</a>
+			          </div>
+			        </div>
+			      </div>
+			      
+			      <div class="content-block hidden payfor">
+			        <div class="row">
+			          <div class="col-100">
+			          	<a href="#" class="button button-big button-fill bg-blue"> Pay for him/her </a>
+			          </div>
+			        </div>
+			      </div>
               
-					<div id="thecard" class="draggable">
+					<div id="thecard" class="draggable current">
 						<div class="content"></div>
 						<div class="points"><img src="img/badge_none.png" alt="points"></div>
 					</div>
 
-				  <div class="speed-dial">
+				  <div class="speed-dial current">
 				    <a href="#" class="floating-button color-red">
 				      <i class="fa fa-share-alt fa-2x"></i>
 				      <i class="fa fa-close fa-2x"></i>
@@ -373,7 +392,7 @@
 		          	</a>
 		          </div>
 		          <div class="col-33">
-		          	<a href="#" onclick="card_record('#add_card_list')" class="button button-big button-fill bg-green">
+		          	<a href="#" onclick="card_record()" class="button button-big button-fill bg-green">
 		          		<i class="fa fa-save"></i> Record
 		          	</a>
 		          </div>
@@ -685,27 +704,7 @@
 	<div class="list-block">
 	  <ul id="waiting">
 	    {{#each waiting}}
-	    <li class="swipeout card-item item{{id}}" 
-	    	data-id="{{id}}" 
-	    	data-email="{{email}}"
-	    	data-firstname="{{firstname}}"
-	    	data-lastname="{{lastname}}"
-	    	data-cellphone="{{cellphone}}"
-	    	data-company="{{company}}"
-	    	data-category="{{category}}"
-	    	data-category_text="{{category_text}}"
-	    	data-birthdate="{{birthdate}}"
-	    	data-email="{{email}}"
-	    	data-gender="{{gender}}"
-	    	data-comment="{{comment}}" 
-	    	data-language="{{language}}"
-	    	data-logo="{{logo}}" 
-	    	data-template="{{template}}" 
-	    	data-points="{{points}}" 
-	    	data-reputation="{{reputation}}" 
-	    	data-points_img="{{points_img}}" 
-	    	data-payed_date="{{payed_date}}" 
-	    	data-current="" >
+	    <li class="swipeout card-item">
 	      <div class="swipeout-content item-content">
 	         <div class="item-inner">
 	            <div class="item-title">{{firstname}} {{lastname}}</div>
