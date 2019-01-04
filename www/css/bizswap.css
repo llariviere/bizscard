@@ -436,7 +436,7 @@ img.recto, img.verso {
 	border-radius: 50% 50% 10% 50%;
 }
 .card-info-txt {
-	padding: 50px 10px calc(100% - 160px) 10px; 
+	padding: 50px 10px calc(100% - 280px) 10px; 
 }
 .card-info-name {
 	margin: 10px;
