@@ -7,7 +7,7 @@ var base_tpl = '<li class="list-item ii_1">\
         <div class="item-inner"> \
           <div class="item-title label" data-i="33" data-id="1">Email<span><i class="fa fa-lock"></i></span></div>\
           <div class="item-input">\
-            <input type="email" name="33" value="" placeholder="your email" class="base lock" data-label="Email" readonly="true" />\
+            <input type="email" name="33" value="" placeholder="email..." class="base lock" data-label="Email" readonly="true" />\
           </div>\
         </div>\
       </div>\
@@ -16,7 +16,7 @@ var base_tpl = '<li class="list-item ii_1">\
         <div class="item-inner"> \
           <div class="item-title label" data-i="35" data-id="2">Firstname<span><i class="fa fa-{{lock}}"></i></span></div>\
           <div class="item-input">\
-            <input type="text" name="35" value="" placeholder="your firstname" class="base {{class}}" data-label="Firstname" readonly="true" />\
+            <input type="text" name="35" value="" placeholder="firstname..." class="base {{class}}" data-label="Firstname" readonly="true" />\
           </div>\
         </div>\
       </div>\
@@ -26,7 +26,7 @@ var base_tpl = '<li class="list-item ii_1">\
         <div class="item-inner"> \
           <div class="item-title label" data-i="38" data-id="3">Lastname<span><i class="fa fa-{{lock}}"></i></span></div>\
           <div class="item-input">\
-            <input type="text" name="38" value="" placeholder="your lastname" class="base {{class}}" data-label="Lastname" readonly="true" />\
+            <input type="text" name="38" value="" placeholder="lastname..." class="base {{class}}" data-label="Lastname" readonly="true" />\
           </div>\
         </div>\
       </div>\
@@ -36,7 +36,7 @@ var base_tpl = '<li class="list-item ii_1">\
         <div class="item-inner"> \
           <div class="item-title label" data-i="26" data-id="4">Cellphone<span><i class="fa fa-{{lock}}"></i></span></div>\
           <div class="item-input">\
-            <input type="tel" name="26" value="" placeholder="your cellphone" class="base {{class}}" data-label="Cellphone" readonly="true" />\
+            <input type="tel" name="26" value="" placeholder="cellphone..." class="base {{class}}" data-label="Cellphone" readonly="true" />\
           </div>\
         </div>\
       </div>\
@@ -46,7 +46,7 @@ var base_tpl = '<li class="list-item ii_1">\
         <div class="item-inner"> \
           <div class="item-title label" data-i="29" data-id="5">Company<span><i class="fa fa-{{lock}}"></i></span></div>\
           <div class="item-input">\
-            <input type="text" name="29" value="" placeholder="your company name" class="base {{class}}" data-label="Company" readonly="true" />\
+            <input type="text" name="29" value="" placeholder="company name..." class="base {{class}}" data-label="Company" readonly="true" />\
           </div>\
         </div>\
       </div>\
@@ -56,7 +56,7 @@ var base_tpl = '<li class="list-item ii_1">\
         <div class="item-inner"> \
           <div class="item-title label" data-i="40" data-id="6">Job title<span><i class="fa fa-{{lock}}"></i></span></div>\
           <div class="item-input">\
-            <input type="text" name="40" value="" placeholder="your job title" class="base {{class}}" data-label="Title" readonly="true" />\
+            <input type="text" name="40" value="" placeholder="job title..." class="base {{class}}" data-label="Title" readonly="true" />\
           </div>\
         </div>\
       </div>\
