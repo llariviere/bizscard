@@ -10,7 +10,9 @@
     <content src="index.html" />
     <access origin="https://vision.googleapis.com" />
     <access origin="https://*.bizswiper.com" />
+    <access origin="https://*.stripe.com" />
     <allow-navigation href="https://*.bizswiper.com/*" />
+    <allow-navigation href="https://*.stripe.com/*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
     <allow-intent href="tel:*" />
