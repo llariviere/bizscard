@@ -21,7 +21,7 @@ var mySwiper = myApp.swiper('.swiper-container', {
 var $$ = Dom7;
 
 var B = {
-	about:'Bizswiper v0.4.2<br>2019-01',
+	about:'Bizswiper v0.4.3<br>2019-01',
 	server:'https://bizswiper.com:3333/',
 	container:'',
 	swiper:{},
