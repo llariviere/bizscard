@@ -19,12 +19,10 @@ var mySwiper = myApp.swiper('.swiper-container', {
 });
 
 var $$ = Dom7;
-var fields = {};
-var cards_fields = {};
-var fields_list = [];
 
 var B = {
-	about:'Bizswiper v0.4.1<br>2019-01',
+	about:'Bizswiper v0.4.2<br>2019-01',
+	server:'https://bizswiper.com:3333/',
 	container:'',
 	swiper:{},
 	input_text:'',
@@ -39,7 +37,9 @@ var B = {
 		mycard: {},
 		current: [],
 		waiting: []
-	}
+	},
+	fields: {},
+	cards_fields: {}
 };
 
 
@@ -127,7 +127,7 @@ $$(".current-list-open").on("click", function(){
 	var list = { current:[] };
 	for(var i=0; i<B.cards.current.length; i++) {
 		list.current[i] = {"id":B.cards.current[i].id};
-		$$.each(cards_fields, function(ii,cf){
+		$$.each(B.cards_fields, function(ii,cf){
 			if(cf.cid==B.cards.current[i].id) {
 				switch(cf.fid) {
 					case 35: list.current[i]['firstname']	=cf.v; break;
@@ -148,7 +148,7 @@ $$(".waiting-list-open").on("click", function(){
 	var list = { waiting:[] };
 	for(var i=0; i<B.cards.waiting.length; i++) {
 		list.waiting[i] = {"id":B.cards.waiting[i].id};
-		$$.each(cards_fields, function(ii,cf){
+		$$.each(B.cards_fields, function(ii,cf){
 			if(cf.cid==B.cards.waiting[i].id) {
 				switch(cf.fid) {
 					case 35: list.waiting[i]['firstname']	=cf.v; break;
@@ -221,12 +221,95 @@ function card_about() {
 	myApp.alert(B.about);
 }
 
+function card_payfor() {
+	var title = 'Credit or debit card';
+	var aftertext = '<div>\
+						<div class="">\
+						  <input type="text" class="cc-input cc-card" maxlength="19" id="cc-card" value="" placeholder="1111 1111 1111 1111"/>\
+						</div>\
+						<div class="row">\
+						  <div class="col-50">\
+						    <input type="number" class="cc-input cc-date" maxlength="2" id="cc-exp-month" value="" placeholder="MM"/>\
+						    <input type="number" class="cc-input cc-date" maxlength="2" id="cc-exp-year" value="" placeholder="YY"/>\
+						  </div>\
+						  <div class="col-50" onClick="card_sms_test_code();">\
+						    <input type="number" class="cc-input cc-cvv" maxlength="3" id="cc-cvv" value="" placeholder="CVV"/>\
+						  </div>\
+						</div>\
+					</div>';
+	
+	
+	var myModal= myApp.modal({
+  		title:title,
+  		afterText:aftertext,
+  		buttons: [
+  			{
+  				text:'Cancel'
+  			},
+  			{
+  				text:'Pay $20CAD',
+  				onClick: function () {
+  					if ($$(".cc-input.not").length>0) {
+  						$$(".cc-input.not").css({"background-color":"#f99","color":"#fff"})
+  						return false;
+  					}
+  					var pars = {
+  						"ccnum":$$("#cc-card").val(),
+  						"ccexp":$$("#cc-exp-month").val()+$$("#cc-exp-year").val(),
+  						"cccvv":$$("#cc-cvv").val(),
+  						"cardid":$$(B.container).data("id"),
+  						"fromid":B.cards.mycard.id
+  					};
+  					socket.emit('card cc charge', pars);
+  				}
+  			}
+  		]
+   },
+   function(){
+   	// bouton cancel...
+   });
+
+	$$("#cc-card").on("keyup", function(){
+		var cc = $$(this).val().replace(/[^\d]/g, '');
+		var ccarr = [] 
+		ccarr[0] = cc.substr(0,4);
+		ccarr[1] = cc.substr(4,4);
+		ccarr[2] = cc.substr(8,4);
+		ccarr[3] = cc.substr(12,4);
+		$$(this).val(ccarr.join(' ').trim());
+	}).on("change", function(){
+		var cc = $$(this).val().replace(/[^\d]/g, '');
+		if (cc.length<16) { $$(this).addClass('not'); }
+	});
+	
+	$$("#cc-exp-month").on("change", function(){
+		$$(this).removeClass('not');
+		var mo = parseInt($$(this).val().replace(/[^\d]/g, ''));
+		if (mo>12) { $$(this).addClass('not'); }
+		if (mo<10) { mo = '0'+mo; }
+		$$(this).val(mo)
+	});
+	$$("#cc-exp-year").on("change", function(){
+		$$(this).removeClass('not');
+		var yy = parseInt($$(this).val().replace(/[^\d]/g, ''));
+		if (yy<19) { $$(this).addClass('not'); }
+		$$(this).val(yy)
+	});
+	$$("#cc-cvv").on("change", function(){
+		$$(this).removeClass('not');
+		var cvv = parseInt($$(this).val().replace(/[^\d]/g, ''));
+		if (cvv.length<3) { $$(this).addClass('not'); }
+		$$(this).val(cvv)
+	});
+   
+}
+
 function card_initial_setup() {
 	mainView.router.load({pageName: 'initial-setup'});
 	B.swiper = $$('.swiper-container-setup')[0].swiper;
 	B.swiper.slideTo(0);
 	
-	// Initializing the fields for different actions...
+	// Initializing the B.fields for different actions...
 	$$("#setup-1").find("input").on("keyup", function(){
 		var fullname = $$("#setup-1").find("input[name='35']").val() + $$("#setup-1").find("input[name='38']").val();
 		if (fullname.length>4) {
@@ -260,7 +343,7 @@ function card_initial_setup() {
 		};
 		$$("#setup_page").find("input").each(function(i,f){
 			pars[$$(this).attr("name")] = $$(this).val();
-			cards_fields.push({cid:pars.id, fid:$$(this).attr("name"), own:pars.id, v:$$(this).val()});
+			B.cards_fields.push({cid:pars.id, fid:$$(this).attr("name"), own:pars.id, v:$$(this).val()});
 		});
 		socket.emit('card record', pars);
 			
@@ -286,7 +369,7 @@ function card_share(list, by) {
 				if (!card.payed_date) return true;
 				var cid = card.id;
 				var rec = {"35":'', "38":''};
-				$$.each(cards_fields, function (ii,cf) {
+				$$.each(B.cards_fields, function (ii,cf) {
 					if(cf.cid>cid) return false;
 					if(cf.cid==cid && (cf.fid=='35' || cf.fid=='38')) { rec[cf.fid.toString()]=cf.v; }
 				});
@@ -447,15 +530,15 @@ function card_form_open(list, index) {
 	$$(B.container).html(base_tpl.replace(/{{lock}}/g, (locked_base ? 'lock' : 'unlock')).replace(/{{class}}/g, (locked_base ? 'lock' : '')));
 	
 	// on batit la matrice de cles-valeurs de la carte... 
-	for (var i=0; i<cards_fields.length; i++) {
-		if (cards_fields[i].cid >cardid) break;
-		if (cards_fields[i].cid==cardid) card[cards_fields[i].fid] = cards_fields[i];
+	for (var i=0; i<B.cards_fields.length; i++) {
+		if (B.cards_fields[i].cid >cardid) break;
+		if (B.cards_fields[i].cid==cardid) card[B.cards_fields[i].fid] = B.cards_fields[i];
 	}
 	
 	var input_li = input_tpl;
 	
-	for (var i=0; i<fields.length; i++) {
-		var f = fields[i];
+	for (var i=0; i<B.fields.length; i++) {
+		var f = B.fields[i];
 		if (f.base) {
 			$$(B.container+" input[name='"+f.id+"']").val((card[f.id] ? card[f.id].v : ''));
 		} else if(card[f.id]) {
@@ -647,10 +730,10 @@ function card_record() {
 		var oblige 	= ($$(li).find("input").hasClass('base'));
 		var phone 	= ($$(li).find("input").hasClass('tel')); 
 		
-		// Skip incomplete fields name...
+		// Skip incomplete B.fields name...
 		if (!champ) return true;
 		
-		// For phone-like fields we filter all except number...
+		// For phone-like B.fields we filter all except number...
 		if (phone) valeur = valeur.replace(/[^0-9]/g, '');
 		
 		// Add to the parameters sent to server...
@@ -669,19 +752,19 @@ function card_record() {
 			}
 		}
 		
-		// If card exist, we update fields list...
+		// If card exist, we update B.fields list...
 		var add_local = (B.container=='#add_card_list');
 		if (pars.id) {
-			$$.each(cards_fields, function(i,cf){
+			$$.each(B.cards_fields, function(i,cf){
 				if (cf.cid==pars['id'] && cf.fid==champ) {
-					cards_fields[i].v = valeur;
+					B.cards_fields[i].v = valeur;
 					add_local = true;
 					return false;
 				}
 			});
 			// If we add a new field (we are the owner)...
 			if (add_local) {
-				cards_fields.push({
+				B.cards_fields.push({
 					"cid": pars.id,
 					"fid":champ,
 					"own":B.cards.mycard.id,
@@ -730,7 +813,7 @@ function card_recorder(data) {
 	}
 	
 	if (data.cards_fields) {
-		for (var i=0; i<data.cards_fields.length; i++) cards_fields.push(data.cards_fields[i]);
+		for (var i=0; i<data.cards_fields.length; i++) B.cards_fields.push(data.cards_fields[i]);
 	}
 		
 	myApp.alert("New card added to your current list!");
@@ -747,9 +830,9 @@ function card_populate(container,data) {
 	var html = cards_templates[(data.template ? data.template : 0)];
 	$$.each(['firstname', 'lastname', 'title', 'company', 'company name', 'address', 'city', 'state_prov', 'postal code', 'country', 'website', 'email', 'cellphone', 'fax', 'logo'], function(i,e){
 		var v = '';
- 		$$.each(fields, function (ii,f) {
+ 		$$.each(B.fields, function (ii,f) {
 			if(e==f.en) {
-			  $$.each(cards_fields, function(iii,cf) {
+			  $$.each(B.cards_fields, function(iii,cf) {
 			  	 if (cf.cid==cardid && cf.fid==f.id) {
 			  	 	v = cf.v + '';
 			  	 	switch (e) {
@@ -842,11 +925,10 @@ function card_populate(container,data) {
 			
 }
 
-function card_auth(id,action) {	
-	id = (id=='{{id}}' ? $$(B.container).data("id") : id);
+function card_auth(action) {		
+	console.log('card_auth('+action+')');
 	
-	console.log('card_auth('+id+', '+action+')');
-	socket.emit('card '+action, {"cardid":B.cards.mycard.id, "authid":id});
+	socket.emit('card '+action, {"cardid":B.cards.mycard.id, "authid":$$(B.container).data("id")});
 }
 
 
@@ -969,7 +1051,7 @@ function card_remove() {
 	});
 }
 
-var socket = io('https://bizswiper.com:3333/');
+var socket = io(B.server);
 var $connected = false;
 var $online = false;
 
@@ -1041,8 +1123,8 @@ socket.on('card rem', function() {
 
 socket.on('card load', function (data) {
 	
-	if (data.fields) fields = data.fields;
-	if (data.cards_fields2) cards_fields = data.cards_fields2;
+	if (data.fields) B.fields = data.fields;
+	if (data.cards_fields2) B.cards_fields = data.cards_fields2;
 	
 	B.cards = {
 		mycard: {},
@@ -1072,7 +1154,7 @@ socket.on('card load', function (data) {
 socket.on('card shared data', function(card) {
 	B.cards.waiting.push(card.cards);
 	$$(".badge.waiting-list-nbr").html(B.cards.waiting.length);
-	for(var i=0; i<card.cards_fields.length; i++) cards_fields.push(card.cards_fields[i]);
+	for(var i=0; i<card.cards_fields.length; i++) B.cards_fields.push(card.cards_fields[i]);
 	myApp.alert("A new card in your waiting list!<br>Shared by someone"+(card.mesg ? " who wrote this:<br>\""+card.mesg+"\"" : '.'));
 });
 				
@@ -1121,7 +1203,7 @@ socket.on('card record', function (data) {
 			}
 			break;
 		case "INSERTED":
-			console.log('cards_fields : '+data.cards_fields.length)
+			console.log('B.cards_fields : '+data.cards_fields.length)
 			if (data.cards_fields) card_recorder(data);
 			break;
 	}
@@ -1133,14 +1215,14 @@ socket.on('card add', function(data){
 	var pars = {};
 	for (var i=0; i<data.cards_fields.length; i++) {
 		var name = '';
-		for (var ii=0; ii<fields.length; ii++) {
-			if (fields[ii].id==data.cards_fields[i].field_id) {
-				name = fields[ii].en.toLowerCase().replace(/\s/g,'');
+		for (var ii=0; ii<B.fields.length; ii++) {
+			if (B.fields[ii].id==data.cards_fields[i].field_id) {
+				name = B.fields[ii].en.toLowerCase().replace(/\s/g,'');
 				break;
 			}
 		}
 		if (list_field.indexOf(name)!==false) pars[name] = data.cards_fields[i].value;
-		cards_fields.push(data.cards_fields[i]);
+		B.cards_fields.push(data.cards_fields[i]);
 	}
 	pars['cardid'] = B.cards.mycard.id;
 	pars["accepted"] = data.card.accepted;
@@ -1162,7 +1244,7 @@ socket.on('card add', function(data){
 socket.on('card details', function(data){
 	// si la carte n'est pas deja dans mes listes (added!=null)...
 	for (var i=0; i<data.cards_fields.length; i++) {
-		cards_fields.push(data.cards_fields[i]);
+		B.cards_fields.push(data.cards_fields[i]);
 	}
 	if (data.card.accepted==null) {
 		myApp.alert("Card added to your waiting list!")
@@ -1236,7 +1318,7 @@ socket.on('card connected', function(data){
 socket.on('custom field', function(data){
   	myApp.alert(data.msg);
 			
-  	fields.push({"id":data.id,"en":data.field,"fr":data.field,"base":0,"order":255});
+  	B.fields.push({"id":data.id,"en":data.field,"fr":data.field,"base":0,"order":255});
   	
 	var li = $$(B.container).find("li.ii_"+data.ii);
 	li.find(".label").attr("data-i",data.id);
@@ -1250,6 +1332,13 @@ socket.on('sms test result', function(data){
 		case "not": $$("#validation_modal_text").html(data.msg); break;
 		case "bad": $$("#sms_test_msg").text(data.msg); $$("#sms_test_code").val(''); break;
 	}
+});
+socket.on('card cc charge', function(data){
+	$$.each(B.cards.current, function(i,c){
+		if (c.id==data.id) B.cards.current[i].payed_date=Date().toString();
+	});
+	$$("#card-form .payfor").hide();
+	myApp.alert("Payment complete!");
 });
  
 
@@ -1333,7 +1422,7 @@ function add_card_li(ii,v,n,i) {
 	
 	var l = '-change-', p = '';
 	
-	$$.each(fields, function(iii,f) {
+	$$.each(B.fields, function(iii,f) {
 		if (i==f.id) {
 			n = f["en"];
 			l = n.substr(0,1).toUpperCase() + n.substr(1).toLowerCase();
@@ -1547,7 +1636,7 @@ function card_field_add() {
 	var i = 0;
 	var add_new = true;
 	var l = '', n = '', html = ['','','','','',''];
-	var families = ['Families','Address fields','Personal infos','Phone numbers','Business infos','Other fields'];
+	var families = ['Families','Address B.fields','Personal infos','Phone numbers','Business infos','Other B.fields'];
 	var li_tpl = '<li>' +
 			      '<label class="label-checkbox item-content">' +
 			        '<input type="checkbox" name="{{ii}}" value="{{i}}" data-name="{{l}}" class="other" {{checked}}>' +
@@ -1560,7 +1649,7 @@ function card_field_add() {
 			      '</label>' +
 			    '</li>';
 			    
-	$$.each(fields, function(k,v) {
+	$$.each(B.fields, function(k,v) {
 		if ($$(B.container).find("input[name='"+v.id+"']").length==0) {
 			n = v.en;
 			l = n.substr(0,1).toUpperCase() + n.substr(1).toLowerCase();
@@ -1580,7 +1669,7 @@ function card_field_add() {
       '<div class="toolbar">' +
         '<div class="toolbar-inner">' +
           '<div class="left"><a href="#" class="close-picker">Cancel</a></div>' +
-          'Choose fields to add' +
+          'Choose B.fields to add' +
           '<div class="right"><a href="#" class="ok-picker">Ok</a></div>' +
         '</div>' +
       '</div>' +
