@@ -109,7 +109,7 @@ function card_ocr_process(data) {
 	var cardImage = $$("#card-entry").find("img."+B.card_side);
 	cardImage.attr("src",scanImg[B.card_side].dataUrl);
 	
-	// Using text detection result from vision, we add a formatted list of fields...
+	// Using text detection result from vision, we add a formatted list of B.fields...
 	var ocrLines = data.description.split("\n");
 	
 	B.container="#add_card_list";
