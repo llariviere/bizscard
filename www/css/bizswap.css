@@ -472,3 +472,18 @@ img.recto, img.verso {
 	right: 0px;
    color: #ccc;
 }
+
+.cc-input.not {
+	border-color: #f00;
+	background-color: #fee;
+}
+.cc-card {
+	background-image: url(../img/visa.png);
+	background-repeat: no-repeat;
+	background-size: contain;
+	background-position: right center;
+}
+.modal-inner input.cc-date {
+	width:30px;
+	display:inline-block;
+}
