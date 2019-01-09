@@ -24,7 +24,7 @@ var B = {
 	about:'Bizswiper v0.4.2<br>2019-01',
 	server:'https://bizswiper.com:33333/',
 	croper:{},
-	crop_opts:{"img":'img/b.png',"card":{ width: ($$("body").width() - 10), height: (($$("body").width() - 10) / 3.5 * 2), type: 'square' }},
+	crop_opts:{"img":'img/b.png',"card":{ width: ($$("body").width() - 10), height: (($$("body").width() - 10) / 3.5 * 2), type: 'square' },"boundary":{ width: ($$("body").width() - 10), height: (($$("body").width() - 10) / 3.5 * 2)}},
 	swiper:{},
 	container:'',
 	input_text:'',
@@ -198,7 +198,8 @@ $$('.popup-crop').on('popup:open', function () {
 	var options =
 	{
         url: B.crop_opts.img,
-        enableOrientation: true
+        enableOrientation: true,
+        boundary: B.crop_opts.boundary
    }
    
 	if ($$('#img_select').val()==44 || $$('#img_select').val()==45) {
@@ -237,7 +238,8 @@ $$('#img_input').on("change", function() {
 	else {
 		B.croper.destroy();
 		
-		var options = { url:found.v, enableOrientation:true };
+		var options = { url:found.v, enableOrientation:true,
+        boundary: B.crop_opts.boundary };
 		
 		if (fid == 44 || fid == 45) { options['viewport'] = B.crop_opts.card; }
 		
@@ -253,7 +255,8 @@ function croper_format(f) {
 		{
 	        url: B.crop_opts.img,
 	        viewport: B.crop_opts.card,
-	        enableOrientation: true
+	        enableOrientation: true,
+        	boundary: B.crop_opts.boundary
 	   }
 	   B.croper = new Croppie(document.getElementById('crop-box'), options);
 	} else {
@@ -262,7 +265,8 @@ function croper_format(f) {
 		var options =
 		{
 	        url: B.crop_opts.img,
-	        enableOrientation: true
+	        enableOrientation: true,
+        boundary: B.crop_opts.boundary
 	   }
 	   B.croper = new Croppie(document.getElementById('crop-box'), options);
 	}
