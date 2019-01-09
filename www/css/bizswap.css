@@ -487,3 +487,25 @@ img.recto, img.verso {
 	width:30px;
 	display:inline-block;
 }
+
+#crop-box {
+	width: 100%;
+	max-width: 500px;
+	height: calc(100vw);
+	padding:2px 2px;
+	margin-bottom: 20px;
+}
+
+.right {
+	text-align: right;
+}
+
+.crop-height {
+	height:27px !important;
+}
+
+.crop-select {
+	border:solid 1px #ccc;
+	border-radius:5px;
+	margin-top:0 !important;
+}
