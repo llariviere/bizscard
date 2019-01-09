@@ -21,17 +21,19 @@ var mySwiper = myApp.swiper('.swiper-container', {
 var $$ = Dom7;
 
 var B = {
-	about:'Bizswiper v0.4.3<br>2019-01',
-	server:'https://bizswiper.com:3333/',
-	container:'',
+	about:'Bizswiper v0.4.2<br>2019-01',
+	server:'https://bizswiper.com:33333/',
+	croper:{},
+	crop_opts:{"img":'img/b.png',"card":{ width: ($$("body").width() - 10), height: (($$("body").width() - 10) / 3.5 * 2), type: 'square' }},
 	swiper:{},
+	container:'',
 	input_text:'',
 	input_name:'',
 	input_type:'',
 	input_labl:'',
 	card_side:'',
 	options: {
-		ocr_match: true
+		ocr_match: false
 	},
 	cards: {
 		mycard: {},
@@ -180,7 +182,129 @@ $$(".card-back-camera-open").on("click", function(){
 	camera_open(false);
 });
 
+$$(".card-other-camera-open").on("click", function(){
+	B.card_side = 'other';
+	camera_open(false);
+});
+
+$$('.popup-crop').on('popup:open', function () {
+	console.log('Crop Popup open');
+	
+	//var container_width = $$("#crop-box").width();	// 2"x3.5" ou 600px x 1050px
+	//B.crop_opts.card = { width: ($$("#crop-box").width() - 10), height: (($$("#crop-box").width() - 10) / 3.5 * 2), type: 'square' }
+	
+	//B.crop_opts.img = 'img/b.png';
+	
+	var options =
+	{
+        url: B.crop_opts.img,
+        enableOrientation: true
+   }
+   
+	if ($$('#img_select').val()==44 || $$('#img_select').val()==45) {
+		options['viewport'] = B.crop_opts.card;
+	} 
+	
+	$$('#img_input').val(0);
+	$$('#img_output').val(0);
+	
+   B.croper = new Croppie(document.getElementById('crop-box'), options);
+   
+});
+
+$$('.popup-crop').on('popup:close', function () {
+	console.log('Crop Popup close');
+	
+	B.croper.destroy();
+});
+
+$$('#img_input').on("change", function() {
+	console.log('Crop input change');
+	
+	var found = false;
+	var cid = $$(B.container).data("id");
+	var fid = $$(this).val();
+	for (var i=0; i<B.cards_fields.length; i++) {
+		var f = B.cards_fields[i];
+		if (f.cid==cid && f.fid==fid) {
+			found = f;
+			break;
+		}
+	}
+	if (!found) { 
+		myApp.alert("No image for that field yet"); 
+	}
+	else {
+		B.croper.destroy();
+		
+		var options = { url:found.v, enableOrientation:true };
+		
+		if (fid == 44 || fid == 45) { options['viewport'] = B.crop_opts.card; }
+		
+		B.croper = new Croppie(document.getElementById('crop-box'), options);
+	}
+});
+
+function croper_format(f) {
+	if (f=='card') {
+		if (B.croper.options.viewport.width > 100) return false;
+		B.croper.destroy();
+		var options =
+		{
+	        url: B.crop_opts.img,
+	        viewport: B.crop_opts.card,
+	        enableOrientation: true
+	   }
+	   B.croper = new Croppie(document.getElementById('crop-box'), options);
+	} else {
+		if (B.croper.options.viewport.width == 100) return false;
+		B.croper.destroy();
+		var options =
+		{
+	        url: B.crop_opts.img,
+	        enableOrientation: true
+	   }
+	   B.croper = new Croppie(document.getElementById('crop-box'), options);
+	}
+}
+
+function croper_record() {
+	var opts = { "type":"base64", "size":"viewport", "format":"png", "quality":1, "circle":false };
+	B.croper.result(opts).then(function(dataUrl){
+		var cid = $$(B.container).data("id");
+		var own = B.cards.mycard.id;
+		var fid = ($$('#img_output').val()==0 ? $$('#img_input').val() : $$('#img_output').val())
+		
+		for(var i=0; i<B.cards_fields.length; i++) {
+			if (cid==B.cards_fields[i].cid && fid==B.cards_fields[i].fid) { 
+				B.cards_fields[i].v = dataUrl;
+				break;
+			}
+		}
+		
+		if (cid==own) {
+			$$("#mycard").find("div.img").css({"background-image":"url("+dataUrl+")"});
+			
+		} else {
+			if (fid==50) $$("#thecard").find("div.img").css({"background-image":"url("+dataUrl+")"});
+			
+			if (fid==52) {
+				 $$("#card-form").find("div.card-info-pastille").css({"background-image":"url("+dataUrl+")"});
+				 $$("#card-form").find("div.card-info-pastille").text('');
+			}
+		}
+		
+		var pars = { 
+			"id":cid,
+			"owner":own
+		};
+		pars[fid] = dataUrl;
+		socket.emit('card record', pars);
+	}); 
+}
+
 $$(".my-card-open").on("click", function(){
+	B.container='#card-form-list';
 	card_form_open("mycard", false);
 });
 
@@ -309,7 +433,7 @@ function card_initial_setup() {
 	B.swiper = $$('.swiper-container-setup')[0].swiper;
 	B.swiper.slideTo(0);
 	
-	// Initializing the B.fields for different actions...
+	// Initializing the fields for different actions...
 	$$("#setup-1").find("input").on("keyup", function(){
 		var fullname = $$("#setup-1").find("input[name='35']").val() + $$("#setup-1").find("input[name='38']").val();
 		if (fullname.length>4) {
@@ -343,7 +467,7 @@ function card_initial_setup() {
 		};
 		$$("#setup_page").find("input").each(function(i,f){
 			pars[$$(this).attr("name")] = $$(this).val();
-			B.cards_fields.push({cid:pars.id, fid:$$(this).attr("name"), own:pars.id, v:$$(this).val()});
+			//B.cards_fields.push({cid:pars.id, fid:$$(this).attr("name"), own:pars.id, v:$$(this).val()});
 		});
 		socket.emit('card record', pars);
 			
@@ -539,7 +663,9 @@ function card_form_open(list, index) {
 	
 	for (var i=0; i<B.fields.length; i++) {
 		var f = B.fields[i];
-		if (f.base) {
+		if (f.format=='img') {
+			// Skip all image field...
+		} else if (f.base) {
 			$$(B.container+" input[name='"+f.id+"']").val((card[f.id] ? card[f.id].v : ''));
 		} else if(card[f.id]) {
 			var input = input_li.replace(/{{name}}/, f.id).replace(/{{value}}/, card[f.id].v).replace(/{{class}}/, f.format).replace(/{{label}}/, f['en']).replace(/{{placeholder}}/, pre_ph+f['en']);
@@ -584,6 +710,7 @@ function storageAvailable() {
         return false;
     }
 }
+
 
 function template_open(no) {
 	console.log('template_open('+no+')');
@@ -714,8 +841,6 @@ function category_open(code_name,cls) {
 	myApp.accordionOpen(".category-level"+(cls=='func'? 3 : (cls=='ctry' ? 4 : 1)));
 	
 }
-
-
 function card_record() {
 	console.log('card_record()');
 
@@ -730,10 +855,10 @@ function card_record() {
 		var oblige 	= ($$(li).find("input").hasClass('base'));
 		var phone 	= ($$(li).find("input").hasClass('tel')); 
 		
-		// Skip incomplete B.fields name...
+		// Skip incomplete fields name...
 		if (!champ) return true;
 		
-		// For phone-like B.fields we filter all except number...
+		// For phone-like fields we filter all except number...
 		if (phone) valeur = valeur.replace(/[^0-9]/g, '');
 		
 		// Add to the parameters sent to server...
@@ -825,7 +950,7 @@ function card_populate(container,data) {
 	console.log('card_populate('+container+', '+data+')');
 	
 	var html2 = '<div class="card-info-name">{{firstname}} {{lastname}}</div><div class="card-info-add">{{email}}{{title}}{{address}} {{city}} {{state_prov}} {{country}} {{postal code}}</div>'
-	var initials = '--', complete_name = 'No name card';
+	var initials = '--', complete_name = 'No name card', avatar = false;
 	var cardid = data.id;
 	var html = cards_templates[(data.template ? data.template : 0)];
 	$$.each(['firstname', 'lastname', 'title', 'company', 'company name', 'address', 'city', 'state_prov', 'postal code', 'country', 'website', 'email', 'cellphone', 'fax', 'logo'], function(i,e){
@@ -834,8 +959,11 @@ function card_populate(container,data) {
 			if(e==f.en) {
 			  $$.each(B.cards_fields, function(iii,cf) {
 			  	 if (cf.cid==cardid && cf.fid==f.id) {
-			  	 	v = cf.v + '';
+			  	 	v = cf.v.toLowerCase() + '';
 			  	 	switch (e) {
+			  	 		case 'avatar':
+			  	 			avatar = v;
+			  	 			break;
 						case 'firstname': 
 							initials = v.substr(0,1).toUpperCase(); 
 							complete_name = v; 
@@ -916,7 +1044,11 @@ function card_populate(container,data) {
 		data.points_img = (data.points_img ? data.points_img : 'none');
 		$$("#"+container+" .points > img").attr("src", "img/badge_"+ data.points_img.toLowerCase() +".png");
 		$$("#card-form .card-info-txt").html(html2);
-		$$("#card-form .card-info-pastille").text(initials);
+		if (avatar) {
+			$$("#card-form .card-info-pastille").css({"background-image":"url("+avatar+")"});
+		} else {
+			$$("#card-form .card-info-pastille").text(initials);
+		}		
 		$$(".card-info-title").text(complete_name);
 	}
 	else {
@@ -1636,7 +1768,7 @@ function card_field_add() {
 	var i = 0;
 	var add_new = true;
 	var l = '', n = '', html = ['','','','','',''];
-	var families = ['Families','Address B.fields','Personal infos','Phone numbers','Business infos','Other B.fields'];
+	var families = ['Families','Address fields','Personal infos','Phone numbers','Business infos','Other fields'];
 	var li_tpl = '<li>' +
 			      '<label class="label-checkbox item-content">' +
 			        '<input type="checkbox" name="{{ii}}" value="{{i}}" data-name="{{l}}" class="other" {{checked}}>' +
@@ -1669,7 +1801,7 @@ function card_field_add() {
       '<div class="toolbar">' +
         '<div class="toolbar-inner">' +
           '<div class="left"><a href="#" class="close-picker">Cancel</a></div>' +
-          'Choose B.fields to add' +
+          'Choose fields to add' +
           '<div class="right"><a href="#" class="ok-picker">Ok</a></div>' +
         '</div>' +
       '</div>' +
