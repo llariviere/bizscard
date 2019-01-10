@@ -19,7 +19,7 @@ var mySwiper = myApp.swiper('.swiper-container', {
 });
 
 var $$ = Dom7;
-
+// {width:100, height:100, type: 'square'}
 var B = {
 	about:'Bizswiper v0.4.2<br>2019-01',
 	server:'https://bizswiper.com:33333/',
@@ -250,24 +250,25 @@ $$('#img_input').on("change", function() {
 function croper_format(f) {
 	if (f=='card') {
 		if (B.croper.options.viewport.width > 100) return false;
-		B.croper.destroy();
 		var options =
 		{
-	        url: B.crop_opts.img,
-	        viewport: B.crop_opts.card,
-	        enableOrientation: true,
-        	boundary: B.crop_opts.boundary
+			url: B.croper.data.url,
+			viewport: B.crop_opts.card,
+			enableOrientation: true,
+			boundary: B.crop_opts.boundary
 	   }
+		B.croper.destroy();
 	   B.croper = new Croppie(document.getElementById('crop-box'), options);
 	} else {
 		if (B.croper.options.viewport.width == 100) return false;
-		B.croper.destroy();
 		var options =
 		{
-	        url: B.crop_opts.img,
-	        enableOrientation: true,
-        boundary: B.crop_opts.boundary
+			url: B.croper.data.url,
+			viewport: {width:100, height:100, type: 'square'},
+			enableOrientation: true,
+			boundary: B.crop_opts.boundary
 	   }
+		B.croper.destroy();
 	   B.croper = new Croppie(document.getElementById('crop-box'), options);
 	}
 }
@@ -957,15 +958,15 @@ function card_populate(container,data) {
 	var initials = '--', complete_name = 'No name card', avatar = false;
 	var cardid = data.id;
 	var html = cards_templates[(data.template ? data.template : 0)];
-	$$.each(['firstname', 'lastname', 'title', 'company', 'company name', 'address', 'city', 'state_prov', 'postal code', 'country', 'website', 'email', 'cellphone', 'fax', 'logo'], function(i,e){
+	$$.each(['firstname', 'lastname', 'title', 'company', 'company name', 'address', 'city', 'state_prov', 'postal code', 'country', 'website', 'email', 'cellphone', 'fax', 'logo', 'Avatar'], function(i,e){
 		var v = '';
  		$$.each(B.fields, function (ii,f) {
 			if(e==f.en) {
 			  $$.each(B.cards_fields, function(iii,cf) {
 			  	 if (cf.cid==cardid && cf.fid==f.id) {
-			  	 	v = cf.v.toLowerCase() + '';
+			  	 	v = cf.v + '';
 			  	 	switch (e) {
-			  	 		case 'avatar':
+			  	 		case 'Avatar':
 			  	 			avatar = v;
 			  	 			break;
 						case 'firstname': 
@@ -1050,6 +1051,7 @@ function card_populate(container,data) {
 		$$("#card-form .card-info-txt").html(html2);
 		if (avatar) {
 			$$("#card-form .card-info-pastille").css({"background-image":"url("+avatar+")"});
+			$$("#card-form .card-info-pastille").text('');
 		} else {
 			$$("#card-form .card-info-pastille").text(initials);
 		}		
