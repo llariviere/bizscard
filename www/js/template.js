@@ -72,9 +72,7 @@ var cards_templates = [
 	<div style="top:120px;left:120px;">{{email}}</div>\
 	<div style="top:135px;left:120px;">{{cellphone}}</div>\
 	<div style="top:150px;left:120px;">{{fax}}</div>\
-	<div class="img" style="top:75px;left:0px;background-image:url({{logo}});">\
-		<i class="fa fa-user fa-4x" style="margin-top:20px;"></i>\
-	</div>',
+	<div class="img" style="top:75px;left:0px;background-image:url({{logo}}), url(img/fa-user.png);"></div>',
 	
 	'<div style="top:4px;left:120px;font-weight:bold;font-size:16px;">{{complete name}}{{firstname}} {{lastname}}</div>\
 	<div style="top:28px;left:120px;">{{title}}</div>\
@@ -85,9 +83,7 @@ var cards_templates = [
 	<div style="top:120px;left:120px;">{{email}}</div>\
 	<div style="top:135px;left:120px;">{{cellphone}}</div>\
 	<div style="top:150px;left:120px;">{{fax}}</div>\
-	<div class="img" style="top:0px;left:0px;background-image:url({{logo}});">\
-		<i class="fa fa-user fa-4x" style="margin-top:20px;"></i>\
-	</div>',
+	<div class="img" style="top:0px;left:0px;background-image:url({{logo}}), url(img/fa-user.png);"></div>',
 	
 	'<div style="top:84px;width:50%;text-align:right;font-weight:bold;font-size:16px;">{{complete name}}{{firstname}} {{lastname}} |</div>\
 	<div style="top:88px;left:50%;width:50%;text-align:left;">&nbsp;{{title}}</div>\
@@ -98,9 +94,7 @@ var cards_templates = [
 	<div style="top:152px;left:50%;width:50%;text-align:left;">&nbsp;{{email}}</div>\
 	<div style="top:168px;width:50%;text-align:right;">{{cellphone}} |</div>\
 	<div style="top:168px;left:50%;width:50%;text-align:left;">&nbsp;{{fax}}</div>\
-	<div class="img" style="top:0px;width:75px;height:75px;left:50%;margin-left:-38px;background-image:url({{logo}});">\
-		<i class="fa fa-user fa-4x" style="margin-top:10px;"></i>\
-	</div>'
+	<div class="img" style="top:0px;width:75px;height:75px;left:50%;margin-left:-38px;background-image:url({{logo}}), url(img/fa-user.png);"></div>',
 ];
 
 var input_tpl = '<input type="text" name="{{name}}" value="{{value}}" class="{{class}}" data-label="{{label}}" placeholder="{{placeholder}}" readonly="{{readonly}}" />';
@@ -115,4 +109,3 @@ var li_tpl = '<li class="list-item {{data-id}}"> \
 			</div> \
 		</div> \
 	</li>';
-	
