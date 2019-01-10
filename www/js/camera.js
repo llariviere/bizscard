@@ -22,21 +22,41 @@ function camera_options(srcType) {
 function camera_open(selection) {
 	
 	if (typeof Camera === "undefined") {
-		if (B.card_side=='other') {
-			card_image_process("img/bcard.jpg");
+		if (B.card_side=='other') { 	 	
+			B.croper.destroy();
+			var options = { 
+				url:"img/bcard.jpg", 
+				enableOrientation:true,
+     			boundary: B.crop_opts.boundary 
+     		};
+			B.croper = new Croppie(document.getElementById('crop-box'), options);
+			return false;
+		} else {
+			myApp.alert('Camera not availlable');
+			card_ocr_process((B.card_side == 'verso' ? card_back_data : card_data));
+			$$("#card-entry img."+B.card_side).attr("src","img/bcard.jpg");
 			return false;
 		}
-		myApp.alert('Camera not availlable');
-		card_ocr_process((B.card_side == 'verso' ? card_back_data : card_data));
-		$$("#card-entry img."+B.card_side).attr("src","img/bcard.jpg");
-		return false;
 	}
     var srcType = Camera.PictureSourceType.CAMERA;
     var options = camera_options(srcType);
     var func = card_image_process;
  
     navigator.camera.getPicture(function cameraSuccess(imgUri) {
-        func(imgUri);
+          
+       if (B.card_side=='other') {       	 	
+				B.croper.destroy();
+				var options = { 
+					url:imgUri, 
+					enableOrientation:true,
+        			boundary: B.crop_opts.boundary 
+        		};
+				B.croper = new Croppie(document.getElementById('crop-box'), options);
+       	 	return false;
+       } else {
+       	func(imgUri);
+       }
+       
     }, function cameraError(error) {
         myApp.alert("Unable to obtain picture: " + error);
     }, options);
@@ -70,17 +90,6 @@ function card_image_process(imgUri) {
           canvas.width = width;
           canvas.height = height;
           canvas.getContext('2d').drawImage(image, 0, 0, width, height);
-          
-          if (B.card_side=='other') {
-          	 	var url = canvas.toDataURL('image/jpeg');
-          	 	
-					B.croper.destroy();
-					
-					var options = { url:url, enableOrientation:true };
-					
-					B.croper = new Croppie(document.getElementById('crop-box'), options);
-          	 	return false;
-          }
           scanImg[B.card_side]['dataUrl'] = canvas.toDataURL('image/jpeg');
           scanImg[B.card_side]['width'] = width;
           scanImg[B.card_side]['height'] = height;
