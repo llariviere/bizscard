@@ -2124,7 +2124,7 @@ var onShake = function () {
 		mainView.router.back();
 	}, false);
 	
-	shake.startWatch(onShake, 40);
+	shake.startWatch(onShake, 30);
 	
 	var storedData = myApp.formGetData('login_form');
 	
