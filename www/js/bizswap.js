@@ -2113,11 +2113,18 @@ function geoLocation(func) {
 	//success({lat:45.6105491,lng:-73.5094794,alt:0}); // manual override for testing...
 }
 
+var onShake = function () {
+  // Fired when a shake is detected
+	myApp.alert("Shake it!!!");
+};
+
 (function (document) {
 	document.addEventListener("backbutton", function(e){
 		e.preventDefault();
 		mainView.router.back();
 	}, false);
+	
+	shake.startWatch(onShake, 40);
 	
 	var storedData = myApp.formGetData('login_form');
 	
