@@ -1287,6 +1287,8 @@ socket.on('card load', function (data) {
 	myApp.hidePreloader();
 	myApp.closeModal();
 	
+	shake.startWatch(onShake, 30);
+	
 }); // socket on load
 
 socket.on('card shared data', function(card) {
