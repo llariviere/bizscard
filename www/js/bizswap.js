@@ -643,7 +643,7 @@ function card_form_open(list, index) {
 		$$("#card-form-edit").hide();
 		var pre_ph = 'the ';
 	} else {
-		$$("#card-form > div > div.waiting").hide()
+		$$("#card-form > div > div").hide()
 		$$("#card-form > div > div.current").show	();
 		$$("#card-form > div > div.edit").show()
 		$$("#card-form > div > div.edit").addClass("hidden");
