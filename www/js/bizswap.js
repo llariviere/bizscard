@@ -33,7 +33,8 @@ var B = {
 	input_labl:'',
 	card_side:'',
 	options: {
-		ocr_match: false
+		ocr_match: false,
+		shake_level: 40
 	},
 	cards: {
 		mycard: {},
@@ -111,7 +112,10 @@ $$(document).on('form:success', 'form.ajax-submit', function (e) {
 	if ($$("form.ajax-submit input[name='id']").val()!=B.cards.mycard.id) return false;
 	
 	$$.each($$(this).find("input, select"), function(i,e){
-		if (e.name) B.cards.mycard[e.name] = e.value;
+		if (e.name) {
+			B.cards.mycard[e.name] = e.value;
+			window.localStorage.setItem('B', JSON.stringify(B));
+		}
 	})
 	
 	card_populate("mycard",B.cards.mycard);
@@ -628,8 +632,8 @@ function card_form_open(list, index) {
 	
 	if (list=='mycard') {
 		$$("#card-form > div > div").hide();
-		$$("#card-form > div > div.edit").show()
-		$$("#card-form > div > div.edit").removeClass("hidden");
+		$$("#card-form > div > div.edit, #card-form > div > div.parameters").show()
+		$$("#card-form > div > div.edit, #card-form > div > div.parameters").removeClass("hidden");
 		$$("#card-form-edit").hide();
 		var pre_ph = 'your ';
 	} else if (list=='waiting') {
@@ -668,7 +672,15 @@ function card_form_open(list, index) {
 	
 	for (var i=0; i<B.fields.length; i++) {
 		var f = B.fields[i];
-		if (f.format=='img') {
+		if (f.format=='pars' && list=='mycard') {
+			if (f.id==10) {
+				$$("#card-parameter input[name='"+f.id+"']").val((card[f.id] ? card[f.id].v : 40));
+			} 
+			if (f.id==11) {
+				$$("#card-parameter input[name='"+f.id+"']").prop("checked",(card[f.id] ? true : false));
+			}
+			
+		} else if (f.format=='img') {
 			// Skip all image field...
 		} else if (f.base) {
 			$$(B.container+" input[name='"+f.id+"']").val((card[f.id] ? card[f.id].v : ''));
@@ -853,9 +865,11 @@ function card_record() {
 	
 	if ($$(B.container).data('id')) pars['id'] = $$(B.container).data('id');
 	
-	$$.each($$(B.container+" li"), function(i,li) {
+	var parameters = (pars.id==B.cards.mycard.id ? ", #card-parameter li" : '');
+	
+	$$.each($$(B.container+" li"+parameters), function(i,li) {
 		var label 	= $$(li).find(".label").text();
-		var champ 	= $$(li).find("input").attr("name").toLowerCase();
+		var champ 	= parseInt($$(li).find("input").attr("name").toLowerCase());
 		var valeur 	= $$(li).find("input").val().replace('-change-','').trim();
 		var oblige 	= ($$(li).find("input").hasClass('base'));
 		var phone 	= ($$(li).find("input").hasClass('tel')); 
@@ -882,13 +896,13 @@ function card_record() {
 			}
 		}
 		
-		// If card exist, we update B.fields list...
+		// If card exist, we update B.cards_fields list...
 		var add_local = (B.container=='#add_card_list');
 		if (pars.id) {
 			$$.each(B.cards_fields, function(i,cf){
 				if (cf.cid==pars['id'] && cf.fid==champ) {
 					B.cards_fields[i].v = valeur;
-					add_local = true;
+					add_local = false;
 					return false;
 				}
 			});
@@ -901,6 +915,7 @@ function card_record() {
 					"v":valeur
 				});
 			}
+			window.localStorage.setItem("B", JSON.stringify(B));
 		}
 		
 	});
@@ -930,6 +945,10 @@ function card_record() {
 		
 		if (pars['id']==B.cards.mycard.id) {
 			card_populate("mycard", pars);
+			if (typeof shake !== 'undefined') {
+				shake.stopWatch();
+				if (B.options.shake_level) shake.startWatch(onShake, B.options.shake_level);
+			}
 		}
 	}
 }
@@ -949,6 +968,7 @@ function card_recorder(data) {
 	myApp.alert("New card added to your current list!");
 	$$(".badge.current-list-nbr").html(B.cards.current.length);
 	$$(".current-list-open").trigger("click");
+	window.localStorage.setItem('B', JSON.stringify(B));
 }
 
 function card_populate(container,data) {
@@ -963,12 +983,15 @@ function card_populate(container,data) {
  		$$.each(B.fields, function (ii,f) {
 			if(e==f.en) {
 			  $$.each(B.cards_fields, function(iii,cf) {
+			  	 if (cf.cid==B.cards.mycard.id && cf.fid==10) B.options.shake_level = cf.v;
+		 		 if (cf.cid==B.cards.mycard.id && cf.fid==11) B.options.ocr_match = cf.v;
+				 if (cardid!=B.cards.mycard.id && cf.cid==cardid && cf.fid==52) {
+				 	avatar = cf.v+ '';
+				 }
+				 
 			  	 if (cf.cid==cardid && cf.fid==f.id) {
 			  	 	v = cf.v + '';
 			  	 	switch (e) {
-			  	 		case 'Avatar':
-			  	 			avatar = v;
-			  	 			break;
 						case 'firstname': 
 							initials = v.substr(0,1).toUpperCase(); 
 							complete_name = v; 
@@ -1239,9 +1262,28 @@ socket.on('card login', function (data) {
 			$$("#email").focus();
 			break;
 		case "card logged in":
-			socket.emit('card load2', data.id);
-		   //welcomescreen.close();
 		   myApp.closeModal(".login-screen.modal-in");
+			var local_B = window.localStorage.getItem('B');
+			if (local_B) {
+				console.log("Local_B");
+				B = JSON.parse(local_B);
+				var nb_cards = 0;
+				if (B.cards.current) {
+					$$(".badge.current-list-nbr").html(B.cards.current.length);
+					nb_cards += B.cards.current.length;
+				}
+				if (B.cards.waiting) {
+					$$(".badge.waiting-list-nbr").html(B.cards.waiting.length);
+					nb_cards += B.cards.waiting.length;
+				}
+				console.log(data.nb_links + ' == ' + nb_cards)
+				if (data.nb_links == nb_cards) {
+					card_populate('mycard',B.cards.mycard);
+					break;	
+				}
+			}
+			console.log('emit card load2')
+			socket.emit('card load2', data.id);
 		   myApp.alert('Synchronizing your data...<br>Please wait.');
 		   geoPermission();
 			break;
@@ -1254,7 +1296,6 @@ socket.on('card login', function (data) {
 
 socket.on('card rem', function() {
 	myApp.formDeleteData('login_form');
-	//welcomescreen.open();
 	myApp.loginScreen(".login-screen.modal-in");
 	myApp.hidePreloader();
 });
@@ -1279,6 +1320,9 @@ socket.on('card load', function (data) {
 			B.cards.waiting.push(data.cards[i]);
 		}
 	}
+	
+	window.localStorage.setItem('B', JSON.stringify(B));	
+	
 	if (B.cards.current) $$(".badge.current-list-nbr").html(B.cards.current.length);
 	if (B.cards.waiting) $$(".badge.waiting-list-nbr").html(B.cards.waiting.length);
 	
@@ -1287,7 +1331,8 @@ socket.on('card load', function (data) {
 	myApp.hidePreloader();
 	myApp.closeModal();
 	
-	shake.startWatch(onShake, 30);
+	if (typeof shake !== 'undefined') shake.startWatch(onShake, B.options.shake_level);
+
 	
 }); // socket on load
 
@@ -1319,7 +1364,9 @@ socket.on('card record', function (data) {
 							mainView.router.load({pageName: 'index'});
 						} },
 						{ text: "Yes, accept it", onClick: function(){
-							card_auth(data.id,'accept')
+							B.container = "#thecard";
+							$$(B.container).data("id", data.id);
+							card_auth('accept');
 							mainView.router.load({pageName: 'index'});
 						}}
 					]
@@ -1377,7 +1424,7 @@ socket.on('card add', function(data){
 		B.cards.current.push(data.card);
 		$$(".badge.current-list-nbr").html(B.cards.current.length);
 	}
-	
+	window.localStorage.setItem('B', JSON.stringify(B));
 	mainView.router.load({pageName: 'index'});
 });
 
@@ -1396,6 +1443,7 @@ socket.on('card details', function(data){
 		B.cards.current.push(data.card);
 		$$(".badge.current-list-nbr").html(B.cards.current.length);
 	}
+	window.localStorage.setItem('B', JSON.stringify(B));
 });
 socket.on('card accepted', function(data){
 	if (data.msg=='OK') {
@@ -1412,6 +1460,7 @@ socket.on('card accepted', function(data){
 		$$(".current-list-open").trigger("click");
 		myApp.alert("Card accepted and transfered to your current card list!");
 	}
+	window.localStorage.setItem('B', JSON.stringify(B));
 });
 socket.on('card refused', function(data){
 	if (data.msg=='OK') {
@@ -1425,6 +1474,7 @@ socket.on('card refused', function(data){
 		if (B.cards.waiting) $$(".badge.waiting-list-nbr").html(B.cards.waiting.length);
 		$$(".waiting-list-open").trigger("click");
 		myApp.alert("Card deleted from your waiting card list!");
+		window.localStorage.setItem('B', JSON.stringify(B));
 	}
 });
 socket.on('card deleted', function(data){
@@ -1439,6 +1489,7 @@ socket.on('card deleted', function(data){
 		$$(".current-list-open").trigger("click");
 		if (B.cards.current) $$(".badge.current-list-nbr").html(B.cards.current.length);
 		myApp.alert("Card deleted from your current card list!");
+		window.localStorage.setItem('B', JSON.stringify(B));
 	}
 });
 socket.on('card qr', function(data){
@@ -1459,6 +1510,7 @@ socket.on('custom field', function(data){
   	myApp.alert(data.msg);
 			
   	B.fields.push({"id":data.id,"en":data.field,"fr":data.field,"base":0,"order":255});
+  	window.localStorage.setItem('B', JSON.stringify(B));
   	
 	var li = $$(B.container).find("li.ii_"+data.ii);
 	li.find(".label").attr("data-i",data.id);
@@ -1475,7 +1527,10 @@ socket.on('sms test result', function(data){
 });
 socket.on('card cc charge', function(data){
 	$$.each(B.cards.current, function(i,c){
-		if (c.id==data.id) B.cards.current[i].payed_date=Date().toString();
+		if (c.id==data.id) {
+			B.cards.current[i].payed_date=Date().toString();
+			window.localStorage.setItem('B', JSON.stringify(B));
+		}
 	});
 	$$("#card-form .payfor").hide();
 	myApp.alert("Payment complete!");
@@ -1679,9 +1734,11 @@ function card_init() {
 			
 			$$("#card_ocr_words").prepend(html);
 			
+			
 			$$("#card_ocr_input").on("change", add_card_word_detect);
-		
-			$$("#card_ocr_words").on("click", ".word", function(event) {
+			
+			$$("#card_ocr_words").find(".word").off("click");
+			$$("#card_ocr_words").find(".word").on("click", function(event) {
 				var new_text = '';
 				if ($$(this).hasClass("on")) {
 					new_text = $$("#card_ocr_input").val().replace($$(this).text(),'').replace('  ',' ').trim();
@@ -1692,6 +1749,7 @@ function card_init() {
 				$$(this).toggleClass("on");
 			});
 			
+			$$("#card_ocr_ok").off("click");
 			$$("#card_ocr_ok").on("click", function(){
 					$$(B.container+" input[name='"+B.input_name+"']").val($$("#card_ocr_input").val());
 			});
@@ -2115,9 +2173,10 @@ function geoLocation(func) {
 	//success({lat:45.6105491,lng:-73.5094794,alt:0}); // manual override for testing...
 }
 
+
 var onShake = function () {
-  // Fired when a shake is detected
-	myApp.alert("Shake it!!!");
+	// Fired when a shake is detected
+	card_offer('mycard',B.cards.mycard.id);
 };
 
 (function (document) {
@@ -2125,7 +2184,7 @@ var onShake = function () {
 		e.preventDefault();
 		mainView.router.back();
 	}, false);
-		
+	
 	var storedData = myApp.formGetData('login_form');
 	
 	if (storedData) {
