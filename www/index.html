@@ -307,6 +307,37 @@
 			        <ul id="card-form-list"></ul>
 					</div>
 					
+					<div class="list-block parameters hidden">
+						Parameters:
+			      	<ul id="card-parameter">
+							<li class="list-item">
+								<div class="item-content">
+									<div class="item-inner">
+										<div class="item-title label" data-i="10" data-id="">Shake sensitivity</div>
+										<div class="item-input">
+							            <div class="range-slider">
+							              <input type="range" min="0" max="100" value="40" step="10" name="10">
+							            </div>
+										</div>
+									</div>
+								</div>
+							</li>
+							<li class="list-item">
+								<div class="item-content">
+									<div class="item-inner">
+										<div class="item-title label" data-i="11" data-id="">OCR auto-populate</div>
+										<div class="item-input">
+							            <label class="label-switch">
+							              <input type="checkbox" name="11">
+							              <div class="checkbox"></div>
+							            </label>
+										</div>
+									</div>
+								</div>
+							</li>
+			      	</ul>
+					</div>
+					
 			      <div class="content-block edit hidden">
 			        <div class="row">
 			          <div class="col-33">
@@ -330,10 +361,10 @@
 			      <div class="content-block waiting hidden">
 			        <div class="row">
 			          <div class="col-50">
-			          	<a href="#" onclick="card_auth('{{id}}','refuse')" class="button button-big button-fill bg-red">Refuse</a>
+			          	<a href="#" onclick="card_auth('refuse')" class="button button-big button-fill bg-red">Refuse</a>
 			          </div>
 			          <div class="col-50">
-			          	<a href="#" onclick="card_auth('{{id}}','accept')" class="button button-big button-fill bg-green">Accept</a>
+			          	<a href="#" onclick="card_auth('accept')" class="button button-big button-fill bg-green">Accept</a>
 			          </div>
 			        </div>
 			      </div>
@@ -667,8 +698,8 @@
      </div>
    </div>
    
-   <div class="content-block" id="crop-box"></div>
-	  
+   <div class="list-block" id="crop-box"></div>
+   
   </div>
   
   <div class="popup popup-templates">
