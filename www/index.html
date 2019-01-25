@@ -184,7 +184,7 @@
           
           <div class="navbar-inner cached" data-page="card-form">
 				<div class="left">
-					<a href="#index" class="back"><i class="icon icon-back"></i></a>
+					<a href="#index" class="link icon-only back"><i class="icon icon-back"></i></a>
 				</div>
             <div class="center sliding card-info-title">Card form</div>
             <div class="right">
@@ -752,11 +752,11 @@
 		          </div>
 		      </div>
 		      <div class="swipeout-actions-left">
-		        <a href="#" onclick="card_auth('{{id}}','delete')" class="bg-red">Delete</a>
+		        <a href="#" onclick="card_del('{{id}}')" data-id="{{id}}" class="a-swipeout delete bg-red">Delete</a>
 		      </div>
 		      <div class="swipeout-actions-right">
-		        <a href="#" onclick="" class="bg-green"><i class="fa fa-phone fa-lg"></i></a>
-		        <a href="#" onclick="" class="bg-blue"><i class="fa fa-comment fa-lg"></i></a>
+		        <a href="tel:{{cellphone}}" class="a-swipeout bg-green"><i class="fa fa-phone fa-lg"></i></a>
+		        <a href="sms:{{cellphone}}" class="a-swipeout bg-blue"><i class="fa fa-comment fa-lg"></i></a>
 		      </div>
 		    </li>
 		    {{else}}
@@ -793,18 +793,12 @@
 	<div class="list-block">
 	  <ul id="waiting">
 	    {{#each waiting}}
-	    <li class="swipeout card-item">
-	      <div class="swipeout-content item-content">
+	    <li class="card-item">
+	      <div class="item-content">
 	         <div class="item-inner">
 	            <div class="item-title">{{firstname}} {{lastname}}</div>
 	            <div class="item-after">{{company}}</div>
 	          </div>
-	      </div>
-	      <div class="swipeout-actions-left">
-	        <a href="#" onclick="card_auth('{{id}}','refuse')" class="bg-red">Refuse</a>
-	      </div>
-	      <div class="swipeout-actions-right">
-	        <a href="#" onclick="card_auth('{{id}}','accept')" class="bg-green">Accept</a>
 	      </div>
 	    </li>
 	    {{else}}
