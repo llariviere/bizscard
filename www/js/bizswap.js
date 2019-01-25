@@ -139,6 +139,7 @@ $$(".current-list-open").on("click", function(){
 					case 35: list.current[i]['firstname']	=cf.v; break;
 					case 38: list.current[i]['lastname']	=cf.v; break;
 					case 29: list.current[i]['company']		=cf.v; break;
+					case 26: list.current[i]['cellphone']	=cf.v.replace(/[^0-9]/g, ''); break;
 				}
 			}
 		});	
@@ -169,6 +170,15 @@ $$(".waiting-list-open").on("click", function(){
 	
 	mainView.router.loadContent(html);
 	
+});
+
+
+$$('.a-swipeout.delete').on('click', function () {
+	console.log($$(this).data("id"))
+});
+
+$$('.a-swipeout').on('click', function () {
+	return false;
 });
 
 $$(".card-camera-open").on("click", function(){
@@ -1090,6 +1100,12 @@ function card_auth(action) {
 	console.log('card_auth('+action+')');
 	
 	socket.emit('card '+action, {"cardid":B.cards.mycard.id, "authid":$$(B.container).data("id")});
+}
+
+function card_del(id) {		
+	console.log('card_del('+id+')');
+	
+	socket.emit('card delete', {"cardid":B.cards.mycard.id, "authid":id});
 }
 
 
