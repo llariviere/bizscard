@@ -29,7 +29,7 @@ function card_offered(context,id) {
 			} }
 		]
 	});
-	//setTimeout(function () { myApp.closeModal(cancelModal); },30000)
+	setTimeout(function () { myApp.closeModal(cancelModal); },30000)
    card_offer_complete(id);
    card_offer_completed(context);
 }
