@@ -21,7 +21,7 @@ var mySwiper = myApp.swiper('.swiper-container', {
 var $$ = Dom7;
 // {width:100, height:100, type: 'square'}
 var B = {
-	about:'Bizswiper v0.4.2<br>2019-01',
+	about:'Bizswiper v0.4.3<br>2019-03',
 	server:'https://bizswiper.com:3333/',
 	croper:{},
 	crop_opts:{"img":'img/b.png',"card":{ width: ($$("body").width() - 10), height: (($$("body").width() - 10) / 3.5 * 2), type: 'square' },"boundary":{ width: ($$("body").width() - 10), height: (($$("body").width() - 10) / 3.5 * 2)}},
