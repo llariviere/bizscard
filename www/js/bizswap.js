@@ -178,6 +178,7 @@ $$('.a-swipeout.delete').on('click', function () {
 });
 
 $$('.a-swipeout').on('click', function () {
+	console.log($$(this).data("id"))
 	return false;
 });
 
@@ -1086,6 +1087,7 @@ function card_populate(container,data) {
 			$$("#card-form .card-info-pastille").css({"background-image":"url("+avatar+")"});
 			$$("#card-form .card-info-pastille").text('');
 		} else {
+			$$("#card-form .card-info-pastille").css({"background-image":"none"});
 			$$("#card-form .card-info-pastille").text(initials);
 		}		
 		$$(".card-info-title").text(complete_name);
@@ -1096,10 +1098,10 @@ function card_populate(container,data) {
 			
 }
 
-function card_auth(action) {		
-	console.log('card_auth('+action+')');
+function card_auth(id, action) {		
+	console.log('card_auth('+id+', '+action+')');
 	
-	socket.emit('card '+action, {"cardid":B.cards.mycard.id, "authid":$$(B.container).data("id")});
+	socket.emit('card '+action, {"cardid":B.cards.mycard.id, "authid":id});
 }
 
 function card_del(id) {		
@@ -1279,7 +1281,7 @@ socket.on('card login', function (data) {
 			break;
 		case "card logged in":
 		   myApp.closeModal(".login-screen.modal-in");
-			var local_B = window.localStorage.getItem('B');
+			var local_B = window.localStorage.getItem('_B');
 			if (local_B) {
 				console.log("Local_B");
 				B = JSON.parse(local_B);
@@ -1337,7 +1339,7 @@ socket.on('card load', function (data) {
 		}
 	}
 	
-	window.localStorage.setItem('B', JSON.stringify(B));	
+	window.localStorage.setItem('_B', JSON.stringify(B));	
 	
 	if (B.cards.current) $$(".badge.current-list-nbr").html(B.cards.current.length);
 	if (B.cards.waiting) $$(".badge.waiting-list-nbr").html(B.cards.waiting.length);
@@ -1382,7 +1384,7 @@ socket.on('card record', function (data) {
 						{ text: "Yes, accept it", onClick: function(){
 							B.container = "#thecard";
 							$$(B.container).data("id", data.id);
-							card_auth('accept');
+							card_auth(data.id, 'accept');
 							mainView.router.load({pageName: 'index'});
 						}}
 					]
