@@ -97,6 +97,8 @@ $$(document).on("click", ".card-item", function(){
 	
 	B.container = '#card-form-list';
 	
+	$$(B.container).data("id",B.cards[list][index].id);
+	
 	B.card_side = '';
 	
 	card_form_open(list, index);
@@ -1098,9 +1100,11 @@ function card_populate(container,data) {
 			
 }
 
-function card_auth(id, action) {		
-	console.log('card_auth('+id+', '+action+')');
+function card_auth(id, action) {
+	if (!id) id = $$(B.container).data("id");
 	
+	console.log('card_auth('+id+', '+action+')');
+		
 	socket.emit('card '+action, {"cardid":B.cards.mycard.id, "authid":id});
 }
 
