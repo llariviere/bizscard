@@ -22,7 +22,7 @@ var $$ = Dom7;
 // {width:100, height:100, type: 'square'}
 var B = {
 	about:'Bizswiper v0.5.0<br>2019-03-22',
-	server:'https://142.44.162.191:3333/',
+	server:'http://142.44.162.191:3333/',
 	croper:{},
 	crop_opts:{"img":'img/b.png',"card":{ width: ($$("body").width() - 10), height: (($$("body").width() - 10) / 3.5 * 2), type: 'square' },"boundary":{ width: ($$("body").width() - 10), height: (($$("body").width() - 10) / 3.5 * 2)}},
 	swiper:{},
