@@ -70,4 +70,5 @@
     <plugin name="cordova-plugin-device" source="npm" spec="~1.1.6" />
     <plugin name="cordova-plugin-geolocation-permission-status" source="npm" spec="~1.0.0" />
     <plugin name="cordova-plugin-shake" spec="~0.6.0" />
+    <plugin name="cordova-plugin-phone-call" spec="~1.0.7" />
 </widget>
