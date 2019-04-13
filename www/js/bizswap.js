@@ -1317,7 +1317,7 @@ function card_remove() {
 	});
 }
 
-var socket = io(B.server);
+var socket = io.connect(B.server);
 var $connected = false;
 var $online = false;
 
