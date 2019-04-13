@@ -1119,8 +1119,7 @@ function card_cell(e) {
 					    if (err == "empty") alert("Unknown phone number");
 					    else myApp.alert("Dialer Error:" + err);    
 					  },
-					  function(success) { alert('Dialing succeeded'); }, 
-					  appChooser
+					  function(success) { alert('Dialing succeeded'); }
 					);
             }
         },
