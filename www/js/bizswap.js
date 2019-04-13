@@ -21,8 +21,8 @@ var mySwiper = myApp.swiper('.swiper-container', {
 var $$ = Dom7;
 // {width:100, height:100, type: 'square'}
 var B = {
-	about:'Bizswiper v0.5.0<br>2019-03-22',
-	server:'https://virtualbizcards.com:3333/',
+	about:'Bizswiper v0.5.1<br>2019-04',
+	server:'http://virtualbizcards.com:33333/',
 	croper:{},
 	crop_opts:{"img":'img/b.png',"card":{ width: ($$("body").width() - 10), height: (($$("body").width() - 10) / 3.5 * 2), type: 'square' },"boundary":{ width: ($$("body").width() - 10), height: (($$("body").width() - 10) / 3.5 * 2)}},
 	swiper:{},
@@ -716,7 +716,7 @@ function card_form_open(list, index) {
 		$$('#thecard').data("top", t);
 		$$('#thecard').css({"height": h, "bottom":t+h});
 		
-		var draggie2 = new Draggabilly( '#thecard', { axis:"y" });
+		var draggie2 = new Draggabilly( '#thecard', { axis:"y", handle: '.handle' });
 		draggie2.on( 'dragEnd', function( event, pointer ) {
 			if (this.position.y < (t-h)) {
 				card_offered('thecard',cardid);
@@ -1078,11 +1078,11 @@ function card_populate(container,data) {
 		});
 		draggie.on( 'staticClick', function(){ card_offer('mycard',B.cards.mycard.id); });
 	
-	}	
+	}
 	
 	if (container) {
 		$$("#"+container+" .content").html(html);
-		data.points_img = (data.points_img ? data.points_img : 'none');
+		data.points_img = (data.points_img ? data.points_img : 'bronze');
 		$$("#"+container+" .points > img").attr("src", "img/badge_"+ data.points_img.toLowerCase() +".png");
 		$$("#card-form .card-info-txt").html(html2);
 		if (avatar) {
@@ -1098,6 +1098,89 @@ function card_populate(container,data) {
 		return html;
 	}
 			
+}
+
+function card_email(e) {
+	var email = e.textContent.substr(3);
+	$$("#card-email").find(".to").val(email)
+	mainView.router.load({pageName: 'card-email'});
+}
+
+function card_cell(e) {
+	var cell = e.textContent.substr(3).replace(/[^\d]/g,'');
+	var buttons1 = [
+        {
+            text: 'Start a phone call',
+            bold: true,
+            onClick: function(){
+            	cordova.plugins.phonedialer.call(
+					  cell, 
+					  function(err) {
+					    if (err == "empty") alert("Unknown phone number");
+					    else myApp.alert("Dialer Error:" + err);    
+					  },
+					  function(success) { alert('Dialing succeeded'); }, 
+					  appChooser
+					);
+            }
+        },
+        {
+            text: 'Send a text message',
+            bold: true,
+            onClick: function(){
+            	var conversationStarted = false;
+					var myMessages = myApp.messages('.messages', {
+					  autoLayout:true
+					});
+					var myMessagebar = myApp.messagebar('.messagebar');
+					mainView.router.load({pageName: 'card-messages'});
+					
+					$$('.messagebar .link').on('click', function () {
+					  // Message text
+					  var messageText = myMessagebar.value().trim();
+					  // Exit if empty message
+					  if (messageText.length === 0) return;
+					 
+					  // Empty messagebar
+					  myMessagebar.clear()
+					 
+					  // Random message type
+					  var messageType ='sent';// (['sent', 'received'])[Math.round(Math.random())];
+					 
+					  // Avatar and name for received message
+					  var avatar, name;
+					  if(messageType === 'received') {
+					    avatar = 'http://lorempixel.com/output/people-q-c-100-100-9.jpg';
+					    name = 'Kate';
+					  }
+					  // Add message
+					  myMessages.addMessage({
+					    // Message text
+					    text: messageText,
+					    // Random message type
+					    type: messageType,
+					    // Avatar and name:
+					    avatar: avatar,
+					    name: name,
+					    // Day
+					    day: !conversationStarted ? 'Today' : false,
+					    time: !conversationStarted ? (new Date()).getHours() + ':' + (new Date()).getMinutes() : false
+					  })
+					 
+					  // Update conversation flag
+					  conversationStarted = true;
+					});
+            }
+        }
+    ];
+    var buttons2 = [
+        {
+            text: 'Cancel',
+            color: 'red'
+        }
+    ];
+    var groups = [buttons1, buttons2];
+    myApp.actions(groups);
 }
 
 function card_auth(id, action) {
