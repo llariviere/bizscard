@@ -72,7 +72,7 @@ var cards_templates = [
 	<div style="top:120px;left:120px;">{{company name}}{{company}}</div>\
 	<div style="top:135px;left:120px;" onClick="card_cell(this)">{{cellphone}}</div>\
 	<div style="top:150px;left:120px;">{{fax}}</div>\
-	<div class="img" style="top:75px;left:0px;background-image:url({{logo}}), url(img/fa-user.png);"></div>',
+	<div class="img" style="top:75px;left:0px;background-image:url({{logo}}), url(img/fa-user.png);" onClick="card_messages()"></div>',
 	
 	'<div style="top:4px;left:120px;font-weight:bold;font-size:16px;">{{complete name}}{{firstname}} {{lastname}}</div>\
 	<div style="top:28px;left:120px;">{{title}}</div>\
@@ -83,7 +83,7 @@ var cards_templates = [
 	<div style="top:120px;left:120px;" onClick="card_cell(this)">{{cellphone}}</div>\
 	<div style="top:135px;left:120px;">{{fax}}</div>\
 	<div style="top:150px;left:120px;">{{website}}</div>\
-	<div class="img" style="top:0px;left:0px;background-image:url({{logo}}), url(img/fa-user.png);"></div>',
+	<div class="img" style="top:0px;left:0px;background-image:url({{logo}}), url(img/fa-user.png);" onClick="card_messages()"></div>',
 	
 	'<div style="top:84px;width:50%;text-align:right;font-weight:bold;font-size:16px;">{{complete name}}{{firstname}} {{lastname}} |</div>\
 	<div style="top:88px;left:50%;width:50%;text-align:left;">&nbsp;{{title}}</div>\
@@ -94,7 +94,7 @@ var cards_templates = [
 	<div style="top:152px;left:50%;width:50%;text-align:left;">&nbsp;{{website}}</div>\
 	<div style="top:168px;width:50%;text-align:right;" onClick="card_cell(this)">{{cellphone}}&nbsp;|</div>\
 	<div style="top:168px;left:50%;width:50%;text-align:left;">&nbsp;{{fax}}</div>\
-	<div class="img" style="top:0px;width:75px;height:75px;left:50%;margin-left:-38px;background-image:url({{logo}}), url(img/fa-user.png);"></div>',
+	<div class="img" style="top:0px;width:75px;height:75px;left:50%;margin-left:-38px;background-image:url({{logo}}), url(img/fa-user.png);" onClick="card_messages()"></div>',
 ];
 
 var input_tpl = '<input type="text" name="{{name}}" value="{{value}}" class="{{class}}" data-label="{{label}}" placeholder="{{placeholder}}" readonly="{{readonly}}" />';
