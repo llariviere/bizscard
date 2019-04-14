@@ -871,6 +871,7 @@ function category_open(code_name,cls) {
 	myApp.accordionOpen(".category-level"+(cls=='func'? 3 : (cls=='ctry' ? 4 : 1)));
 	
 }
+
 function card_record() {
 	console.log('card_record()');
 
@@ -987,6 +988,8 @@ function card_recorder(data) {
 function card_populate(container,data) {
 	console.log('card_populate('+container+', '+data+')');
 	
+	B.container = container;
+	
 	var html2 = '<div class="card-info-name">{{firstname}} {{lastname}}</div><div class="card-info-add">{{email}}{{title}}{{address}} {{city}} {{state_prov}} {{country}} {{postal code}}</div>'
 	var initials = '--', complete_name = 'No name card', avatar = false;
 	var cardid = data.id;
@@ -1101,85 +1104,72 @@ function card_populate(container,data) {
 }
 
 function card_email(e) {
+	if (B.container=='mycard') return false;
 	var email = e.textContent.substr(3);
 	$$("#card-email").find(".to").val(email)
 	mainView.router.load({pageName: 'card-email'});
 }
 
+function card_messages() {
+	if (B.container=='mycard') return false;
+	var conversationStarted = false;
+	var myMessages = myApp.messages('.messages', {
+	  autoLayout:true
+	});
+	var myMessagebar = myApp.messagebar('.messagebar');
+	mainView.router.load({pageName: 'card-messages'});
+	
+	$$('.messagebar .link').on('click', function () {
+	  // Message text
+	  var messageText = myMessagebar.value().trim();
+	  // Exit if empty message
+	  if (messageText.length === 0) return;
+	 
+	  // Empty messagebar
+	  myMessagebar.clear()
+	 
+	  // Random message type
+	  var messageType ='sent';// (['sent', 'received'])[Math.round(Math.random())];
+	 
+	  // Avatar and name for received message
+	  var avatar, name;
+	  if(messageType === 'received') {
+	    avatar = 'http://lorempixel.com/output/people-q-c-100-100-9.jpg';
+	    name = 'Kate';
+	  }
+	  // Add message
+	  myMessages.addMessage({
+	    // Message text
+	    text: messageText,
+	    // Random message type
+	    type: messageType,
+	    // Avatar and name:
+	    avatar: avatar,
+	    name: name,
+	    // Day
+	    day: !conversationStarted ? 'Today' : false,
+	    time: !conversationStarted ? (new Date()).getHours() + ':' + (new Date()).getMinutes() : false
+	  })
+	 
+	  // Update conversation flag
+	  conversationStarted = true;
+	});
+
+}
+
 function card_cell(e) {
+	if (B.container=='mycard') return false;
 	var cell = e.textContent.substr(3).replace(/[^\d]/g,'');
-	var buttons1 = [
-        {
-            text: 'Start a phone call',
-            bold: true,
-            onClick: function(){
-            	cordova.plugins.phonedialer.call(
-					  cell, 
-					  function(err) {
-					    if (err == "empty") alert("Unknown phone number");
-					    else myApp.alert("Dialer Error:" + err);    
-					  },
-					  function(success) { alert('Dialing succeeded'); }
-					);
-            }
-        },
-        {
-            text: 'Send a text message',
-            bold: true,
-            onClick: function(){
-            	var conversationStarted = false;
-					var myMessages = myApp.messages('.messages', {
-					  autoLayout:true
-					});
-					var myMessagebar = myApp.messagebar('.messagebar');
-					mainView.router.load({pageName: 'card-messages'});
-					
-					$$('.messagebar .link').on('click', function () {
-					  // Message text
-					  var messageText = myMessagebar.value().trim();
-					  // Exit if empty message
-					  if (messageText.length === 0) return;
-					 
-					  // Empty messagebar
-					  myMessagebar.clear()
-					 
-					  // Random message type
-					  var messageType ='sent';// (['sent', 'received'])[Math.round(Math.random())];
-					 
-					  // Avatar and name for received message
-					  var avatar, name;
-					  if(messageType === 'received') {
-					    avatar = 'http://lorempixel.com/output/people-q-c-100-100-9.jpg';
-					    name = 'Kate';
-					  }
-					  // Add message
-					  myMessages.addMessage({
-					    // Message text
-					    text: messageText,
-					    // Random message type
-					    type: messageType,
-					    // Avatar and name:
-					    avatar: avatar,
-					    name: name,
-					    // Day
-					    day: !conversationStarted ? 'Today' : false,
-					    time: !conversationStarted ? (new Date()).getHours() + ':' + (new Date()).getMinutes() : false
-					  })
-					 
-					  // Update conversation flag
-					  conversationStarted = true;
-					});
-            }
-        }
-    ];
-    var buttons2 = [
-        {
-            text: 'Cancel',
-            color: 'red'
-        }
-    ];
-    var groups = [buttons1, buttons2];
-    myApp.actions(groups);
+	
+	if (typeof phonedialer == 'undefined') return false;
+	phonedialer.call(
+	  cell, 
+	  function(err) {
+	    if (err == "empty") myApp.alert("Unknown phone number");
+	    else myApp.alert("Dialer Error:" + err);    
+	  },
+	  function(success) {  }
+	);
 }
 
 function card_auth(id, action) {
@@ -1477,8 +1467,8 @@ socket.on('card record', function (data) {
 				});
 			} else if (data.payed) {
 				myApp.modal({
-					title: 'Existing card?', 
-					text: '<b>This email address is already used on a payed card!</b><br>Do you want to add it?', 
+					title: 'Existing card', 
+					text: '<b>This email address is already used by a paying user!</b><br>Do you want to add it?', 
 					buttons: [
 						{ text: "No thanks", onClick: function(){
 							myApp.alert("You should change the email address...");
@@ -1502,6 +1492,8 @@ socket.on('card record', function (data) {
 });
 
 socket.on('card add', function(data){
+	console.log('card add : '); console.log(data);
+	
 	var list_field = ['company','firstname','lastname','email','id','poinst_img']
 	var pars = {};
 	for (var i=0; i<data.cards_fields.length; i++) {
@@ -1855,7 +1847,9 @@ function card_init() {
 			
 			$$("#card_ocr_ok").off("click");
 			$$("#card_ocr_ok").on("click", function(){
-					$$(B.container+" input[name='"+B.input_name+"']").val($$("#card_ocr_input").val());
+				console.log(B.input_name+' '+$$("#card_ocr_input").val());
+				if (B.input_name==33) $$("#card_ocr_input").val($$("#card_ocr_input").val().replace(/[\s]/g,''));
+				$$(B.container+" input[name='"+B.input_name+"']").val($$("#card_ocr_input").val());
 			});
 		}
 		
