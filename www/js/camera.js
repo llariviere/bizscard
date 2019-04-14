@@ -20,8 +20,9 @@ function camera_options(srcType) {
 }
 
 function camera_open(selection) {
-	
+	console.log('camera_open()');
 	if (typeof Camera === "undefined") {
+		card_ocr_process({vertices:[{x:0,y:0},{x:0,y:0},{x:0,y:0},{x:0,y:0}],description:''});$$("#card-entry img."+B.card_side).attr("src","img/paper.jpg");return false;
 		if (B.card_side=='other') { 	 	
 			B.croper.destroy();
 			var options = { 
@@ -58,7 +59,9 @@ function camera_open(selection) {
        }
        
     }, function cameraError(error) {
-        myApp.alert("Unable to obtain picture: " + error);
+        myApp.alert("Photo capture cancelled"); //  + error
+        card_ocr_process({vertices:[{x:0,y:0},{x:0,y:0},{x:0,y:0},{x:0,y:0}],description:''});
+        $$("#card-entry img."+B.card_side).attr("src","img/badge_none.png");
     }, options);
 }
 
@@ -104,6 +107,7 @@ function card_image_process(imgUri) {
 }
 
 function card_image2dataUrl(imgUri, callback) {
+	console.log('card_image2dataUrl()')
   var xhr = new XMLHttpRequest();
   xhr.onload = function() {
     var reader = new FileReader();
@@ -119,7 +123,7 @@ function card_image2dataUrl(imgUri, callback) {
 }
 
 function card_ocr_process(data) {
-	
+	console.log('card_ocr_process()');
 	// Using cropping hints from vision, we crop, rotate and show the scanned card image...
 	var points = data.vertices;
 	var x0 = points[0].x - 10;
