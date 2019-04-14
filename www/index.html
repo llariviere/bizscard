@@ -297,10 +297,13 @@
 						<div class="card-info-top">
 							<div class="card-info-pastille"></div>
 						</div>
-						<!--div class="card-info-txt">
+					</div>
+					
+					<div class="card-info waiting hidden">
+						<div class="card-info-txt">
 							<div class="card-info-name"></div>
 							<div class="card-info-add"></div>
-						</div-->
+						</div>
 					</div>
 					
 					<div class="list-block edit hidden">
@@ -369,13 +372,13 @@
 			        </div>
 			      </div>
 			      
-			      <div class="content-block edit hidden payfor">
+			      <!--div class="content-block edit hidden payfor">
 			        <div class="row">
 			          <div class="col-100" onclick="card_payfor('{{id}}')">
 			          	<a href="#" class="button button-big button-fill bg-blue"> Pay for him/her </a>
 			          </div>
 			        </div>
-			      </div>
+			      </div-->
               
 					<div id="thecard" class="draggable current">
 						<div class="handle"><i class="fa fa-chevron-up fa-2x"></i></div>
@@ -819,7 +822,7 @@
 		          </div>
 		      </div>
 		      <div class="swipeout-actions-left">
-		        <a href="#" onclick="card_del('{{id}}')" data-id="{{id}}" class="a-swipeout delete bg-red">Delete</a>
+		        <a href="#" onclick="card_del('{{id}}');event.stopPropagation();" data-id="{{id}}" class="a-swipeout delete bg-red">Delete</a>
 		      </div>
 		      <div class="swipeout-actions-right">
 		        <a href="tel:{{cellphone}}" class="a-swipeout bg-green"><i class="fa fa-phone fa-lg"></i></a>
