@@ -32,6 +32,7 @@ var B = {
 	input_type:'',
 	input_labl:'',
 	card_side:'',
+	cardid:'',
 	options: {
 		ocr_match: false,
 		shake_level: 40
@@ -986,13 +987,13 @@ function card_recorder(data) {
 }
 
 function card_populate(container,data) {
-	console.log('card_populate('+container+', '+data+')');
-	
-	B.container = container;
+	console.log('card_populate('+container+', )');
+	console.log(data)
 	
 	var html2 = '<div class="card-info-name">{{firstname}} {{lastname}}</div><div class="card-info-add">{{email}}{{title}}{{address}} {{city}} {{state_prov}} {{country}} {{postal code}}</div>'
 	var initials = '--', complete_name = 'No name card', avatar = false;
-	var cardid = data.id;
+	B.cardid = data.id;
+	
 	var html = cards_templates[(data.template ? data.template : 0)];
 	$$.each(['firstname', 'lastname', 'title', 'company', 'company name', 'address', 'city', 'state_prov', 'postal code', 'country', 'website', 'email', 'cellphone', 'fax', 'logo', 'Avatar'], function(i,e){
 		var v = '';
@@ -1001,11 +1002,11 @@ function card_populate(container,data) {
 			  $$.each(B.cards_fields, function(iii,cf) {
 			  	 if (cf.cid==B.cards.mycard.id && cf.fid==10) B.options.shake_level = cf.v;
 		 		 if (cf.cid==B.cards.mycard.id && cf.fid==11) B.options.ocr_match = cf.v;
-				 if (cardid!=B.cards.mycard.id && cf.cid==cardid && cf.fid==52) {
+				 if (B.cardid!=B.cards.mycard.id && cf.cid==B.cardid && cf.fid==52) {
 				 	avatar = cf.v+ '';
 				 }
 				 
-			  	 if (cf.cid==cardid && cf.fid==f.id) {
+			  	 if (cf.cid==B.cardid && cf.fid==f.id) {
 			  	 	v = cf.v + '';
 			  	 	switch (e) {
 						case 'firstname': 
@@ -1173,7 +1174,7 @@ function card_cell(e) {
 }
 
 function card_auth(id, action) {
-	if (!id) id = $$(B.container).data("id");
+	if (typeof id === 'undefined') id = B.cardid;
 	
 	console.log('card_auth('+id+', '+action+')');
 		
