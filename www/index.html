@@ -364,17 +364,17 @@
 			      <div class="content-block waiting hidden">
 			        <div class="row">
 			          <div class="col-50">
-			          	<a href="#" onclick="card_auth('', 'refuse')" class="button button-big button-fill bg-red">Refuse</a>
+			          	<a href="#" onclick="card_auth(B.cardid, 'refuse')" class="button button-big button-fill bg-red">Refuse</a>
 			          </div>
 			          <div class="col-50">
-			          	<a href="#" onclick="card_auth('', 'accept')" class="button button-big button-fill bg-green">Accept</a>
+			          	<a href="#" onclick="card_auth(B.cardid, 'accept')" class="button button-big button-fill bg-green">Accept</a>
 			          </div>
 			        </div>
 			      </div>
 			      
 			      <!--div class="content-block edit hidden payfor">
 			        <div class="row">
-			          <div class="col-100" onclick="card_payfor('{{id}}')">
+			          <div class="col-100" onclick="card_payfor(B.cardid)">
 			          	<a href="#" class="button button-big button-fill bg-blue"> Pay for him/her </a>
 			          </div>
 			        </div>
