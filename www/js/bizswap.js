@@ -33,6 +33,8 @@ var B = {
 	input_labl:'',
 	card_side:'',
 	cardid:'',
+	h:'',
+	t:'',
 	options: {
 		ocr_match: false,
 		shake_level: 40
@@ -139,6 +141,7 @@ $$(".current-list-open").on("click", function(){
 		$$.each(B.cards_fields, function(ii,cf){
 			if(cf.cid==B.cards.current[i].id) {
 				switch(cf.fid) {
+					case 33: list.current[i]['email']		=cf.v; break;
 					case 35: list.current[i]['firstname']	=cf.v; break;
 					case 38: list.current[i]['lastname']	=cf.v; break;
 					case 29: list.current[i]['company']		=cf.v; break;
@@ -501,6 +504,10 @@ function card_initial_setup() {
 }
 
 function card_share(list, by) {
+	console.log("card_share("+list+", "+by+")");
+	
+	$$(".speed-dial").removeClass("speed-dial-opened");
+	
 	var id = (list=='mycard' ? B.cards.mycard.id : $$(B.container).data("id"));
 	var title = '';
 	var aftertext = '<input type="text" value="">';
@@ -1067,14 +1074,14 @@ function card_populate(container,data) {
 		$$(".pieID.pie").addClass(B.cards.mycard.points_img.toLowerCase());
 		pie_create(".pieID.legend", ".pieID.pie");
 		
-		var h = $$("#mycard").width() / 3.5 * 2.0;
-		var t = $$("#mycard").offset().top;
-		$$("#mycard").data("top", t);
-		$$("#mycard").css({"height": h, "bottom":t+h});
+		B.h = $$("#mycard").width() / 3.5 * 2.0;
+		B.t = $$("#mycard").offset().top;
+		$$("#mycard").data("top", B.t);
+		$$("#mycard").css({"height": B.h, "bottom":B.t+B.h});
 		
 		var draggie = new Draggabilly( '#mycard', { axis:"y" });
 		draggie.on( 'dragEnd', function( event, pointer ) {
-			if (this.position.y < (t-h)) {
+			if (this.position.y < (B.t-B.h)) {
 				card_offered('mycard',B.cards.mycard.id);
 			} else {
 				card_offer_completed('mycard');
@@ -1105,14 +1112,20 @@ function card_populate(container,data) {
 }
 
 function card_email(e) {
-	if (B.container=='mycard') return false;
+	
+	if ($$(e).parents(".draggable").attr("id")=='mycard') return false;
+	
 	var email = e.textContent.substr(3);
 	$$("#card-email").find(".to").val(email)
 	mainView.router.load({pageName: 'card-email'});
 }
 
-function card_messages() {
-	if (B.container=='mycard') return false;
+function card_messages(e) {
+	
+	console.log("card_cell(e)");
+	
+	if ($$(e).parents(".draggable").attr("id")=='mycard') return false;
+	
 	var conversationStarted = false;
 	var myMessages = myApp.messages('.messages', {
 	  autoLayout:true
@@ -1159,11 +1172,14 @@ function card_messages() {
 }
 
 function card_cell(e) {
-	if (B.container=='mycard') return false;
+	console.log("card_cell(e)");
+	
+	if ($$(e).parents(".draggable").attr("id")=='mycard') return false;
+	
 	var cell = e.textContent.substr(3).replace(/[^\d]/g,'');
 	
 	if (typeof phonedialer == 'undefined') return false;
-	phonedialer.call(
+	cordova.plugins.phonedialer.call(
 	  cell, 
 	  function(err) {
 	    if (err == "empty") myApp.alert("Unknown phone number");
@@ -1435,7 +1451,7 @@ socket.on('card shared data', function(card) {
 	B.cards.waiting.push(card.cards);
 	$$(".badge.waiting-list-nbr").html(B.cards.waiting.length);
 	for(var i=0; i<card.cards_fields.length; i++) B.cards_fields.push(card.cards_fields[i]);
-	myApp.alert("A new card in your waiting list!<br>Shared by someone"+(card.mesg ? " who wrote this:<br>\""+card.mesg+"\"" : '.'));
+	myApp.alert("A new card in your waiting list!<br>Shared by someone"+(card.mesg ? " who wrote this:<p>\"<b>"+card.mesg+"</b>\"" : '.'));
 });
 				
 socket.on('card record', function (data) {
@@ -1824,10 +1840,18 @@ function card_init() {
 		
 		if (B.card_side=='recto') {
 			
-			var html = '<div class="list-block" style="margin:0px;line-height:35px;"> \
-				<input id="card_ocr_input" type="text" name="" value="'+B.input_text+'" placeholder="Pick words or enter text..."/> \
-					Words from the card: \
-			</div>';
+			if ($$("#card_ocr_words").find(".word").length) {
+				var html = '<div class="list-block" style="margin:0px;line-height:35px;"> \
+					<input id="card_ocr_input" type="text" name="" value="'+B.input_text+'" placeholder="Pick words or enter text..."/> \
+						Words from the card: \
+				</div>';
+			}
+			else {
+				var html = '<div class="list-block" style="margin:0px;line-height:35px;"> \
+					<input id="card_ocr_input" type="text" name="" value="'+B.input_text+'" placeholder="Enter text..."/> \
+				</div>';
+			}
+			
 			
 			$$("#card_ocr_words").prepend(html);
 			
