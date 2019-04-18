@@ -81,6 +81,55 @@
 		      </a>
 		    </li>
 		    <li>
+		      <div class="item-content">
+		         <div class="item-inner">
+		            <div class="item-title" onClick="$$('#politics').toggleClass('hidden')">
+		            	Politics
+		            	<ul id="politics" class="hidden">
+						    <li>
+							  <a href="#politics-services" class="item-link">
+						      <div class="item-content close-panel">
+						         <div class="item-inner">
+						            <div class="item-title">Services</div>
+						          </div>
+						      </div>
+						      </a>
+						    </li>
+						    <li>
+							  <a href="#politics-confidentiality" class="item-link" >
+						      <div class="item-content close-panel">
+						         <div class="item-inner">
+						            <div class="item-title">Confidentiality</div>
+						          </div>
+						      </div>
+						      </a>
+						    </li>
+		            	</ul>
+		            </div>
+		          </div>
+		      </div>
+		    </li>
+		    <li>
+		    	<a href="#subscription" class="item-link">
+		      <div class="item-content close-panel">
+		         <div class="item-inner">
+		            <div class="item-title">Subscription</div>
+		            <div class="item-after"> </div>
+		          </div>
+		      </div>
+				</a>
+		    </li>
+		    <li>
+		    	<a href="#help" class="item-link">
+		      <div class="item-content close-panel">
+		         <div class="item-inner">
+		            <div class="item-title">Help</div>
+		            <div class="item-after"> </div>
+		          </div>
+		      </div>
+				</a>
+		    </li>
+		    <li>
 		    	<a href="#" class="item-link log-off">
 		      <div class="item-content close-panel">
 		         <div class="item-inner">
@@ -197,6 +246,51 @@
               <a href="#" class="link" id="fields_page_close">Close</a>
 				</div>
             <div class="center sliding">Choose a field name</div>
+            <div class="right">
+            </div>
+          </div>
+          
+          <div class="navbar-inner cached" data-page="politics-services">
+				<div class="left">
+              <a href="#index" class="link icon-only back"><i class="icon icon-back"></i></a>
+				</div>
+            <div class="center sliding">Politics : services</div>
+            <div class="right">
+            </div>
+          </div>
+          
+          <div class="navbar-inner cached" data-page="politics-confidentiality">
+				<div class="left">
+              <a href="#index" class="link icon-only back"><i class="icon icon-back"></i></a>
+				</div>
+            <div class="center sliding">Politics : confidentiality</div>
+            <div class="right">
+            </div>
+          </div>
+          
+          <div class="navbar-inner cached" data-page="subscription">
+				<div class="left">
+              <a href="#index" class="link icon-only back"><i class="icon icon-back"></i></a>
+				</div>
+            <div class="center sliding">Subscription</div>
+            <div class="right">
+            </div>
+          </div>
+          
+          <div class="navbar-inner cached" data-page="card-messages">
+				<div class="left">
+              <a href="#index" class="link icon-only back"><i class="icon icon-back"></i></a>
+				</div>
+            <div class="center sliding">Messages</div>
+            <div class="right">
+            </div>
+          </div>
+          
+          <div class="navbar-inner cached" data-page="help">
+				<div class="left">
+              <a href="#index" class="link icon-only back"><i class="icon icon-back"></i></a>
+				</div>
+            <div class="center sliding">Help</div>
             <div class="right">
             </div>
           </div>
@@ -581,6 +675,59 @@
 			      </div>
 				</div>
 			</div>
+  
+			<div class="page cached no-tabbar" data-page="politics-services">
+				<div class="page-content"></div>
+			</div>
+			
+			<div class="page cached no-tabbar" data-page="politics-confidentiality">
+				<div class="page-content"></div>
+			</div>
+			
+			<div class="page cached no-tabbar" data-page="subscription">
+				<div class="page-content">
+					<div class="list-block">
+						Billing:
+			      	<ul>
+							<li class="list-item">
+								<div class="item-content">
+									<div class="item-inner">
+										<div class="item-title label"></div>
+									</div>
+								</div>
+							</li>
+			      	</ul>
+					</div>
+					<div class="list-block">
+						Contract:
+			      	<ul>
+							<li class="list-item">
+								<div class="item-content">
+									<div class="item-inner">
+										<div class="item-title label"></div>
+									</div>
+								</div>
+							</li>
+			      	</ul>
+					</div>
+					<div class="list-block">
+						Upgrade:
+			      	<ul>
+							<li class="list-item">
+								<div class="item-content">
+									<div class="item-inner">
+										<div class="item-title label"></div>
+									</div>
+								</div>
+							</li>
+			      	</ul>
+					</div>
+				</div>
+			</div>
+			
+			<div class="page cached no-tabbar" data-page="help">
+				<div class="page-content"></div>
+			</div>
 			
       </div>
       
@@ -699,7 +846,7 @@
     <div class="navbar">
       <div class="navbar-inner">
         <div class="left"><a href="#" data-popup=".popup-crop" class="close-popup">Close</a></div>
-        <div class="center">Images Editor</div>
+        <div class="center">Image Editor</div>
         <div class="right"></div>
       </div>
     </div>
@@ -814,7 +961,7 @@
 		<div class="list-block list-block-search searchbar-found">
 		  <ul id="current">
 		    {{#each current}}
-		    <li class="swipeout card-item" >
+		    <li class="swipeout card-item draggable" data-id="{{id}}" >
 		      <div class="swipeout-content item-content">
 		         <div class="item-inner">
 		            <div class="item-title">{{firstname}} {{lastname}}</div>
@@ -825,8 +972,8 @@
 		        <a href="#" onclick="card_del('{{id}}');event.stopPropagation();" data-id="{{id}}" class="a-swipeout delete bg-red">Delete</a>
 		      </div>
 		      <div class="swipeout-actions-right">
-		        <a href="tel:{{cellphone}}" class="a-swipeout bg-green"><i class="fa fa-phone fa-lg"></i></a>
-		        <a href="sms:{{cellphone}}" class="a-swipeout bg-blue"><i class="fa fa-comment fa-lg"></i></a>
+		        <a href="#" onclick="card_cell(this);event.stopPropagation();" class="a-swipeout bg-green"><span style="display:none">C: {{cellphone}}</span><i class="fa fa-phone fa-lg"></i></a>
+		        <a href="#" onclick="card_messages(this);event.stopPropagation();" class="a-swipeout bg-blue"><i class="fa fa-comment fa-lg"></i></a>
 		      </div>
 		    </li>
 		    {{else}}
