@@ -19,7 +19,7 @@
 	z-index: 20;
 } 
 
-#thecard {
+#mycard, #thecard {
 	position: fixed;
 }
 
@@ -76,6 +76,7 @@
 	vertical-align: middle;
 }
 
+#mycard .handle,
 #thecard .handle {
 	position: absolute;
 	top: 10px;
