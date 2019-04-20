@@ -5,7 +5,8 @@
 function card_offer(context,id) {
 	console.log('card_offer('+context+','+id+')');
 	$$("#"+context+" .thumb").show();
-	$$('#'+context).css({ 'top': $$('#'+context).data('top') })
+	//$$('#'+context).css({ 'top': $$('#'+context).data('top') })
+	$$('#'+context).css({ 'top': B.t })
 	$$('#'+context).animate(
 	    { 'top': 10 },
 	    {
@@ -49,7 +50,6 @@ function card_offer_complete(id) {
 }
 
 function card_offer_completed(context) {
-	console.log('card_offer_completed('+context+')');
 	console.log('card_offer_completed('+context+')');
 	$$('#'+context+' .thumb').hide();
 	$$('#'+context).animate( 
