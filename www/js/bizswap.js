@@ -35,6 +35,8 @@ var B = {
 	cardid:'',
 	h:'',
 	t:'',
+	draggie:{},
+	draggie2:{},
 	options: {
 		ocr_match: false,
 		shake_level: 40
@@ -128,11 +130,30 @@ $$(document).on('form:success', 'form.ajax-submit', function (e) {
 	
 });
 
-$$(".index-open").on("click", function(){
+$$(".index-open").on("click", function(){	
 	
+	mycard_init();
 	mainView.router.load({pageName: 'index'});
 	
 });
+
+function mycard_init() {
+
+	$$("#mycard").data("top", B.t);
+	$$("#mycard").css({"height": B.h, "bottom":B.t+B.h});
+	
+	if (typeof B.draggie !== "undefined")	B.draggie.destroy();
+	B.draggie = new Draggabilly( '#mycard', { axis:"y", handle: '.handle' });
+	B.draggie.on( 'dragEnd', function( event, pointer ) {
+		if (this.position.y < (B.t-B.h)) {
+			card_offered('mycard',B.cards.mycard.id);
+		} else {
+			card_offer_completed('mycard');
+		}
+	});
+	B.draggie.on( 'staticClick', function(){ card_offer('mycard',B.cards.mycard.id); });
+	
+}
 
 $$(".current-list-open").on("click", function(){
 	var list = { current:[] };
@@ -719,20 +740,20 @@ function card_form_open(list, index) {
 	
 	if (cardid != B.cards.mycard.id) {
 		
-		var h = $$('#thecard').width() / 3.5 * 2.0;
-		var t = $$('#thecard').offset().top;
-		$$('#thecard').data("top", t);
-		$$('#thecard').css({"height": h, "bottom":t+h});
-		
-		var draggie2 = new Draggabilly( '#thecard', { axis:"y", handle: '.handle' });
-		draggie2.on( 'dragEnd', function( event, pointer ) {
-			if (this.position.y < (t-h)) {
+		//var h = $$('#thecard').width() / 3.5 * 2.0;
+		//var t = $$('#thecard').offset().top;
+		$$('#thecard').data("top", B.t);
+		$$('#thecard').css({"height": B.h, "bottom":B.t+B.h});
+		if (typeof B.draggie2.destroy === "function") B.draggie2.destroy();
+		B.draggie2 = new Draggabilly( '#thecard', { axis:"y", handle: '.handle' });
+		B.draggie2.on( 'dragEnd', function( event, pointer ) {
+			if (this.position.y < (B.t-B.h)) {
 				card_offered('thecard',cardid);
 			} else {
 				card_offer_completed('thecard');
 			}
 		});
-		draggie2.on( 'staticClick', function(){ card_offer('thecard',cardid); });
+		B.draggie2.on( 'staticClick', function(){ card_offer('thecard',cardid); });
 	
 	}
 	
@@ -1076,18 +1097,8 @@ function card_populate(container,data) {
 		
 		B.h = $$("#mycard").width() / 3.5 * 2.0;
 		B.t = $$("#mycard").offset().top;
-		$$("#mycard").data("top", B.t);
-		$$("#mycard").css({"height": B.h, "bottom":B.t+B.h});
 		
-		var draggie = new Draggabilly( '#mycard', { axis:"y" });
-		draggie.on( 'dragEnd', function( event, pointer ) {
-			if (this.position.y < (B.t-B.h)) {
-				card_offered('mycard',B.cards.mycard.id);
-			} else {
-				card_offer_completed('mycard');
-			}
-		});
-		draggie.on( 'staticClick', function(){ card_offer('mycard',B.cards.mycard.id); });
+		mycard_init()
 	
 	}
 	
@@ -1511,8 +1522,8 @@ socket.on('card record', function (data) {
 socket.on('card add', function(data){
 	console.log('card add : '); console.log(data);
 	
-	var list_field = ['company','firstname','lastname','email','id','poinst_img']
-	var pars = {};
+	//var list_field = ['company','firstname','lastname','email','id','poinst_img']
+	//var pars = {};
 	for (var i=0; i<data.cards_fields.length; i++) {
 		var name = '';
 		for (var ii=0; ii<B.fields.length; ii++) {
@@ -1521,12 +1532,12 @@ socket.on('card add', function(data){
 				break;
 			}
 		}
-		if (list_field.indexOf(name)!==false) pars[name] = data.cards_fields[i].value;
+		//if (list_field.indexOf(name)!==false) pars[name] = data.cards_fields[i].value;
 		B.cards_fields.push(data.cards_fields[i]);
 	}
-	pars['cardid'] = B.cards.mycard.id;
-	pars["accepted"] = data.card.accepted;
-	pars["id"] = data.card.id;
+	//pars['cardid'] = B.cards.mycard.id;
+	//pars["accepted"] = data.card.accepted;
+	//pars["id"] = data.card.id;
 	if (data.card.accepted==null) {
 		myApp.alert("Card added to your waiting list!")
 		B.cards.waiting.push(data.card);
