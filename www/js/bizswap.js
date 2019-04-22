@@ -33,6 +33,7 @@ var B = {
 	input_labl:'',
 	card_side:'',
 	cardid:'',
+	card_offered:false,
 	h:'',
 	t:'',
 	draggie:{},
@@ -141,7 +142,7 @@ function mycard_init() {
 
 	$$("#mycard").data("top", B.t);
 	$$("#mycard").css({"height": B.h, "bottom":B.t+B.h});
-	
+	/*
 	if (typeof B.draggie !== "undefined")	B.draggie.destroy();
 	B.draggie = new Draggabilly( '#mycard', { axis:"y", handle: '.handle' });
 	B.draggie.on( 'dragEnd', function( event, pointer ) {
@@ -152,6 +153,14 @@ function mycard_init() {
 		}
 	});
 	B.draggie.on( 'staticClick', function(){ card_offer('mycard',B.cards.mycard.id); });
+	*/
+	
+	$$("#mycard").find(".handle").on("click", function(e){
+		if (!B.card_offered) {
+			B.card_offered = true;
+			card_offer('mycard',B.cards.mycard.id);
+		}
+	});
 	
 }
 
@@ -740,8 +749,9 @@ function card_form_open(list, index) {
 	
 	if (cardid != B.cards.mycard.id) {
 		
-		//var h = $$('#thecard').width() / 3.5 * 2.0;
-		//var t = $$('#thecard').offset().top;
+		/*
+		var h = $$('#thecard').width() / 3.5 * 2.0;
+		var t = $$('#thecard').offset().top;
 		$$('#thecard').data("top", B.t);
 		$$('#thecard').css({"height": B.h, "bottom":B.t+B.h});
 		if (typeof B.draggie2.destroy === "function") B.draggie2.destroy();
@@ -754,6 +764,13 @@ function card_form_open(list, index) {
 			}
 		});
 		B.draggie2.on( 'staticClick', function(){ card_offer('thecard',cardid); });
+		*/
+		$$("#thecard").find(".handle").on("click touchmove touchstart", function () {
+			if (!B.card_offered) {
+				B.card_offered = true;
+				card_offer('thecard',cardid);
+			}
+		});
 	
 	}
 	
