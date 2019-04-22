@@ -2,8 +2,11 @@
 * exchange, card offer functions...
 */
 
+var cancelModal = '';
+
 function card_offer(context,id) {
 	console.log('card_offer('+context+','+id+')');
+	
 	$$("#"+context+" .thumb").show();
 	//$$('#'+context).css({ 'top': $$('#'+context).data('top') })
 	$$('#'+context).css({ 'top': B.t })
@@ -13,15 +16,14 @@ function card_offer(context,id) {
 	        duration: 500,
 	        easing: 'swing',
 	        begin: function (elements) {},
-	        complete: function(){ card_offered(context,id); }
+	        complete: function(){ card_offered(context,id); B.card_offered = false; }
 	    }
 	);
 }
 
-var cancelModal = '';
-
 function card_offered(context,id) {
 	console.log('card_offered('+context+','+id+')');
+	/*
    cancelModal = myApp.modal({
    	title: 'Card offered...', 
    	text: 'Clic below to cancel', 
@@ -32,6 +34,7 @@ function card_offered(context,id) {
 		]
 	});
 	setTimeout(function () { myApp.closeModal(cancelModal); },30000)
+	*/
    card_offer_complete(id);
    card_offer_completed(context);
 }
@@ -51,6 +54,7 @@ function card_offer_complete(id) {
 
 function card_offer_completed(context) {
 	console.log('card_offer_completed('+context+')');
+	
 	$$('#'+context+' .thumb').hide();
 	$$('#'+context).animate( 
 		{ 'top': B.t}, 
@@ -58,6 +62,18 @@ function card_offer_completed(context) {
 	);
 } 
 
+socket.on('card offer confirm', function(data){
+   cancelModal = myApp.modal({
+   	title: 'Card offered...', 
+   	text: 'Clic below to cancel', 
+   	buttons: [
+			{ text: "Cancel", onClick: function(){
+				card_offer_cancel(data.id);
+			} }
+		]
+	});
+	setTimeout(function () { myApp.closeModal(cancelModal); },30000)
+});
 
 socket.on('cards list', function(data){
 	
