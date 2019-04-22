@@ -1011,12 +1011,18 @@
 	<div class="list-block">
 	  <ul id="waiting">
 	    {{#each waiting}}
-	    <li class="card-item">
-	      <div class="item-content">
+	    <li class="swipeout card-item" data-id="{{id}}" >
+	      <div class="swipeout-content item-content">
 	         <div class="item-inner">
 	            <div class="item-title">{{firstname}} {{lastname}}</div>
 	            <div class="item-after">{{company}}</div>
 	          </div>
+	      </div>
+	      <div class="swipeout-actions-left">
+	        <a href="#" onclick="card_auth('{{id}}', 'refuse');event.stopPropagation();" class="a-swipeout delete bg-red">Refuse</a>
+	      </div>
+	      <div class="swipeout-actions-right">
+	        <a href="#" onclick="card_auth('{{id}}', 'accept');event.stopPropagation();" class="a-swipeout bg-green">Accept</a>
 	      </div>
 	    </li>
 	    {{else}}
