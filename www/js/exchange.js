@@ -69,10 +69,11 @@ socket.on('card offer confirm', function(data){
    	buttons: [
 			{ text: "Cancel", onClick: function(){
 				card_offer_cancel(data.id);
+				B.card_offered = false;
 			} }
 		]
 	});
-	setTimeout(function () { myApp.closeModal(cancelModal); },30000)
+	setTimeout(function () { myApp.closeModal(cancelModal);B.card_offered = false; },30000)
 });
 
 socket.on('cards list', function(data){
@@ -90,10 +91,13 @@ socket.on('cards list', function(data){
 		var titre = (data.length > 1 ? "We found those offers<br>(clic a name to accept)" : "We found this offer<br>(clic to accept)");
  			
 		$$.each(data, function(i,card){
-			var fullname = (card.firstname && card.lastname ? card.firstname+' '+card.lastname : card.email);
+			
+			if (card.card == B.card_offered || card.card == B.cards.mycard.id) return true;
+			
+			var fullname = (card.firstname || card.lastname ? card.firstname+' '+card.lastname : card.email);
 			var linked = (card.accepted ? "fa-id-card-o" : (card.added ? "fa-id-card" : "fa-check-square-o"));
  				
-			if (card.card!=B.cards.mycard.id) fnds.push('<tr style="border-bottom:solid 1px #bbb;" onClick="card_auth('+card.card+',\'offer auth\');myApp.closeModal()">\
+			if (card.card!=B.cards.mycard.id) fnds.push('<tr style="border-bottom:solid 1px #bbb;" onClick="card_auth('+card.card+',\'offer auth\');myApp.closeModal();B.card_offered = false;">\
 <td align="left">'+fullname+'<span style="float:right">'+(30-card.delais)+'s</span></td>\
 <td align="right"><i class="fa '+linked+'"></i></td>\
 </tr>');
