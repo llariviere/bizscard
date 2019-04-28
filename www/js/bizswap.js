@@ -21,7 +21,7 @@ var mySwiper = myApp.swiper('.swiper-container', {
 var $$ = Dom7;
 // {width:100, height:100, type: 'square'}
 var B = {
-	about:'Bizswiper v0.5.1<br>2019-04',
+	about:'Bizswiper v0.5.2<br>2019-04',
 	server:'https://virtualbizcards.com:3333/',
 	croper:{},
 	crop_opts:{"img":'img/b.png',"card":{ width: ($$("body").width() - 10), height: (($$("body").width() - 10) / 3.5 * 2), type: 'square' },"boundary":{ width: ($$("body").width() - 10), height: (($$("body").width() - 10) / 3.5 * 2)}},
@@ -1088,6 +1088,10 @@ function card_populate(container,data) {
 	
 	if (container=='mycard') {
 		
+		if () {
+			
+		}
+		
 		var img = card_points_img(B.cards.mycard)
 		B.cards.mycard["points_target"] = img.points_target;
 		B.cards.mycard["points_img"] 	= img.points_img;
@@ -1207,7 +1211,7 @@ function card_cell(e) {
 	var cell = e.textContent.substr(3).replace(/[^\d]/g,'');
 	
 	if (typeof phonedialer == 'undefined') return false;
-	cordova.plugins.phonedialer.call(
+	cordova.plugins.phonedialer.dial(
 	  cell, 
 	  function(err) {
 	    if (err == "empty") myApp.alert("Unknown phone number");
@@ -2222,26 +2226,26 @@ function card_custom_field_validate(ii, v) {
 
 function card_points_img(card) {
 	var $data = {};
-	if (card.points>30000000) {
+	if (card.points>1000000) {
 		$data['points_img'] = 'Diamond';
 		$data['points_target'] = points;
 		$data['points_color'] = "#caf1f7";
-	} else if(card.points>3500000) {
+	} else if(card.points>500000) {
 		$data['points_img'] = 'Gold';
-		$data['points_target'] = 30000000;
+		$data['points_target'] = 1000000;
 		$data['points_color'] = "#ffeb56";
 	} else if(card.points>100000) {
 		$data['points_img'] = 'Silver';
-		$data['points_target'] = 3500000;
+		$data['points_target'] = 500000;
 		$data['points_color'] = "#ccd1f9";
 	} else if(card.payed_date) {
 		$data['points_img'] = 'Bronze';
 		$data['points_target'] = 100000;
 		$data['points_color'] = "Bronze";
 	} else {
-		$data['points_img'] = 'none';
+		$data['points_img'] = 'Bronze';
 		$data['points_target'] = 100000;
-		$data['points_color'] = "#eeeeee";
+		$data['points_color'] = "Bronze";
 	}
 	return $data;
 } 
