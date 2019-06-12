@@ -1,10 +1,10 @@
-/* Bizcard specific /var/www/html/card/js/app.js */
+/* B.i.Z specific /var/www/html/card/js/app.js */
 
  var myApp = new Framework7({
 	precompileTemplates: true,
 	template7Pages: true,
 	allowDuplicateUrls:true,
-	modalTitle: 'B.i.Z',
+	modalTitle: 'B.&iuml;.Z',
 	modalButtonCancel: 'Cancel...',
 	modalPreloaderTitle: 'One moment please...',
 	scrollTopOnStatusbarClick: true,
@@ -21,7 +21,7 @@ var mySwiper = myApp.swiper('.swiper-container', {
 var $$ = Dom7;
 
 var B = {
-	about:'B.i.Z v0.7.0<br>2019-06',
+	about:'B.&iuml;.Z is a product of Kontakt Mondo inc. and all related subdiaries . Reserved brand blblbl.<p> KontaktMondo is an incorporation under Canada law bbllblba on May xx 2019. </p> <p>Current version in used: 0.7.1 (2019-06)',
 	server:'https://virtualbizcards.com:3333/',
 	options: {
 		ocr_match: true,
@@ -277,7 +277,7 @@ function is_locked() {
 	return !$$(this).hasClass('lock');
 }
 
-function card_init() {
+function card_init(card_side) {
 	console.log('card_init()');
 	
 	if (B.container=="card-form-list") {
@@ -317,10 +317,10 @@ function card_init() {
 			$$("#card_ocr_input").val(B.input_text);
 			B['input_name'] = $$(this).attr("name");
 			myApp.pickerModal(".picker-ocr-words");
-			if (B.card_side) add_card_word_detect();
+			if (card_side) add_card_word_detect();
 		});
 		
-		if (B.card_side=='front') {
+		if (card_side=='front') {
 			
 			if ($$("#card_ocr_words").find(".word").length) {
 				var html = '<div class="list-block" style="margin:0px;line-height:35px;"> \
@@ -443,6 +443,11 @@ function card_input_modal() {
 
 function card_record() {
 	console.log('card_record()');
+	
+	myApp.showPreloader('Recording...');
+	setTimeout(function () {
+   	myApp.hidePreloader();
+	}, 8000);
 
 	var pars = {};
 	
@@ -517,9 +522,10 @@ function card_record() {
 	// Always identify the owner...
 	pars['owner'] = B.cards.mycard.id;
 	
-	// For scan entry we record the original image...
-	if (B.container=='#add_card_list' && scanImg[B.card_side].dataUrl!=undefined) { 
-		pars[(B.card_side=='front' ? '44' : '45')] = scanImg[B.card_side].dataUrl;
+	// For scan entry we record the original images...
+	if (B.container=='#add_card_list' && typeof B.dataUrl !== 'undefined') { 
+		pars[44] = B.dataUrl.front;
+		pars[45] = B.dataUrl.back;
 	}
 		
 	// Send to sender...
@@ -915,8 +921,29 @@ function card_email(e) {
 	if ($$(e).parents(".draggable").attr("id")=='mycard') return false;
 	
 	var email = e.textContent.substr(3);
+	$$("#card-email").find("input, textarea").val('');
 	$$("#card-email").find(".to").val(email)
 	mainView.router.load({pageName: 'card-email'});
+}
+
+function card_email_send(help) {
+	var container = help || "card-email";
+	var pars = {
+		"from": B.cards.mycard.id,
+		"firstname": B.cards.mycard.firstname,
+		"lastname": B.cards.mycard.lastname,
+		"to": $$("#"+container).find("input.to").val(),
+		"sujet": $$("#"+container).find("input.subject").val(),
+		"msg": $$("#"+container).find("textarea").val()
+	}; 
+	var Email = /\w+@\w+/;
+	if (pars.to.match(Email)) {
+		socket.emit('card share email',pars);
+		mainView.router.back();
+	} else {
+		myApp.alert("The email address is not valid.")
+	}
+	$$("#"+container).find("textarea").val('');
 }
 
 function card_messages(e) {
@@ -977,7 +1004,7 @@ function card_cell(e) {
 	
 	var cell = e.textContent.substr(3).replace(/[^\d]/g,'');
 	
-	if (typeof phonedialer == 'undefined') return false;
+	if (typeof cordova.plugins.phonedialer == 'undefined') return false;
 	cordova.plugins.phonedialer.dial(
 	  cell, 
 	  function(err) {
@@ -1137,7 +1164,15 @@ function card_share(list, by) {
   							var email = value;
   							var Email = /\w+@\w+/;
   							if (value.match(Email)) {
-  								socket.emit('card share email', {"from":B.cards.mycard.id,"cardid":id,"email":email});
+  								var pars =  {
+  									"from":B.cards.mycard.id,
+  									"cardid":id,
+  									"email":email, 
+  									"firstname": B.cards.mycard.firstname, 
+  									"lastname": B.cards.mycard.lastname
+  								}
+								console.log(pars)
+  								socket.emit('card share email',pars);
   							} else {
   								myApp.alert("The address is not valid. Send aborted");
   							}
@@ -1390,7 +1425,7 @@ function geoLocation(func) {
 		clearTimeout(B.timout);
 		myApp.modal({
 	   	title: 'GeoLocation is not permitted on your device', 
-	   	text: 'You have to activate GeoLocation in your app parameters for Bizswiper card exchange to work.1', 
+	   	text: 'You have to activate GeoLocation in your app parameters for B.&iuml;.Z card exchange to work.1', 
 	   	buttons: [
 				{ text: "Ok", onClick: function () {} }
 			]
@@ -1398,16 +1433,16 @@ function geoLocation(func) {
 		return false;
 	}
 
-	function success(o) {
+	function onSuccess(o) {
 		func(o.coords);
 	};
 
-	function error(err) {
+	function onError(err) {
 		myApp.hidePreloader();
 		clearTimeout(B.timout);
 		myApp.modal({
 	   	title: 'GeoLocation is not permitted on your device', 
-	   	text: err.PositionError.code+' You have to activate GeoLocation in your app parameters for Bizswiper card exchange to work.', 
+	   	text: err.PositionError.code+' You have to activate GeoLocation in your app parameters for B.&iuml;.Z card exchange to work.', 
 	   	buttons: [
 				{ text: "Ok", onClick: function () {} }
 			]
@@ -1419,11 +1454,9 @@ function geoLocation(func) {
 	  maximumAge: 0
 	};
 	
-	navigator.geolocation.getCurrentPosition(success, error, options);
+	navigator.geolocation.getCurrentPosition(onSuccess, onError, options);
 	//success({lat:45.6105491,lng:-73.5094794,alt:0}); // manual override for testing...
 }
-
-
 
 $$(document).on("click", ".card-item", function(){
 	
@@ -1521,7 +1554,9 @@ $$(".card-add-user").on("click", function(){
 	mainView.router.load({pageName: 'card-add-user'});
 	$$(".card-fields, .button-photo").addClass("hidden");
 	$$("#capturePhoto, #listPhoto").parent().removeClass("hidden");
-	
+	$$('#card-photo-front, #card-photo-back').attr("src","")
+	$$(".button.card-side.back").trigger("click");
+	$$(".button.card-side.front").trigger("click");
 	
 	/*
 	$$(".card-back-camera-open").show();
@@ -1540,7 +1575,7 @@ $$(".card-back-camera-open").on("click", function(){
 
 $$(".card-other-camera-open").on("click", function(){
 	B.card_side = 'other';
-	camera_open(false);
+	galleryPhoto();
 });
 
 $$('.popup-crop').on('popup:open', function () {
