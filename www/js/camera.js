@@ -94,7 +94,7 @@
 	
 	function listPhoto() {
 		
-		B.dynamicPopup = myApp.popup('<div class="popup" style="overflow-y: scroll">\
+		myApp.popup('<div class="popup" style="overflow-y: scroll">\
 		<div class="navbar">\
       <div class="navbar-inner">\
         <div class="left"></div>\
@@ -102,7 +102,7 @@
         <div class="right"><a href="#" class="link close-popup">Close</a></div>\
       </div>\
     </div>\
-	<div class="list">\
+	<div class="list-block media-list">\
 		<ul id="ulPhoto"></ul>\
 	</div>\
 </div>');
@@ -145,17 +145,23 @@
 									
 									var dirDate = new Date(parseInt(dirEntry.name));
 									
-									$$("#ulPhoto").append('<li onClick="loadPhoto(\''+dirEntry.name+'\')" class="item-content">\
-								 <div class="item-inner item-cell">\
-								 	<div class="item-row">\
-								      <div class="item-cell">'+dirDate.toString()+'</div>\
-								    </div>\
-								    <div class="item-row">\
-								      <div class="item-cell thumb"><img src="'+ frontfile +'" /></div>\
-								      <div class="item-cell thumb"><img src="'+ backfile  +'" /></div>\
-								    </div>\
-							    </div>\
-							</li>')
+									$$("#ulPhoto").append('<li class="swipeout" onClick="loadPhoto(\''+dirEntry.name+'\')" id="dir_'+dirEntry.name+'"">\
+								  <a href="#" class="swipeout-content item-content item-link">\
+								      <div class="item-inner">\
+								         <div class="item-title-row"> \
+								           '+ dirDate.toString().substr(0,24) +'\
+								         </div>\
+								         <div class="item-after"></div>\
+											<div class="item-subtitle row"> \
+										      <div class="col-50 thumb"><img src="'+ frontfile +'" /></div> \
+										      <div class="col-50 thumb"><img src="'+ backfile +'" /></div> \
+											</div> \
+								      </div>\
+								  </a>\
+							     <div class="swipeout-actions-left">\
+						          <a href="#" onClick="delPhoto(\''+dirEntry.name+'\');event.stopPropagation();" class="delete  bg-red">Delete</a>\
+						        </div>\
+							   </li>')
 	
 								}
 	      				});
@@ -172,7 +178,7 @@
 
 	function capturePhoto() {
 	    if (typeof Camera === "undefined") {
-			myApp.alert("No camera available");
+			myApp.alert("The camera is not available");
 	    }
 	    else {
 	    	var options = setOptions(Camera.PictureSourceType.CAMERA);
@@ -181,6 +187,25 @@
 			    
 				 B.fromfile = false;
 			    $$("#savePhoto, #processPhoto").parent().removeClass("hidden");
+			}, onFail, options);
+	    }
+	}
+	
+	function galleryPhoto() {
+	    if (typeof Camera === "undefined") {
+			myApp.alert("Photo library is not available");
+	    }
+	    else {
+	    	var options = setOptions(Camera.PictureSourceType.PHOTOLIBRARY);
+	    	navigator.camera.getPicture( function(imageUri) {
+	    		B.croper.destroy();
+				var options = { 
+					url:imgUri, 
+					enableOrientation:true,
+        			boundary: B.crop_opts.boundary 
+        		};
+				B.croper = new Croppie(document.getElementById('crop-box'), options);
+       	 	return false;
 			}, onFail, options);
 	    }
 	}
@@ -199,10 +224,9 @@
 				$$('#card-photo-back').attr("src",  backfile);
 				$$(".button.card-side.front").trigger("click");
 				
-				//dirEntry.removeRecursively();
+				myApp.closeModal();
 			   
 			   $$("#processPhoto").parent().removeClass("hidden");
-				B.dynamicPopup.close();
 				B.fromfile = true;
 			});
 		}, onFail);
@@ -216,83 +240,84 @@
 	   	myApp.hidePreloader();
 		}, 8000);
 		
-		function getDataUrl(img) {
-		   var canvas = document.createElement('canvas');
-	      canvas.width = img.width;
-	      canvas.height = img.height;
-		   var ctx = canvas.getContext('2d');
-	      ctx.drawImage(img, 0, 0); 
-	      return canvas.toDataURL('image/jpeg');
-		};
-		
-		if ($$('#card-photo-front').attr("src")) {
-			$$('#card-photo-front').on("click", function(img){
-				var dataUrl = getDataUrl(img);
-				socket.emit('card ocr', {photo:dataUrl.replace(/^data:image\/(png|jpg|jpeg);base64,/, ''), cardid: mycard.id});
-			});
+		function getDataUri(url, callback) {
+			var image = new Image();
+			
+			image.onload = function () {
+				console.log(this);
+				var canvas = document.createElement('canvas');
+				canvas.width = this.naturalWidth; // or 'width' if you want a special/scaled size
+				canvas.height = this.naturalHeight; // or 'height' if you want a special/scaled size
+				
+				canvas.getContext('2d').drawImage(this, 0, 0);
+				
+				// Get raw image data
+				callback(canvas.toDataURL('image/png').replace(/^data:image\/(png|jpg);base64,/, ''));
+			};
+			
+			image.src = url;
 		}
 		
-		if ($$('#card-photo-back').attr("src")) {
-			$$('#card-photo-back').on("click", function(img){
-				var dataUrl = getDataUrl(img);
-				socket.emit('card ocr', {photo:dataUrl.replace(/^data:image\/(png|jpg|jpeg);base64,/, ''), cardid: mycard.id});
+		B.dataUrl = {};
+		var initd = false;
+		
+		if ($$('#card-photo-front').attr("src")) {
+			getDataUri($$('#card-photo-front').attr("src"), function(dataUrl){
+				B.dataUrl.front = dataUrl;
+				socket.emit('card ocr', {photo: dataUrl, cardid: mycard.id, card_side: "front"});
+				if ($$('#card-photo-back').attr("src")) {
+					getDataUri($$('#card-photo-back').attr("src"), function(dataUrl){
+						B.dataUrl.back = dataUrl;
+						socket.emit('card ocr', {photo: dataUrl, cardid: mycard.id, card_side: "back"});
+					});
+				}
 			});
+			card_ocr_init();
+		} else if ($$('#card-photo-back').attr("src")) {
+			getDataUri($$('#card-photo-back').attr("src"), function(dataUrl){
+				B.dataUrl.back = dataUrl;
+				socket.emit('card ocr', {photo: dataUrl, cardid: mycard.id, card_side: "front"});
+			});
+			card_ocr_init();
 		}
 	}
 	
-	socket.on('card ocr', card_ocr_process);
-	
-	function card_ocr_process(data) {
-		console.log('card_ocr_process()');
-		
-		// Using cropping hints from vision, we crop, rotate and show the scanned card image...
-		/*
-		var points = data.vertices;
-		var x0 = points[0].x - 10;
-		var y0 = points[0].y - 10;
-		var x1 = points[2].x - x0 + 20;
-		var y1 = points[2].y - y0 + 20;
-		
-		var canvas = document.createElement('canvas');
-		canvas.width = x1;
-		canvas.height = y1;
-		var context = canvas.getContext('2d');
-		var cardImage = $$("#card-entry").find("img."+B.card_side);
-		cardImage.attr("src",scanImg[B.card_side].dataUrl);
-		*/
-		
-		// Using text detection result from vision, we add a formatted list of fields...
-		var ocrLines = data.description.split("\n");
-		
+	function card_ocr_init() {
 		B.container="#add_card_list";
 		B.list = "current";
 		B.index = false;
 		B.cardid = false;
 		$$(".card-fields").removeClass("hidden");
 		$$(B.container).html(base_tpl.replace(/lock/g,'unlock').replace(/{{unlock}}/g,'unlock').replace(/{{class}}/g, ''));
+		$$(".button-photo").addClass("hidden");
+		$$(".card-fields").parent().removeClass("hidden");
+		$$("#card_ocr_words").html('');
+	}
+	
+	socket.on('card ocr', function(data) {
+		console.log('card_ocr_process()');
 		
-		/*
-		if (B.card_side=='recto') {
-			$$(B.container).html(base_tpl.replace(/lock/g,'unlock').replace(/{{unlock}}/g,'unlock').replace(/{{class}}/g, ''));
-		}
-		else { 
-			$$(".card-back-camera-open").hide(); 
-		}
-		*/
+		// Using text detection result from vision, we add a formatted list of fields...
+		var ocrLines = data.description.split("\n");
 		
 		for (var ii=0; ii<ocrLines.length; ii++) {
 			var ocrLine = ocrLines[ii].replace(/^[ ]+|[ ]+$/g,'');
 			if (ocrLine.length) add_card_li_match(ii, ocrLine);
 		}
 		
-		$$(".button-photo").addClass("hidden");
-		$$(".card-fields").parent().removeClass("hidden");
-		
-		card_init();
+		card_init(data.card_side);
 		
 		myApp.hidePreloader();
+	});
+	
+	function delPhoto(dirname) {
+		console.log('delPhoto('+dirname+')');
+		B.cwd_ = B.fs_.root;		
+		B.cwd_.getDirectory(dirname, {}, function(dirEntry) {
+			$$("#dir_"+dirname).remove();
+			dirEntry.removeRecursively();			
+		}, onFail);
 	}
-
 	
 	function onFail(message) {
 	    myApp.alert('Failed because: ' + message);
